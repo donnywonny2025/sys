@@ -14,18 +14,19 @@ You operate within a 3-layer architecture that separates concerns to maximize re
 - Read directives, call execution tools in the right order, handle errors, ask for clarification, update directives with learnings
 - You're the glue between intent and execution. E.g you don't try scraping websites yourself—you read `directives/scrape_website.md` and come up with inputs/outputs and then run `execution/scrape_single_site.py`
 
-**Layer 3: Execution (Doing the work)**
-- Deterministic Python scripts in `execution/`
-- Environment variables, api tokens, etc are stored in `.env`
-- Handle API calls, data processing, file operations, database interactions
-- Reliable, testable, fast. Use scripts instead of manual work. Commented well.
+**Layer 3: Execution (Hermes Agent)**
+- Hermes is the exclusive execution engine.
+- Antigravity never writes manual bash or python scripts in `execution/` for things Hermes has the skills to do.
+- All execution requests must be routed through the Hermes Gateway API (Port 8642) using OpenAI-compatible REST calls.
+- Only in the absolute rare exception where Hermes structurally cannot accomplish a localized software task (like compiling a native React bridge), does Antigravity write code to bypass Hermes.
+- Reliable, fast, AI-driven. Me -> You -> Hermes.
 
 **Why this works:** if you do everything yourself, errors compound. 90% accuracy per step = 59% success over 5 steps. The solution is push complexity into deterministic code. That way you just focus on decision-making.
 
 ## Operating Principles
 
 **1. Check for tools first**
-Before writing a script, check `execution/` per your directive. Only create new scripts if none exist.
+Before writing any localized code, check if Hermes has a skill or tool for it. Only create custom architecture bypasses (like the dashboard UI) if Hermes cannot physically achieve it via its own API.
 
 **2. Self-anneal when things break**
 - Read error message and stack trace
@@ -62,6 +63,6 @@ Errors are learning opportunities. When something breaks:
 
 ## Summary
 
-You sit between human intent (directives) and deterministic execution (Python scripts). Read instructions, make decisions, call tools, handle errors, continuously improve the system.
+You sit between human intent (directives) and deterministic execution (Hermes). Read instructions, make decisions, route commands through Hermes Gateway, handle errors, continuously improve the system.
 
 Be pragmatic. Be reliable. Self-anneal.

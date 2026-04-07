@@ -33,5 +33,1018 @@
     "type": "success",
     "content": "**Hermes Agent online.** Gemini 2.5 Flash responding via direct terminal pipe. Model confirmed, API key working.",
     "timestamp": "2026-04-07T04:36:33.614Z"
+  },
+  {
+    "type": "success",
+    "content": "<strong>Dashboard v2 deployed.</strong> Hermes bridge active. Gateway connected.",
+    "timestamp": "2026-04-07T04:57:42.740Z"
+  },
+  {
+    "type": "info",
+    "content": "<strong>Mail — colour8k@mac.com</strong><br>1. USPS Expected Delivery by Mon Apr 13<br>2. Your Venmo Debit Card is now disabled<br>3. Receipt from GOOGLE*CLOUD — $10.00<br>4. Security alert for kerrjeff1977@gmail.com<br>5. Your Venmo Debit Card is now enabled",
+    "timestamp": "2026-04-07T05:04:22.020Z"
+  },
+  {
+    "type": "info",
+    "content": "<strong>📬 Mail — colour8k@mac.com (via Hermes)</strong><br>1. USPS® Delivery — Mon Apr 13 · 12:49 AM<br>2. Venmo Card disabled · 11:41 PM<br>3. Google Cloud receipt $10.00 · 11:41 PM<br>4. Security alert · 11:39 PM<br>5. Venmo Card enabled · 11:37 PM",
+    "timestamp": "2026-04-07T05:07:54.301Z"
+  },
+  {
+    "type": "info",
+    "content": "<strong>📬 Inbox — colour8k@mac.com</strong><br>› USPS® Delivery Mon Apr 13 · <em>12:49 AM</em><br>› Venmo Card disabled · <em>11:41 PM</em><br>› Google Cloud receipt $10.00 · <em>11:41 PM</em><br>› Security alert · <em>11:39 PM</em><br>› Venmo Card enabled · <em>11:37 PM</em>",
+    "timestamp": "2026-04-07T05:08:52.063Z"
+  },
+  {
+    "type": "message",
+    "text": "<strong>📬 Inbox — colour8k@mac.com</strong><br>› USPS® Delivery Mon Apr 13<br>› Venmo Card disabled<br>› Google Cloud receipt $10.00<br>› Security alert<br>› Venmo Card enabled",
+    "style": "info",
+    "timestamp": "2026-04-07T05:09:57.947Z"
+  },
+  {
+    "type": "message",
+    "text": "<strong>📬 Inbox — iCloud</strong><br><br>",
+    "style": "info",
+    "timestamp": "2026-04-07T05:11:10.413Z"
+  },
+  {
+    "type": "email",
+    "emails": [
+      {
+        "subject": "USPS® Expected Delivery by Monday, April 13, 2026 arriving by 9:00pm 9400111206241421253727",
+        "sender": "auto-reply@usps.com",
+        "date": "Tuesday, April 7, 2026 at 12:49:06 AM",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "Monday, April 6, 2026 at 11:41:45 PM",
+        "unread": true
+      },
+      {
+        "subject": "Receipt from GOOGLE*CLOUD CHTCX4 - $10.00",
+        "sender": "Venmo",
+        "date": "Monday, April 6, 2026 at 11:41:17 PM",
+        "unread": true
+      },
+      {
+        "subject": "Security alert for kerrjeff1977@gmail.com",
+        "sender": "Google",
+        "date": "Monday, April 6, 2026 at 11:39:38 PM",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "Monday, April 6, 2026 at 11:37:45 PM",
+        "unread": true
+      },
+      {
+        "subject": "Apr 6, 2026 Digest: 1 new message from PVSchools today",
+        "sender": "PVSchools via ParentSquare",
+        "date": "Monday, April 6, 2026 at 9:19:33 PM",
+        "unread": true
+      },
+      {
+        "subject": "Apr 6, 2026 Digest: 1 new message from Desert Shadows Elementary School today",
+        "sender": "Desert Shadows Elementary School via ParentSquare",
+        "date": "Monday, April 6, 2026 at 9:19:14 PM",
+        "unread": true
+      },
+      {
+        "subject": "Amir Frenkel recently posted",
+        "sender": "LinkedIn",
+        "date": "Monday, April 6, 2026 at 9:04:16 PM",
+        "unread": true
+      },
+      {
+        "subject": "4/6 Daily Jobs Digest",
+        "sender": "Arena Careers",
+        "date": "Monday, April 6, 2026 at 9:02:56 PM",
+        "unread": true
+      },
+      {
+        "subject": "No dangers found after thorough search of Desert Shadows Elementary School parking lot.",
+        "sender": "PVSchools via ParentSquare",
+        "date": "Monday, April 6, 2026 at 8:41:54 PM",
+        "unread": true
+      },
+      {
+        "subject": "[AINews] Gemma 4 crosses 2 million downloads",
+        "sender": "AINews",
+        "date": "Monday, April 6, 2026 at 8:17:23 PM",
+        "unread": true
+      },
+      {
+        "subject": "Your job matches for “Video Producer” — curated for you from Jobright - 04/06/2026",
+        "sender": "Jobright Job Alert",
+        "date": "Monday, April 6, 2026 at 8:11:06 PM",
+        "unread": true
+      },
+      {
+        "subject": "USPS® Expected Delivery on Tuesday, April 7, 2026 arriving by 9:00pm 9261290376142072331419",
+        "sender": "auto-reply@usps.com",
+        "date": "Monday, April 6, 2026 at 8:01:07 PM",
+        "unread": true
+      },
+      {
+        "subject": "Important Pick-Up Location Information for Desert Shadows Elementary and Middle School",
+        "sender": "PVSchools via ParentSquare",
+        "date": "Monday, April 6, 2026 at 7:27:24 PM",
+        "unread": false
+      },
+      {
+        "subject": "Threat Received Related to Desert Shadows Elementary, No Evidence of Dangers",
+        "sender": "PVSchools via ParentSquare",
+        "date": "Monday, April 6, 2026 at 7:09:26 PM",
+        "unread": false
+      },
+      {
+        "subject": "Hey Jeff! 35% off ends soon. ***",
+        "sender": "BlackPeopleMeet",
+        "date": "Monday, April 6, 2026 at 6:00:25 PM",
+        "unread": true
+      },
+      {
+        "subject": "Creative Producer insights: $110K/yr+ salary at 160 job openings",
+        "sender": "LinkedIn",
+        "date": "Monday, April 6, 2026 at 5:55:01 PM",
+        "unread": true
+      },
+      {
+        "subject": "4/6/26 Job Alert: Insight Global just started hiring.",
+        "sender": "MatchedJobs Alerts",
+        "date": "Monday, April 6, 2026 at 5:43:13 PM",
+        "unread": true
+      },
+      {
+        "subject": "New: Get sick day supplies delivered 😷",
+        "sender": "Grubhub",
+        "date": "Monday, April 6, 2026 at 5:35:43 PM",
+        "unread": true
+      },
+      {
+        "subject": "Your SoFi banking statement is available",
+        "sender": "SoFi",
+        "date": "Monday, April 6, 2026 at 5:17:54 PM",
+        "unread": true
+      }
+    ],
+    "timestamp": "2026-04-07T05:15:03.006Z"
+  },
+  {
+    "type": "focus",
+    "items": [
+      {
+        "text": "SYSTEM Dashboard — build command center",
+        "meta": "In progress",
+        "urgent": true
+      },
+      {
+        "text": "Hermes Agent integration — mail, calendar, weather",
+        "meta": "Configuring skills"
+      },
+      {
+        "text": "Lemmings game — CRT display fix",
+        "meta": "Paused"
+      },
+      {
+        "text": "Data Annotation — Factuality Research qualification",
+        "meta": "Awaiting results"
+      },
+      {
+        "text": "Vince narrative — B-roll assembly final export",
+        "meta": "Blocked on color grade"
+      }
+    ],
+    "timestamp": "2026-04-07T05:15:18.580Z"
+  },
+  {
+    "type": "scene",
+    "scene": "whiteboard",
+    "timestamp": "2026-04-07T05:18:19.709Z"
+  },
+  {
+    "type": "weather",
+    "data": {
+      "summary": "☁️   +49°F",
+      "detail": "☁️   +49°F 46% ↖4mph"
+    },
+    "timestamp": "2026-04-07T05:31:13.143Z"
+  },
+  {
+    "type": "calendar",
+    "events": [],
+    "timestamp": "2026-04-07T05:31:25.595Z"
+  },
+  {
+    "type": "email",
+    "emails": [
+      {
+        "subject": "Quick question about your application at Reputation.com, Inc.",
+        "sender": "Glassdoor",
+        "date": "Tuesday, April 7, 2026 at 1:30:03 AM",
+        "unread": true
+      },
+      {
+        "subject": "USPS® Expected Delivery by Monday, April 13, 2026 arriving by 9:00pm 9400111206241421253727",
+        "sender": "auto-reply@usps.com",
+        "date": "Tuesday, April 7, 2026 at 12:49:06 AM",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "Monday, April 6, 2026 at 11:41:45 PM",
+        "unread": true
+      },
+      {
+        "subject": "Receipt from GOOGLE*CLOUD CHTCX4 - $10.00",
+        "sender": "Venmo",
+        "date": "Monday, April 6, 2026 at 11:41:17 PM",
+        "unread": true
+      },
+      {
+        "subject": "Security alert for kerrjeff1977@gmail.com",
+        "sender": "Google",
+        "date": "Monday, April 6, 2026 at 11:39:38 PM",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "Monday, April 6, 2026 at 11:37:45 PM",
+        "unread": true
+      },
+      {
+        "subject": "Apr 6, 2026 Digest: 1 new message from PVSchools today",
+        "sender": "PVSchools via ParentSquare",
+        "date": "Monday, April 6, 2026 at 9:19:33 PM",
+        "unread": true
+      },
+      {
+        "subject": "Apr 6, 2026 Digest: 1 new message from Desert Shadows Elementary School today",
+        "sender": "Desert Shadows Elementary School via ParentSquare",
+        "date": "Monday, April 6, 2026 at 9:19:14 PM",
+        "unread": true
+      },
+      {
+        "subject": "Amir Frenkel recently posted",
+        "sender": "LinkedIn",
+        "date": "Monday, April 6, 2026 at 9:04:16 PM",
+        "unread": true
+      },
+      {
+        "subject": "4/6 Daily Jobs Digest",
+        "sender": "Arena Careers",
+        "date": "Monday, April 6, 2026 at 9:02:56 PM",
+        "unread": true
+      },
+      {
+        "subject": "No dangers found after thorough search of Desert Shadows Elementary School parking lot.",
+        "sender": "PVSchools via ParentSquare",
+        "date": "Monday, April 6, 2026 at 8:41:54 PM",
+        "unread": true
+      },
+      {
+        "subject": "[AINews] Gemma 4 crosses 2 million downloads",
+        "sender": "AINews",
+        "date": "Monday, April 6, 2026 at 8:17:23 PM",
+        "unread": true
+      },
+      {
+        "subject": "Your job matches for “Video Producer” — curated for you from Jobright - 04/06/2026",
+        "sender": "Jobright Job Alert",
+        "date": "Monday, April 6, 2026 at 8:11:06 PM",
+        "unread": true
+      },
+      {
+        "subject": "USPS® Expected Delivery on Tuesday, April 7, 2026 arriving by 9:00pm 9261290376142072331419",
+        "sender": "auto-reply@usps.com",
+        "date": "Monday, April 6, 2026 at 8:01:07 PM",
+        "unread": true
+      },
+      {
+        "subject": "Important Pick-Up Location Information for Desert Shadows Elementary and Middle School",
+        "sender": "PVSchools via ParentSquare",
+        "date": "Monday, April 6, 2026 at 7:27:24 PM",
+        "unread": false
+      },
+      {
+        "subject": "Threat Received Related to Desert Shadows Elementary, No Evidence of Dangers",
+        "sender": "PVSchools via ParentSquare",
+        "date": "Monday, April 6, 2026 at 7:09:26 PM",
+        "unread": false
+      },
+      {
+        "subject": "Hey Jeff! 35% off ends soon. ***",
+        "sender": "BlackPeopleMeet",
+        "date": "Monday, April 6, 2026 at 6:00:25 PM",
+        "unread": true
+      },
+      {
+        "subject": "Creative Producer insights: $110K/yr+ salary at 160 job openings",
+        "sender": "LinkedIn",
+        "date": "Monday, April 6, 2026 at 5:55:01 PM",
+        "unread": true
+      },
+      {
+        "subject": "4/6/26 Job Alert: Insight Global just started hiring.",
+        "sender": "MatchedJobs Alerts",
+        "date": "Monday, April 6, 2026 at 5:43:13 PM",
+        "unread": true
+      },
+      {
+        "subject": "New: Get sick day supplies delivered 😷",
+        "sender": "Grubhub",
+        "date": "Monday, April 6, 2026 at 5:35:43 PM",
+        "unread": true
+      }
+    ],
+    "timestamp": "2026-04-07T05:31:34.960Z"
+  },
+  {
+    "type": "focus",
+    "items": [
+      {
+        "text": "SYSTEM Dashboard — build command center",
+        "meta": "In progress",
+        "urgent": true
+      },
+      {
+        "text": "Hermes Agent integration — mail, calendar, weather",
+        "meta": "Configuring skills"
+      },
+      {
+        "text": "Excalidraw Real-time Bridge",
+        "meta": "Deployed"
+      }
+    ],
+    "timestamp": "2026-04-07T05:31:34.970Z"
+  },
+  {
+    "type": "scene",
+    "scene": "whiteboard",
+    "timestamp": "2026-04-07T05:31:42.841Z"
+  },
+  {
+    "type": "system",
+    "content": "COMMUNICATION RULE CODIFIED: Artifacts banned. All updates will route directly to chat or display visually on this dashboard.",
+    "urgent": true,
+    "timestamp": "2026-04-07T05:37:25.949Z"
+  },
+  {
+    "type": "studio",
+    "hero": "/data/gallery/black_cat.png",
+    "gallery": [
+      "/data/gallery/black_cat.png"
+    ],
+    "timestamp": "2026-04-07T05:40:19.836Z"
+  },
+  {
+    "type": "studio",
+    "hero": "/data/gallery/black_cat.png",
+    "gallery": [
+      "/data/gallery/black_cat.png"
+    ],
+    "timestamp": "2026-04-07T05:41:07.784Z"
+  },
+  {
+    "type": "studio",
+    "hero": "data/gallery/black_cat.png",
+    "gallery": [
+      "/data/gallery/black_cat.png"
+    ],
+    "timestamp": "2026-04-07T05:41:15.120Z"
+  },
+  {
+    "type": "studio",
+    "hero": "/data/gallery/black_cat.png",
+    "gallery": [
+      "/data/gallery/black_cat.png"
+    ],
+    "timestamp": "2026-04-07T05:43:07.508Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/black_cat.png",
+      "size": "1024x1024",
+      "aspect": "1:1",
+      "prompt": "A hyper-realistic photograph of a sleek black cat sitting elegantly on a wooden table, studio lighting, highly detailed focus on the eyes and fur."
+    },
+    "gallery": [
+      {
+        "src": "/data/gallery/black_cat.png",
+        "size": "1024x1024",
+        "aspect": "1:1",
+        "prompt": "A hyper-realistic photograph of a sleek black cat sitting elegantly on a wooden table, studio lighting, highly detailed focus on the eyes and fur."
+      }
+    ],
+    "timestamp": "2026-04-07T05:44:42.936Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/cat_16_9.png",
+      "size": "1024x576",
+      "aspect": "16:9",
+      "prompt": "A hyper-realistic cinematic photograph of a sleek black cat sitting elegantly on a wooden table, wide landscape shot, 16:9 aspect ratio, studio lighting, highly detailed focus."
+    },
+    "gallery": [
+      {
+        "src": "/data/gallery/cat_16_9.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic photograph of a sleek black cat sitting elegantly on a wooden table, wide landscape shot, 16:9 aspect ratio, studio lighting, highly detailed focus."
+      },
+      {
+        "src": "/data/gallery/black_cat.png",
+        "size": "1024x1024",
+        "aspect": "1:1",
+        "prompt": "A hyper-realistic photograph of a sleek black cat sitting elegantly on a wooden table, studio lighting, highly detailed focus on the eyes and fur."
+      }
+    ],
+    "timestamp": "2026-04-07T05:46:21.194Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/cat_16_9.png",
+      "size": "1024x576",
+      "aspect": "16:9",
+      "prompt": "A hyper-realistic cinematic photograph of a sleek black cat sitting elegantly on a wooden table, wide landscape shot, 16:9 aspect ratio, studio lighting, highly detailed focus."
+    },
+    "gallery": [
+      {
+        "src": "/data/gallery/cat_16_9.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic photograph of a sleek black cat sitting elegantly on a wooden table, wide landscape shot, 16:9 aspect ratio, studio lighting, highly detailed focus."
+      },
+      {
+        "src": "/data/gallery/black_cat.png",
+        "size": "1024x1024",
+        "aspect": "1:1",
+        "prompt": "A hyper-realistic photograph of a sleek black cat sitting elegantly on a wooden table, studio lighting, highly detailed focus on the eyes and fur."
+      }
+    ],
+    "timestamp": "2026-04-07T05:49:17.145Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/space_station.png",
+      "size": "1024x576",
+      "aspect": "16:9",
+      "prompt": "A hyper-realistic cinematic wide shot of a massive futuristic space station orbiting a glowing blue gas giant. Detailed neon lighting, spaceships docking."
+    },
+    "gallery": [
+      {
+        "src": "/data/gallery/space_station.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a massive futuristic space station orbiting a glowing blue gas giant."
+      },
+      {
+        "src": "/data/gallery/cat_16_9.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic photograph of a sleek black cat sitting elegantly on a wooden table."
+      },
+      {
+        "src": "/data/gallery/black_cat.png",
+        "size": "1024x1024",
+        "aspect": "1:1",
+        "prompt": "A hyper-realistic photograph of a sleek black cat sitting elegantly on a wooden table."
+      }
+    ],
+    "timestamp": "2026-04-07T05:55:13.205Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/nano_test.png",
+      "size": "1024x576",
+      "aspect": "16:9",
+      "prompt": "A quick futuristic cyberpunk street cat"
+    },
+    "gallery": [
+      {
+        "src": "/data/gallery/nano_test.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A quick futuristic cyberpunk street cat"
+      }
+    ],
+    "timestamp": "2026-04-07T05:56:49.874Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/fireman_cat.png",
+      "size": "1024x576",
+      "aspect": "16:9",
+      "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform and red helmet, standing proudly in front of a fire engine, dramatic lighting."
+    },
+    "gallery": [
+      {
+        "src": "/data/gallery/fireman_cat.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform."
+      },
+      {
+        "src": "/data/gallery/space_station.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a massive futuristic space station orbiting a glowing blue gas giant."
+      },
+      {
+        "src": "/data/gallery/cat_16_9.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic photograph of a sleek black cat sitting elegantly on a wooden table."
+      }
+    ],
+    "timestamp": "2026-04-07T05:59:08.972Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/firecat_nano.png",
+      "size": "1024x576",
+      "aspect": "16:9",
+      "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform and red helmet, standing proudly in front of a fire engine, dramatic lighting.",
+      "model": "Nano Banana 2 Pro (gemini-3.1-pro-image-preview)"
+    },
+    "gallery": [
+      {
+        "src": "/data/gallery/firecat_nano.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Nano Banana 2 Pro"
+      },
+      {
+        "src": "/data/gallery/fireman_cat.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Imagen 4 Fast"
+      },
+      {
+        "src": "/data/gallery/cat_16_9.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic photograph of a sleek black cat sitting elegantly on a wooden table.",
+        "model": "Default"
+      }
+    ],
+    "timestamp": "2026-04-07T06:04:27.820Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/firecat_nano.png",
+      "size": "1024x576",
+      "aspect": "16:9",
+      "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform and red helmet, standing proudly in front of a fire engine, dramatic lighting.",
+      "model": "Nano Banana 2 Pro (gemini-3.1-pro-image-preview)"
+    },
+    "gallery": [
+      {
+        "src": "/data/gallery/firecat_nano.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Nano Banana 2 Pro"
+      },
+      {
+        "src": "/data/gallery/fireman_cat.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Imagen 4 Fast"
+      },
+      {
+        "src": "/data/gallery/cat_16_9.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic photograph of a sleek black cat sitting elegantly on a wooden table.",
+        "model": "Default"
+      }
+    ],
+    "timestamp": "2026-04-07T06:06:38.516Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/firecat_nano.png",
+      "size": "1024x576",
+      "aspect": "16:9",
+      "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform and red helmet, standing proudly in front of a fire engine, dramatic lighting.",
+      "model": "Nano Banana 2 Pro (gemini-3.1-pro-image-preview)"
+    },
+    "gallery": [
+      {
+        "src": "/data/gallery/firecat_nano.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Nano Banana 2 Pro"
+      },
+      {
+        "src": "/data/gallery/fireman_cat.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Imagen 4 Fast"
+      },
+      {
+        "src": "/data/gallery/cat_16_9.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic photograph of a sleek black cat sitting elegantly on a wooden table.",
+        "model": "Default"
+      }
+    ],
+    "timestamp": "2026-04-07T06:08:25.585Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/firecat_nano.png",
+      "size": "1584x672",
+      "aspect": "16:9",
+      "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform and red helmet, standing proudly in front of a fire engine, dramatic lighting.",
+      "model": "Nano Banana 2 Pro (gemini-3.1-pro-image-preview)"
+    },
+    "gallery": [
+      {
+        "src": "/data/gallery/firecat_nano.png",
+        "size": "1584x672",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Nano Banana 2 Pro"
+      },
+      {
+        "src": "/data/gallery/fireman_cat.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Imagen 4 Fast"
+      },
+      {
+        "src": "/data/gallery/cat_16_9.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic photograph of a sleek black cat sitting elegantly on a wooden table.",
+        "model": "Default"
+      }
+    ],
+    "timestamp": "2026-04-07T06:14:00.546Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/firecat_nano_upscaled.png",
+      "size": "3168x1344",
+      "aspect": "16:9",
+      "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform and red helmet, standing proudly in front of a fire engine, dramatic lighting.",
+      "model": "Nano Banana 2 Pro [UPSCALED]"
+    },
+    "gallery": [
+      {
+        "src": "/data/gallery/firecat_nano_upscaled.png",
+        "size": "3168x1344",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Nano Banana 2 Pro [UPSCALED]"
+      },
+      {
+        "src": "/data/gallery/firecat_nano.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Nano Banana 2 Pro"
+      },
+      {
+        "src": "/data/gallery/fireman_cat.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Imagen 4 Fast"
+      }
+    ],
+    "timestamp": "2026-04-07T06:18:18.652Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/firecat_nano_upscaled.png",
+      "size": "3168x1344",
+      "aspect": "16:9",
+      "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform and red helmet, standing proudly in front of a fire engine, dramatic lighting.",
+      "model": "Nano Banana 2 Pro [UPSCALED]"
+    },
+    "gallery": [
+      {
+        "src": "/data/gallery/firecat_nano_upscaled.png",
+        "size": "3168x1344",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Nano Banana 2 Pro [UPSCALED]"
+      },
+      {
+        "src": "/data/gallery/firecat_nano.png",
+        "size": "1584x672",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Nano Banana 2 Pro"
+      },
+      {
+        "src": "/data/gallery/fireman_cat.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Imagen 4 Fast"
+      },
+      {
+        "src": "/data/gallery/cat_16_9.png",
+        "size": "1024x576",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic photograph of a sleek black cat sitting elegantly on a wooden table.",
+        "model": "Default"
+      }
+    ],
+    "timestamp": "2026-04-07T06:19:38.768Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/firecat_nano_upscaled.png",
+      "size": "3168x1344",
+      "aspect": "16:9",
+      "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform and red helmet, standing proudly in front of a fire engine, dramatic lighting.",
+      "model": "Nano Banana 2 Pro [UPSCALED]"
+    },
+    "gallery": [
+      {
+        "src": "/data/gallery/firecat_nano_upscaled.png",
+        "size": "3168x1344",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Nano Banana 2 Pro [UPSCALED]"
+      },
+      {
+        "src": "/data/gallery/firecat_nano.png",
+        "size": "1584x672",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Nano Banana 2 Pro"
+      }
+    ],
+    "timestamp": "2026-04-07T06:23:25.712Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/firecat_nano_upscaled.png",
+      "size": "3168x1344",
+      "aspect": "16:9",
+      "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform and red helmet, standing proudly in front of a fire engine, dramatic lighting.",
+      "model": "Nano Banana 2 Pro [UPSCALED]"
+    },
+    "gallery": [
+      {
+        "src": "/data/gallery/firecat_nano_upscaled.png",
+        "size": "3168x1344",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Nano Banana 2 Pro [UPSCALED]"
+      },
+      {
+        "src": "/data/gallery/firecat_nano.png",
+        "size": "1584x672",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Nano Banana 2 Pro"
+      }
+    ],
+    "timestamp": "2026-04-07T06:27:02.603Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/firecat_nano_upscaled.png",
+      "size": "3168x1344",
+      "aspect": "16:9",
+      "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform and red helmet, standing proudly in front of a fire engine, dramatic lighting.",
+      "model": "Nano Banana 2 Pro [UPSCALED]"
+    },
+    "gallery": [
+      {
+        "src": "/data/gallery/firecat_nano_upscaled.png",
+        "size": "3168x1344",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Nano Banana 2 Pro [UPSCALED]"
+      },
+      {
+        "src": "/data/gallery/firecat_nano.png",
+        "size": "1584x672",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Nano Banana 2 Pro"
+      }
+    ],
+    "timestamp": "2026-04-07T06:28:05.042Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/moon.png",
+      "size": "1584x672",
+      "aspect": "16:9",
+      "prompt": "A professional high-resolution astrophotography shot of the moon in deep space, glowing white and crisp against the pitch-black void of space. Hyper-detailed crater textures, realistic lunar surface with raw physical imperfections, shot through a high-powered astronomical telescope, sharp focus, cinematic lighting, 16:9 aspect ratio.",
+      "model": "Nano Banana 2 Pro"
+    },
+    "gallery": [
+      {
+        "src": "/data/gallery/moon.png",
+        "size": "1584x672",
+        "aspect": "16:9",
+        "prompt": "A professional high-resolution astrophotography shot of the moon in deep space...",
+        "model": "Nano Banana 2 Pro"
+      },
+      {
+        "src": "/data/gallery/firecat_nano_upscaled.png",
+        "size": "3168x1344",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Nano Banana 2 Pro [UPSCALED]"
+      },
+      {
+        "src": "/data/gallery/firecat_nano.png",
+        "size": "1584x672",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Nano Banana 2 Pro"
+      }
+    ],
+    "timestamp": "2026-04-07T06:34:33.553Z"
+  },
+  {
+    "type": "reference",
+    "src": "/data/references/moon.jpg",
+    "timestamp": "2026-04-07T06:38:05.845Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/moon.png",
+      "size": "1584x672",
+      "aspect": "16:9",
+      "prompt": "A professional high-resolution astrophotography shot of the moon in deep space...",
+      "model": "Nano Banana 2 Pro"
+    },
+    "gallery": [
+      {
+        "src": "/data/gallery/moon.png",
+        "size": "1584x672",
+        "aspect": "16:9",
+        "prompt": "A professional high-resolution astrophotography shot of the moon in deep space...",
+        "model": "Nano Banana 2 Pro"
+      },
+      {
+        "src": "/data/gallery/firecat_nano_upscaled.png",
+        "size": "3168x1344",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Nano Banana 2 Pro [UPSCALED]"
+      },
+      {
+        "src": "/data/gallery/firecat_nano.png",
+        "size": "1584x672",
+        "aspect": "16:9",
+        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
+        "model": "Nano Banana 2 Pro"
+      }
+    ],
+    "timestamp": "2026-04-07T06:42:10.283Z"
+  },
+  {
+    "type": "close_reference",
+    "timestamp": "2026-04-07T06:42:11.321Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/moon.png",
+      "size": "1584x672",
+      "aspect": "16:9",
+      "prompt": "A professional high-resolution astrophotography shot of the moon in deep space...",
+      "model": "Nano Banana 2 Pro"
+    },
+    "gallery": [
+      {
+        "src": "/data/gallery/moon.png",
+        "size": "1584x672",
+        "aspect": "16:9",
+        "prompt": "A professional high-resolution astrophotography shot of the moon in deep space...",
+        "model": "Nano Banana 2 Pro"
+      }
+    ],
+    "timestamp": "2026-04-07T06:43:21.140Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/test_gen.png",
+      "size": "1584x672",
+      "aspect": "16:9",
+      "prompt": "lighthouse on cliff, golden hour, cinematic, 16:9",
+      "model": "Nano Banana 2 Pro"
+    },
+    "timestamp": "2026-04-07T07:16:00.822Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/lighthouse_golden.png",
+      "size": "1584x672",
+      "aspect": "16:9",
+      "prompt": "A cinematic wide-angle landscape photograph of a weathered stone lighthouse perched on a dramatic volcanic cliff at golden hour, ocean mist rolling across black jagged rocks, warm backlighting creating long shadows, shot on 35mm film with natural film grain, shallow depth of field, raw physical texture on the lighthouse walls, 16:9 aspect ratio",
+      "model": "Nano Banana 2 Pro"
+    },
+    "timestamp": "2026-04-07T07:16:28.607Z"
+  },
+  {
+    "type": "scene",
+    "scene": "studio",
+    "timestamp": "2026-04-07T07:16:49.432Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/lighthouse_cinematic.png",
+      "size": "1408x768",
+      "aspect": "16:9",
+      "prompt": "A cinematic wide-angle landscape photograph of a weathered stone lighthouse perched on a dramatic volcanic cliff at golden hour, ocean mist rolling across black jagged rocks, warm backlighting, shot on 35mm film, natural film grain, 16:9 aspect ratio",
+      "model": "Imagen 4 Fast"
+    },
+    "timestamp": "2026-04-07T07:20:08.338Z"
+  },
+  {
+    "type": "reference",
+    "src": "/data/references/lighthouse_ref.jpg",
+    "timestamp": "2026-04-07T07:21:02.948Z"
+  },
+  {
+    "type": "reference",
+    "src": "/data/references/lighthouse_real.jpg",
+    "timestamp": "2026-04-07T07:26:21.779Z"
+  },
+  {
+    "type": "reference",
+    "src": "/data/references/lighthouse_real.jpg",
+    "timestamp": "2026-04-07T07:38:27.241Z"
+  },
+  {
+    "type": "reference",
+    "src": "/data/references/lighthouse_real.jpg",
+    "timestamp": "2026-04-07T07:39:15.103Z"
+  },
+  {
+    "type": "reference",
+    "src": "/data/references/lighthouse_real.jpg",
+    "timestamp": "2026-04-07T07:40:14.099Z"
+  },
+  {
+    "type": "reference",
+    "src": "/data/references/lighthouse_real.jpg",
+    "timestamp": "2026-04-07T07:41:56.808Z"
+  },
+  {
+    "type": "reference",
+    "src": "/data/references/lighthouse_real.jpg",
+    "timestamp": "2026-04-07T07:46:19.711Z"
+  },
+  {
+    "type": "reference",
+    "src": "/data/references/lighthouse_real.jpg",
+    "title": "Unsplash — Lighthouse on Cliff",
+    "timestamp": "2026-04-07T07:49:46.109Z"
+  },
+  {
+    "type": "reference",
+    "src": "/data/references/lighthouse_ref.jpg",
+    "title": "Dreamstime — Rocky Coast Sunset",
+    "timestamp": "2026-04-07T07:49:47.143Z"
+  },
+  {
+    "type": "close_reference",
+    "timestamp": "2026-04-07T07:51:08.371Z"
   }
 ]

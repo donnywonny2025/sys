@@ -6,6 +6,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { WebSocketServer } = require('ws');
+const { execFile } = require('child_process');
 
 const PORT = 3111;
 const PUBLIC_DIR = path.join(__dirname, 'public');
@@ -28,6 +29,8 @@ const MIME = {
 
 // Connected WebSocket clients
 const clients = new Set();
+// Persistent UI State Cache
+let activeState = null;
 
 // Broadcast to all connected browsers
 function broadcast(data) {
@@ -55,6 +58,24 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'POST' && req.url === '/api/push') {
     try {
       const data = await parseBody(req);
+      
+      // Cache the UI state so that hard refreshes don't drop the active payload
+      if (data.type === 'studio' || data.type === 'reference' || data.type === 'close_reference' || data.type === 'clear') {
+        if (!activeState) activeState = { type: 'home' };
+        if (data.type === 'studio' || data.type === 'clear') {
+          activeState = data; // replace base state
+          if (!activeState.references) activeState.references = [];
+        } else if (data.type === 'reference') {
+          if (!activeState.references) activeState.references = [];
+          activeState.references.push({ src: data.src, title: data.title || null });
+          activeState.referenceActive = true;
+          activeState.referenceSrc = data.src; // legacy compat
+        } else if (data.type === 'close_reference') {
+          activeState.references = [];
+          activeState.referenceActive = false;
+        }
+      }
+
       broadcast(data);
       // Log to data/history.json
       const historyPath = path.join(DATA_DIR, 'history.json');
@@ -86,6 +107,135 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end('[]');
     }
+    return;
+  }
+
+  // ── API: Get active state ──
+  if (req.method === 'GET' && req.url === '/api/state') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(activeState || { type: 'home' }));
+    return;
+  }
+
+  // ── API: Save Whiteboard Image ──
+  if (req.method === 'POST' && req.url === '/api/whiteboard/save') {
+    try {
+      const data = await parseBody(req);
+      if (data.image) {
+        // Strip the data:image/png;base64, prefix
+        const base64Data = data.image.replace(/^data:image\/png;base64,/, "");
+        fs.writeFileSync(path.join(DATA_DIR, 'whiteboard.png'), base64Data, 'base64');
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true, message: 'Saved successfully' }));
+      } else {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'No image data provided' }));
+      }
+    } catch (e) {
+      console.error("Whiteboard save error:", e);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: e.message }));
+    }
+    return;
+  }
+
+  // ── API: Export Image to OS Folder ──
+  if (req.method === 'POST' && req.url === '/api/studio/export') {
+    try {
+      const data = await parseBody(req);
+      if (data.source && data.destDir) {
+        // Source is assumed to be something like 'gallery/black_cat.webp'
+        const sourcePath = path.join(DATA_DIR, data.source);
+        if (!fs.existsSync(sourcePath)) {
+          throw new Error("Source image not found in dashboard data.");
+        }
+        
+        // Ensure dest dir exists
+        if (!fs.existsSync(data.destDir)) {
+          fs.mkdirSync(data.destDir, { recursive: true });
+        }
+        
+        const fileName = path.basename(sourcePath);
+        const destPath = path.join(data.destDir, fileName);
+        
+        fs.copyFileSync(sourcePath, destPath);
+        
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true, message: `Saved to ${destPath}` }));
+      } else {
+        throw new Error("Missing source or destDir");
+      }
+    } catch (e) {
+      console.error("Export error:", e);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: e.message }));
+    }
+    return;
+  }
+
+  // ── API: Local Upscale ──
+  if (req.method === 'POST' && req.url === '/api/studio/upscale') {
+    try {
+      const data = await parseBody(req);
+      if (data.source) {
+        const sourcePath = path.join(DATA_DIR, data.source.replace('/data/', ''));
+        if (!fs.existsSync(sourcePath)) {
+          throw new Error("Source image not found: " + sourcePath);
+        }
+
+        const scriptPath = path.join(path.dirname(__dirname), 'execution', 'upscale_local.sh');
+        
+        // Execute the upscaler
+        execFile(scriptPath, [sourcePath], (error, stdout, stderr) => {
+          if (error) {
+            console.error("Upscale shell error:", error);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            return res.end(JSON.stringify({ error: error.message }));
+          }
+
+          const outStr = stdout.trim();
+          if (outStr.startsWith("SUCCESS|")) {
+            const parts = outStr.split("|");
+            // e.g. SUCCESS|/Volumes/.../gallery/firecat_nano_upscaled.png|3168x1344
+            const newAbsolute = parts[1];
+            const newSize = parts[2];
+            const newFileName = path.basename(newAbsolute);
+            
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ 
+              ok: true, 
+              newSrc: "/data/gallery/" + newFileName, 
+              newSize: newSize 
+            }));
+          } else {
+            console.error("Upscale failed:", outStr);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: "Failed to upscale image internally" }));
+          }
+        });
+      } else {
+        throw new Error("Missing source file");
+      }
+    } catch (e) {
+      console.error("Upscale error:", e);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: e.message }));
+    }
+    return;
+  }
+
+  // ── API: Choose Directory Native Dialog ──
+  if (req.method === 'GET' && req.url === '/api/studio/choose-dir') {
+    const { exec } = require('child_process');
+    exec('osascript -e \'POSIX path of (choose folder with prompt "Select Export Directory:")\'', (err, stdout) => {
+      if (err) {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ canceled: true }));
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ path: stdout.trim() }));
+    });
     return;
   }
 

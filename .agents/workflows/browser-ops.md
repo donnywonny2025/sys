@@ -4,77 +4,62 @@ description: How to manage the browser and dashboard — rules for efficient bro
 
 # Browser & Dashboard Operations
 
-## Core Rules
+## RULE #1: THE BROWSER IS JEFF'S DISPLAY
 
-1. **The SYSTEM dashboard tab (localhost:3111) is ALWAYS open.** Never close it. Never navigate away from it.
-2. **Close any tab that isn't the dashboard.** If you open a tab for research, close it when done.
-3. **Don't spawn browser subagents just to check your work.** Use `curl` to test API endpoints instead.
-4. **When you must use the browser subagent, be precise.** One clear task, get in, get out.
-5. **After code changes, push a test message via curl to verify.** Don't refresh the browser unless CSS/HTML changed.
+**Everything visual goes to the browser IMMEDIATELY.** No exceptions. No showing things only in chat.
 
-## Testing the Dashboard Pipe
-
-Instead of opening a browser subagent, test with curl:
 ```bash
-# Push text
-curl -s -X POST http://localhost:3111/api/push \
-  -H "Content-Type: application/json" \
-  -d '{"type":"info","content":"Test message"}'
-
-# Check it worked
-curl -s http://localhost:3111/api/history | tail -1
+osascript -e 'tell application "Google Chrome"
+  activate
+  if (count of windows) is 0 then make new window
+  set URL of active tab of front window to "http://localhost:3111/"
+end tell'
 ```
 
-## Restarting the Server
+## RULE #2: NEVER ASK, JUST BUILD
 
-When HTML/CSS/JS changes require a browser refresh:
-1. Kill the server process
-2. Clear history if needed: `rm -f dashboard/data/history.json`
-3. Restart: `cd dashboard && node server.js`
-4. The browser auto-reconnects via WebSocket — no manual refresh needed for data changes
-5. For HTML/CSS changes, push a reload command or use browser subagent ONCE
+If Jeff says he wants something, BUILD IT. Don't ask "do you want me to set that up?" — obviously yes. If it needs to work (persistence, visibility, collaboration), make it work COMPLETELY before showing it. Half-working demos are unacceptable.
 
-## Browser Tab Management (AppleScript)
+**Bad:** "Want me to set up self-hosted Excalidraw?"
+**Good:** *sets it up, shows working result* "Whiteboard is live. Your drawings save to the project and I can see them."
 
-Use `osascript` for tab control — it's instant and reliable:
+## RULE #3: THINK AHEAD
+
+When building a feature, think through what Jeff will obviously need next:
+- If it's a whiteboard → he needs persistence, he needs me to see it
+- If it's email → he needs it sorted, dated, more than 5 items
+- If it's a display → he needs it to look premium, not amateur
+
+Build the complete thing. Don't ship v0.1 and iterate in front of him.
+
+## RULE #4: AUTO-RUN EVERYTHING
+
+Mark all safe commands as SafeToAutoRun=true. Jeff should never see "Allow this?" prompts from command execution. Screenshots, curl, osascript, file reads — all auto-run.
+
+## RULE #5: SINGULAR BROWSER CONTROL
+
+Maintain absolute, dictatorial control over the browser session. If multiple identical tabs are open causing state conflict, actively close them and force the active remaining tab into the correct focus context. The user expects you to drive the display perfectly.
+
+## RULE #6: ALWAYS VISUALLY VERIFY
+
+Never assume a DOM manipulation worked because the code looks right. Capture backend screenshots if necessary, but remember Rule #7.
+
+## RULE #7: NO MOUSE/CURSOR AUTOMATION
+
+DO NOT use browser subagents to physically "click" around the user's dashboard to verify things. The user hates having their cursor or active session hijacked by simulated mouse events. If you need to switch the view to Image Studio, DO NOT click the studio button using browser AI—USE THE WEBSOCKET BACKEND (`curl http://localhost:3111/api/push`) to invisibly switch the scene state.
+
+## Core Browser Commands
+
 ```bash
-# Close all about:blank tabs
-osascript -e 'tell application "Google Chrome" to close (every tab of every window whose URL is "about:blank")'
+# Refresh dashboard
+osascript -e 'tell application "Google Chrome" to tell active tab of front window to reload'
 
-# Close a tab by URL
-osascript -e 'tell application "Google Chrome" to close (every tab of every window whose URL contains "example.com")'
+# Switch scene via API
+curl -s -X POST http://localhost:3111/api/push -H "Content-Type: application/json" -d '{"type":"scene","scene":"home"}'
 
-# List all tabs
-osascript -e 'tell application "Google Chrome" to get URL of every tab of every window'
-
-# Open a URL in existing tab
-osascript -e 'tell application "Google Chrome" to set URL of active tab of front window to "http://localhost:3111/"'
+# Close Duplicate Localhost Tabs 
+osascript -e 'tell application "Google Chrome"
+  set theTabs to tabs of window 1 whose URL contains "localhost:3111"
+  if (count of theTabs) > 1 then close item 2 of theTabs
+end tell'
 ```
-
-**NEVER use the browser subagent to close or manage tabs.** AppleScript is instant and doesn't require permission dialogs.
-
-## Reading Dashboard State (JavaScript via AppleScript)
-
-"Allow JavaScript from Apple Events" is ENABLED. Read the dashboard directly:
-```bash
-# Read page text
-osascript -e 'tell application "Google Chrome" to execute active tab of front window javascript "document.querySelector(\"#feed\").innerText"'
-
-# Count messages
-osascript -e 'tell application "Google Chrome" to execute active tab of front window javascript "document.querySelectorAll(\".message\").length"'
-
-# Refresh the page
-osascript -e 'tell application "Google Chrome" to execute active tab of front window javascript "location.reload()"'
-```
-
-## Quick Screen Check
-```bash
-# Screenshot (no dialog, silent)
-screencapture -x /tmp/dashboard_check.png
-```
-
-## Browser Tab Policy
-
-- Only ONE tab should be open: `http://localhost:3111/`
-- Research goes through `firecrawl_search` or `read_url_content`, NOT browser tabs
-- If a stray tab appears, close it immediately — don't leave about:blank tabs hanging

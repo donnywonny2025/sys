@@ -4,26 +4,165 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SYSTEM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <!-- Status Bar -->
-  <div class="status-bar">
-    <span class="status-bar__name">SYSTEM</span>
-    <span class="status-bar__time" id="clock"></span>
-    <div class="status-bar__indicators">
-      <span class="status-dot status-dot--active"></span>
-      <span class="status-label">Live</span>
+  <!-- Left Rail -->
+  <nav id="rail">
+    <div class="rail-top">
+      <div class="rail-logo"><span class="logo-mark">S</span></div>
+      <button class="rail-btn active" data-scene="home" title="Home">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>
+      </button>
+      <button class="rail-btn" data-scene="mail" title="Mail">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13 2 4"/></svg>
+      </button>
+      <button class="rail-btn" data-scene="calendar" title="Calendar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      </button>
+      <button class="rail-btn" data-scene="whiteboard" title="Whiteboard">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </button>
+      <button class="rail-btn" data-scene="studio" title="Image Studio">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+      </button>
     </div>
-  </div>
-
-  <!-- Main Content -->
-  <div class="main" id="feed">
-    <div class="empty-state" id="empty">
-      <div class="empty-state__icon">◆</div>
-      <div class="empty-state__text">Waiting for input.<br>Connected and ready.</div>
+    <div class="rail-bottom">
+      <div class="rail-status-wrap" title="Dashboard connection">
+        <span class="status-dot" id="status-dot"></span>
+      </div>
     </div>
+  </nav>
+
+  <!-- Main App -->
+  <div id="app">
+    <!-- Top Bar -->
+    <header id="top-bar">
+      <div class="top-left">
+        <span class="top-label">SYSTEM</span>
+        <span class="top-divider">·</span>
+        <span class="top-date" id="top-date"></span>
+      </div>
+      <time class="top-clock" id="clock"></time>
+      <div class="top-right">
+        <span class="top-weather" id="top-weather">—</span>
+        <span class="status-label" id="status-label">Live</span>
+      </div>
+    </header>
+
+    <!-- Scene: Home -->
+    <main id="scene-home" class="scene active">
+
+      <!-- Row 1: Whiteboard / Focus -->
+      <section id="focus-section">
+        <div class="focus-header">
+          <h2 class="section-label">Today's Focus</h2>
+          <span class="focus-date" id="focus-date"></span>
+        </div>
+        <div id="focus-items">
+          <div class="empty-state">No focus items yet. Tell me what you're working on.</div>
+        </div>
+      </section>
+
+      <!-- Row 2: Calendar + Email side by side -->
+      <div id="panels-grid">
+        <!-- Calendar Panel -->
+        <section id="calendar-panel" class="panel">
+          <h2 class="section-label">Schedule</h2>
+          <div id="calendar-content">
+            <div class="empty-state">Calendar not synced yet.</div>
+          </div>
+        </section>
+
+        <!-- Email Panel -->
+        <section id="email-panel" class="panel">
+          <h2 class="section-label">Inbox</h2>
+          <div id="email-content">
+            <div class="empty-state">Mail not loaded yet.</div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Row 3: Feed (system activity log) -->
+      <section id="feed-section">
+        <h2 class="section-label">Activity</h2>
+        <div id="feed-content"></div>
+      </section>
+
+    </main>
+
+    <!-- Scene: Full Mail View -->
+    <main id="scene-mail" class="scene">
+      <section class="full-scene">
+        <h2 class="section-label">Inbox — colour8k@mac.com</h2>
+        <div id="mail-full-content">
+          <div class="empty-state">Loading mail...</div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Scene: Full Calendar View -->
+    <main id="scene-calendar" class="scene">
+      <section class="full-scene">
+        <h2 class="section-label">Calendar</h2>
+        <div id="calendar-full-content">
+          <div class="empty-state">Loading calendar...</div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Scene: Whiteboard (Excalidraw) -->
+    <main id="scene-whiteboard" class="scene">
+      <iframe
+        id="excalidraw-frame"
+        src="/whiteboard/index.html"
+        style="width:100%; height:100%; border:none; border-radius:6px;"
+        allow="clipboard-read; clipboard-write"
+      ></iframe>
+    </main>
+
+    <!-- Scene: Image Studio -->
+    <main id="scene-studio" class="scene">
+      <section class="full-scene studio-container">
+        <div class="studio-main" id="studio-viewport" style="position:relative; overflow:hidden; touch-action:none;">
+          <div id="studio-hero-wrap" style="display:none; position:relative; max-width:100%; max-height:100%; transform-origin:50% 50%; will-change:transform;">
+            <img id="studio-hero-img" src="" style="display:block; max-width:100%; max-height:100%; object-fit:contain; border-radius:4px; box-shadow:0 4px 20px rgba(0,0,0,0.5); pointer-events:none; -webkit-user-drag:none; user-select:none;" />
+            <div id="studio-upscale-badge" style="display:none; position:absolute; top:12px; right:12px; background:var(--green); color:var(--s0); padding:6px 12px; border-radius:12px; font-family:var(--font-b); font-size:0.75rem; letter-spacing:1px; z-index:20; box-shadow:0 4px 10px rgba(0,0,0,0.5); pointer-events:none;">UPSCALED</div>
+          </div>
+          <div id="studio-empty" class="empty-state" style="position:relative; z-index:10;">Awaiting generation...</div>
+          
+          <!-- Dynamic Reference PIP Windows Container -->
+          <div id="studio-ref-container" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:100;"></div>
+          <!-- Minimized References Tray -->
+          <div id="studio-ref-tray" style="position:absolute; bottom:8px; left:8px; display:flex; gap:6px; z-index:101; flex-wrap:wrap; max-width:80%; pointer-events:none;"></div>
+        </div>
+        <div class="studio-sidebar">
+          <div class="studio-controls">
+            <h3 class="section-label">Selected Image Data</h3>
+            <div id="studio-metadata" style="margin-bottom:14px; font-family:var(--font-m); font-size:0.6rem; color:var(--t2); line-height:1.4;">
+              <em>No active data.</em>
+            </div>
+            <h3 class="section-label">Export</h3>
+            <div class="control-group">
+              <button id="studio-choose-dir-btn" class="studio-btn" style="background:var(--s2);color:var(--t1);">Choose Directory</button>
+              <div id="studio-export-path-display" style="font-family:var(--font-m); font-size:0.55rem; color:var(--t2); word-break:break-all;">No directory selected</div>
+              <div style="display:flex; gap:8px;">
+                <button id="studio-upscale-btn" class="studio-btn" style="flex:1; background:var(--green); color:var(--s0);">Upscale (4x)</button>
+                <button id="studio-download-btn" class="studio-btn" style="flex:1;">Save Image ↓</button>
+              </div>
+            </div>
+            <div id="studio-status" class="studio-status"></div>
+          </div>
+          <div class="studio-gallery-wrapper">
+            <h3 class="section-label">Gallery</h3>
+            <div id="studio-gallery" class="studio-gallery"></div>
+          </div>
+        </div>
+      </section>
+    </main>
   </div>
 
   <script src="app.js"></script>
