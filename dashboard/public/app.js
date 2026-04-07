@@ -701,6 +701,7 @@
       var consoleItems = history.filter(function(h) { return h.type === 'console'; });
       consoleItems.forEach(function(item) {
         addConsoleLine(item.entry, item.style || 'sys', item.ts);
+        addChatFeedBubble(item.entry, item.style || 'sys');
       });
       if (consoleItems.length === 0) {
         addConsoleLine('Console initialized. Waiting for OpenClaw activity...', 'sys');

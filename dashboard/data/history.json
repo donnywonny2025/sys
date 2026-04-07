@@ -1235,5 +1235,17 @@
     "entry": "🔗 OpenClaw Control UI connected",
     "style": "sys",
     "ts": "08:13:00"
+  },
+  {
+    "type": "console",
+    "entry": "🔌 OpenClaw Control UI disconnected",
+    "style": "warn",
+    "ts": "08:19:56"
+  },
+  {
+    "type": "console",
+    "entry": "🔗 OpenClaw Control UI connected",
+    "style": "sys",
+    "ts": "08:19:56"
   }
 ]
