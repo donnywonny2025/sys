@@ -92,7 +92,8 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify({ error: 'No message provided' }));
         return;
       }
-      pushToConsole(`→ ${message}`, 'out');
+      // Fire-and-forget: the session watcher picks up both the prompt and
+      // response from the JSONL files and pushes them to the console/chat feed.
       const { execFile } = require('child_process');
       execFile('openclaw', ['agent', '--agent', 'main', '--message', message], {
         timeout: 60000,
@@ -105,21 +106,9 @@ const server = http.createServer(async (req, res) => {
           res.end(JSON.stringify({ error: errMsg }));
           return;
         }
-        // stdout contains just the reply text (after the spinner/banner lines)
-        const lines = stdout.split('\n');
-        // Find the actual response (skip OpenClaw banner lines)
-        let reply = '';
-        let pastBanner = false;
-        for (const line of lines) {
-          if (line.startsWith('◇') || line.startsWith('◐')) { pastBanner = true; continue; }
-          if (pastBanner || (!line.startsWith('🦞') && !line.startsWith('│') && !line.startsWith('Gateway'))) {
-            if (line.trim()) reply += (reply ? '\n' : '') + line;
-          }
-        }
-        if (!reply) reply = stdout.trim();
-        pushToConsole(`← OpenClaw: ${reply.substring(0, 200)}`, 'in');
+        // CLI returns "completed" — actual reply comes via session watcher
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ reply }));
+        res.end(JSON.stringify({ ok: true }));
       });
     } catch (e) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
