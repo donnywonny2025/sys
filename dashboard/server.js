@@ -117,14 +117,20 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // ── API: Hermes agent status ──
-  if (req.method === 'GET' && req.url === '/api/hermes-status') {
-    // Check if hermes binary exists and can report status
-    const { exec } = require('child_process');
-    exec('hermes status 2>&1 | head -5', { timeout: 3000 }, (err, stdout) => {
-      const isUp = stdout && stdout.includes('Hermes Agent Status');
+  // ── API: OpenClaw agent status ──
+  if (req.method === 'GET' && (req.url === '/api/hermes-status' || req.url === '/api/openclaw-status')) {
+    const http = require('http');
+    const probe = http.get('http://127.0.0.1:18789/health', { timeout: 3000 }, (probeRes) => {
+      let body = '';
+      probeRes.on('data', d => body += d);
+      probeRes.on('end', () => {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ active: true, engine: 'openclaw', output: body.trim() }));
+      });
+    });
+    probe.on('error', () => {
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ active: isUp, output: (stdout || '').trim() }));
+      res.end(JSON.stringify({ active: false, engine: 'openclaw', output: 'Gateway unreachable' }));
     });
     return;
   }
