@@ -82,6 +82,51 @@ const server = http.createServer(async (req, res) => {
     req.pipe(proxyReq);
     return;
   }
+  // ── API: Chat with OpenClaw ──
+  if (req.method === 'POST' && req.url === '/api/openclaw-chat') {
+    try {
+      const data = await parseBody(req);
+      const message = data.message;
+      if (!message) {
+        res.writeHead(400, CORS_JSON);
+        res.end(JSON.stringify({ error: 'No message provided' }));
+        return;
+      }
+      pushToConsole(`→ ${message}`, 'out');
+      const { execFile } = require('child_process');
+      execFile('openclaw', ['agent', '--agent', 'main', '--message', message], {
+        timeout: 60000,
+        env: { ...process.env, PATH: process.env.PATH + ':/Users/jeffkerr/Library/pnpm' }
+      }, (err, stdout, stderr) => {
+        if (err) {
+          const errMsg = stderr || err.message;
+          pushToConsole(`✗ OpenClaw error: ${errMsg.substring(0, 150)}`, 'err');
+          res.writeHead(500, CORS_JSON);
+          res.end(JSON.stringify({ error: errMsg }));
+          return;
+        }
+        // stdout contains just the reply text (after the spinner/banner lines)
+        const lines = stdout.split('\n');
+        // Find the actual response (skip OpenClaw banner lines)
+        let reply = '';
+        let pastBanner = false;
+        for (const line of lines) {
+          if (line.startsWith('◇') || line.startsWith('◐')) { pastBanner = true; continue; }
+          if (pastBanner || (!line.startsWith('🦞') && !line.startsWith('│') && !line.startsWith('Gateway'))) {
+            if (line.trim()) reply += (reply ? '\n' : '') + line;
+          }
+        }
+        if (!reply) reply = stdout.trim();
+        pushToConsole(`← OpenClaw: ${reply.substring(0, 200)}`, 'in');
+        res.writeHead(200, CORS_JSON);
+        res.end(JSON.stringify({ reply }));
+      });
+    } catch (e) {
+      res.writeHead(500, CORS_JSON);
+      res.end(JSON.stringify({ error: e.message }));
+    }
+    return;
+  }
 
   // ── API: Push content to dashboard ──
   if (req.method === 'POST' && req.url === '/api/push') {
