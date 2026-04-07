@@ -404,3 +404,109 @@ body {
 }
 .chat-send-btn:hover { opacity: 0.85; }
 .chat-send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Telemetry Activity Strip ── */
+.telem-strip {
+  border-top: 1px solid var(--s2);
+  background: rgba(0,0,0,0.4);
+  flex-shrink: 0;
+  padding: 6px 14px;
+  font-family: var(--font-m); font-size: 0.55rem;
+  line-height: 1.5;
+  overflow: hidden;
+}
+.telem-row {
+  display: flex; align-items: center; gap: 12px;
+  white-space: nowrap; overflow: hidden;
+}
+.telem-row + .telem-row { margin-top: 3px; }
+.telem-sep { color: var(--s2); opacity: 0.4; }
+/* Status dot */
+.telem-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: #34d399; display: inline-block;
+  animation: telemPulse 2s infinite;
+}
+.telem-dot.offline { background: #f87171; animation: none; }
+@keyframes telemPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+/* Labels */
+.telem-lbl { color: var(--t2); letter-spacing: 0.1em; }
+.telem-val { color: var(--t1); }
+.telem-accent { color: var(--accent); }
+/* Sparkline */
+.telem-spark { color: #5bc4be; letter-spacing: -1px; font-size: 0.65rem; }
+/* Memory bar */
+.telem-bar-wrap { display: inline-flex; gap: 1px; align-items: center; }
+.telem-bar-seg {
+  width: 4px; height: 8px; border-radius: 1px;
+  background: var(--s2);
+}
+.telem-bar-seg.filled { background: #c084fc; }
+/* Event chain ticker */
+.telem-chain {
+  display: flex; align-items: center; gap: 4px;
+  flex: 1; overflow: hidden;
+  mask-image: linear-gradient(to right, transparent 0%, black 4%, black 90%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 4%, black 90%, transparent 100%);
+}
+.telem-evt {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 1px 6px; border-radius: 3px;
+  font-size: 0.5rem; letter-spacing: 0.05em;
+  white-space: nowrap; flex-shrink: 0;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  animation: evtSlideIn 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes evtSlideIn {
+  from { opacity: 0; transform: translateX(-12px) scale(0.9); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+.telem-evt-arrow {
+  color: var(--s2); opacity: 0.3; flex-shrink: 0;
+  font-size: 0.45rem;
+}
+/* Event type colors */
+.telem-evt.recv { color: #5bc4be; border-color: rgba(91,196,190,0.2); }
+.telem-evt.think { color: #c084fc; border-color: rgba(192,132,252,0.2); }
+.telem-evt.tool { color: #f59e0b; border-color: rgba(245,158,11,0.2); }
+.telem-evt.done { color: #34d399; border-color: rgba(52,211,153,0.2); }
+.telem-evt.reply { color: #60a5fa; border-color: rgba(96,165,250,0.2); }
+.telem-evt.boot { color: var(--accent); border-color: rgba(255,255,255,0.08); }
+.telem-evt .evt-dur { opacity: 0.6; font-size: 0.45rem; }
+/* Animated status flash — flies in, holds, fades out */
+.telem-flash {
+  color: var(--accent); font-weight: 500;
+  display: inline-block;
+  animation: telemFlyIn 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes telemFlyIn {
+  from { opacity: 0; transform: translateX(-20px); filter: blur(2px); }
+  to { opacity: 1; transform: translateX(0); filter: blur(0); }
+}
+.telem-flash-out {
+  animation: telemFlyOut 0.5s ease-in forwards;
+}
+@keyframes telemFlyOut {
+  from { opacity: 1; transform: translateX(0); filter: blur(0); }
+  to { opacity: 0; transform: translateX(20px); filter: blur(2px); }
+}
+/* Color variants */
+.telem-flash.recv { color: #5bc4be; }
+.telem-flash.think { color: #c084fc; }
+.telem-flash.tool { color: #f59e0b; }
+.telem-flash.done { color: #34d399; }
+.telem-flash.reply { color: #60a5fa; }
+/* Small inline values */
+.telem-sm { font-size: 0.48rem; }
+/* Data flow pulse */
+.telem-data-pulse {
+  animation: dataPulse 0.4s ease-out;
+}
+@keyframes dataPulse {
+  from { color: #34d399; }
+  to { color: var(--t1); }
+}

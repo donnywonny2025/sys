@@ -10,5 +10,13 @@
 - Use the Dashboard's WebSocket push API to flash messages, show designs, or prompt the user visually.
 
 **3. The Execution Loop:**
-- Me (Jeff) -> You (Antigravity) -> Hermes
+- Me (Jeff) → You (Antigravity) → OpenClaw → Dashboard → Jeff
+- Antigravity orchestrates; OpenClaw executes via Gemini 2.5 Flash
+- Dashboard shows everything: chat feed, console, and telemetry strip
 - Never ask for permission to build something safe. Just build it, push the result to the dashboard, and tell the user in chat.
+
+**4. Token Efficiency:**
+- Never bombard OpenClaw with unnecessary messages
+- Use cheap prompts for testing (e.g., "Say hello in 5 words")
+- Telemetry is derived from local OS stats + JSONL log tailing — zero API cost
+- Frontend changes (HTML/CSS/JS) only need a browser refresh, NOT a server restart

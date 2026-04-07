@@ -618,6 +618,9 @@
               statusEl.className = 'console-status' + (msg.status !== 'IDLE' ? ' active' : '');
             }
             break;
+          case 'telem':
+            handleTelemEvent(msg);
+            break;
         }
       } catch (err) {
         addFeedItem(e.data, 'info');
@@ -789,4 +792,189 @@
     chatMessages.appendChild(bubble);
     setTimeout(function() { chatMessages.scrollTop = chatMessages.scrollHeight; }, 50);
   }
+
+  // ── Telemetry System ──
+  var SPARK_CHARS = '▁▂▃▄▅▆▇█';
+  var cpuHistory = [];
+  var latencyHistory = [];
+  var dataIn = 0;
+  var dataOut = 0;
+  var telemIcons = {
+    recv: '→', think: '◎', tool: '▶', done: '✓', reply: '◀', error: '✗'
+  };
+
+  function spark(values, len) {
+    len = len || 10;
+    while (values.length > len) values.shift();
+    while (values.length < len) values.unshift(0);
+    var max = Math.max.apply(null, values) || 1;
+    return values.map(function(v) {
+      var idx = Math.round((v / max) * (SPARK_CHARS.length - 1));
+      return SPARK_CHARS[idx];
+    }).join('');
+  }
+
+  function fmtUptime(ms) {
+    var s = Math.floor(ms / 1000);
+    var h = Math.floor(s / 3600).toString().padStart(2, '0');
+    var m = Math.floor((s % 3600) / 60).toString().padStart(2, '0');
+    var sec = (s % 60).toString().padStart(2, '0');
+    return h + ':' + m + ':' + sec;
+  }
+
+  function buildMemBar(pct) {
+    var el = document.getElementById('telem-mem-bar');
+    if (!el) return;
+    var segs = 10;
+    var filled = Math.round(pct / 100 * segs);
+    el.innerHTML = '';
+    for (var i = 0; i < segs; i++) {
+      var seg = document.createElement('span');
+      seg.className = 'telem-bar-seg' + (i < filled ? ' filled' : '');
+      el.appendChild(seg);
+    }
+  }
+
+  function pollTelemetry() {
+    fetch('/api/telemetry')
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        // Uptime
+        var up = document.getElementById('telem-uptime');
+        if (up) up.textContent = fmtUptime(d.uptime);
+        // Session/turns
+        var sess = document.getElementById('telem-session');
+        if (sess) sess.textContent = d.session;
+        var turns = document.getElementById('telem-turns');
+        if (turns) turns.textContent = d.turns;
+        // CPU sparkline
+        cpuHistory.push(d.cpu);
+        var cpuEl = document.getElementById('telem-cpu');
+        if (cpuEl) cpuEl.textContent = spark(cpuHistory, 10);
+        var cpuPct = document.getElementById('telem-cpu-pct');
+        if (cpuPct) cpuPct.textContent = d.cpu + '%';
+        // MEM bar
+        buildMemBar(d.mem);
+        var memPct = document.getElementById('telem-mem-pct');
+        if (memPct) memPct.textContent = d.mem + '%';
+      })
+      .catch(function() {});
+  }
+
+  var MAX_CHAIN = 10;
+
+  function addChainEvent(icon, label, cssClass, durStr, dataSize) {
+    var chain = document.getElementById('telem-chain');
+    if (!chain) return;
+
+    // Add arrow separator if not first
+    if (chain.children.length > 0) {
+      var arrow = document.createElement('span');
+      arrow.className = 'telem-evt-arrow';
+      arrow.textContent = '→';
+      chain.appendChild(arrow);
+    }
+
+    // Build the event pill
+    var evt = document.createElement('span');
+    evt.className = 'telem-evt ' + (cssClass || '');
+    var text = icon + ' ' + label;
+    if (durStr) text += ' ' + durStr;
+    if (dataSize) text += ' ↓' + dataSize;
+    evt.textContent = text;
+    chain.appendChild(evt);
+
+    // Trim old events (remove oldest pill + its arrow)
+    while (chain.querySelectorAll('.telem-evt').length > MAX_CHAIN) {
+      if (chain.firstChild) chain.removeChild(chain.firstChild); // arrow or evt
+      if (chain.firstChild && chain.firstChild.classList.contains('telem-evt-arrow')) {
+        chain.removeChild(chain.firstChild);
+      }
+    }
+
+    // Auto-scroll to newest
+    chain.scrollLeft = chain.scrollWidth;
+  }
+
+  function fmtBytes(b) {
+    if (!b || b < 1) return '';
+    if (b < 1024) return b + 'B';
+    if (b < 1048576) return (b / 1024).toFixed(1) + 'KB';
+    return (b / 1048576).toFixed(1) + 'MB';
+  }
+
+  function handleTelemEvent(msg) {
+    var durStr = '';
+    if (msg.durMs) {
+      durStr = msg.durMs > 1000
+        ? (msg.durMs / 1000).toFixed(1) + 's'
+        : msg.durMs + 'ms';
+    }
+
+    // Track latency
+    if (msg.durMs && (msg.event === 'reply' || msg.event === 'done')) {
+      latencyHistory.push(msg.durMs);
+      var latEl = document.getElementById('telem-latency');
+      if (latEl) latEl.textContent = spark(latencyHistory, 10);
+      var avgEl = document.getElementById('telem-latency-avg');
+      if (avgEl && latencyHistory.length) {
+        var sum = latencyHistory.slice(-10).reduce(function(a, b) { return a + b; }, 0);
+        var avg = sum / Math.min(latencyHistory.length, 10);
+        avgEl.textContent = (avg / 1000).toFixed(1) + 's';
+      }
+    }
+
+    // Track data flow
+    if (msg.dataBytes && msg.event === 'done') {
+      dataIn += msg.dataBytes;
+      var inEl = document.getElementById('telem-data-in-val');
+      if (inEl) {
+        inEl.textContent = fmtBytes(dataIn);
+        inEl.classList.remove('telem-data-pulse');
+        inEl.offsetHeight;
+        inEl.classList.add('telem-data-pulse');
+      }
+    }
+    if (msg.event === 'recv' && msg.label) {
+      dataOut += msg.label.length;
+      var outEl = document.getElementById('telem-data-out-val');
+      if (outEl) {
+        outEl.textContent = fmtBytes(dataOut);
+        outEl.classList.remove('telem-data-pulse');
+        outEl.offsetHeight;
+        outEl.classList.add('telem-data-pulse');
+      }
+    }
+
+    var dataSize = msg.dataBytes ? fmtBytes(msg.dataBytes) : '';
+
+    switch (msg.event) {
+      case 'recv':
+        addChainEvent('→', 'IN', 'recv');
+        break;
+      case 'think':
+        addChainEvent('◎', 'THINK', 'think', durStr);
+        break;
+      case 'tool':
+        addChainEvent('▶', (msg.label || '—'), 'tool');
+        break;
+      case 'done':
+        addChainEvent('✓', durStr || 'OK', 'done', '', dataSize);
+        break;
+      case 'reply':
+        addChainEvent('◀', 'OUT', 'reply', durStr);
+        break;
+    }
+  }
+
+  // Start telemetry polling
+  pollTelemetry();
+  setInterval(pollTelemetry, 4000);
+
+  // Boot sequence — chain of events
+  setTimeout(function() { addChainEvent('⚡', 'BOOT', 'boot'); }, 200);
+  setTimeout(function() { addChainEvent('◉', 'FEEDS', 'recv'); }, 1200);
+  setTimeout(function() { addChainEvent('◎', 'OPENCLAW', 'think'); }, 2200);
+  setTimeout(function() { addChainEvent('✓', 'READY', 'done'); }, 3200);
+
 })();

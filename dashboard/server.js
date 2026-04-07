@@ -6,8 +6,10 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { WebSocketServer } = require('ws');
-const { execFile } = require('child_process');
+const { execFile, spawn } = require('child_process');
+const os = require('os');
 
+const SERVER_START = Date.now();
 const PORT = 3111;
 const PUBLIC_DIR = path.join(__dirname, 'public');
 const DATA_DIR = path.join(__dirname, 'data');
@@ -204,6 +206,52 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && req.url === '/api/state') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(activeState || { type: 'home' }));
+    return;
+  }
+
+  // ── API: Telemetry — free OS-level stats ──
+  if (req.method === 'GET' && req.url === '/api/telemetry') {
+    const cpus = os.cpus();
+    const cpuPct = cpus.map(c => {
+      const total = Object.values(c.times).reduce((a, b) => a + b, 0);
+      return Math.round(100 - (c.times.idle / total * 100));
+    });
+    const avgCpu = Math.round(cpuPct.reduce((a, b) => a + b, 0) / cpuPct.length);
+    const totalMem = os.totalmem();
+    const freeMem = os.freemem();
+    const memPct = Math.round((1 - freeMem / totalMem) * 100);
+    const uptimeMs = Date.now() - SERVER_START;
+
+    // Session info
+    const sessDir = path.join(os.homedir(), '.openclaw/agents/main/sessions');
+    let sessionId = '—', sessionSize = 0, turns = 0;
+    try {
+      const files = fs.readdirSync(sessDir).filter(f => f.endsWith('.jsonl'));
+      if (files.length) {
+        const sorted = files.map(f => ({ f, t: fs.statSync(path.join(sessDir, f)).mtimeMs }))
+          .sort((a, b) => b.t - a.t);
+        sessionId = sorted[0].f.replace('.jsonl', '').slice(0, 8);
+        const full = path.join(sessDir, sorted[0].f);
+        sessionSize = fs.statSync(full).size;
+        const content = fs.readFileSync(full, 'utf8');
+        turns = (content.match(/"role":"user"/g) || []).length;
+      }
+    } catch (e) {}
+
+    // History count
+    let historyCount = 0;
+    try {
+      const h = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'history.json'), 'utf8'));
+      historyCount = h.length;
+    } catch (e) {}
+
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+      cpu: avgCpu, cpuCores: cpuPct,
+      mem: memPct, uptime: uptimeMs,
+      session: sessionId, sessionSize, turns,
+      historyCount, clients: clients.size
+    }));
     return;
   }
 
@@ -455,7 +503,6 @@ server.listen(PORT, () => {
 
 // ── OpenClaw Session Watcher ──
 // Watches the active session JSONL file for new chat messages and pushes them to the console
-const { spawn } = require('child_process');
 
 const SESSIONS_DIR = path.join(process.env.HOME || '/Users/jeffkerr', '.openclaw/agents/main/sessions');
 
@@ -526,26 +573,53 @@ function startSessionWatcher() {
 
           const role = entry.message.role;
           const content = entry.message.content;
-          if (!Array.isArray(content)) continue;
 
-          const textPart = content.find(c => c.type === 'text');
-          if (!textPart || !textPart.text) continue;
+          // Extract all visible content (text, tool calls, tool results)
+          const ts = entry.message.timestamp || new Date().toISOString();
+          const durMs = entry.message.durationMs || 0;
 
-          let text = textPart.text;
-
-          if (role === 'user') {
-            // Strip the "Sender (untrusted metadata)" wrapper if present
-            const userMatch = text.match(/\n\n(.+)$/s);
-            const cleanText = userMatch ? userMatch[1].trim() : text.trim();
-            if (cleanText) pushToConsole(`→ ${cleanText}`, 'prompt');
-          } else if (role === 'assistant') {
-            // Strip <final> tags
-            text = text.replace(/<\/?final>/g, '').trim();
-            if (text) {
-              const dur = entry.message.durationMs
-                ? `(${(entry.message.durationMs / 1000).toFixed(1)}s)`
-                : '';
+          if (typeof content === 'string' && content.trim()) {
+            let text = content.replace(/<\/?final>/g, '').trim();
+            if (role === 'user') {
+              const userMatch = text.match(/\n\n(.+)$/s);
+              const cleanText = userMatch ? userMatch[1].trim() : text.trim();
+              if (cleanText) {
+                pushToConsole(`→ ${cleanText}`, 'prompt');
+                broadcast({ type: 'telem', event: 'recv', ts, label: cleanText.slice(0, 60) });
+              }
+            } else if (role === 'assistant' && text) {
+              const dur = durMs ? `(${(durMs / 1000).toFixed(1)}s)` : '';
               pushToConsole(`← OpenClaw ${dur}: ${text}`, 'response');
+              broadcast({ type: 'telem', event: 'reply', ts, durMs, label: text.slice(0, 60) });
+            }
+          } else if (Array.isArray(content)) {
+            for (const part of content) {
+              if (part.type === 'text' && part.text) {
+                let text = part.text.replace(/<\/?final>/g, '').trim();
+                if (!text) continue;
+                if (role === 'user') {
+                  const userMatch = text.match(/\n\n(.+)$/s);
+                  const cleanText = userMatch ? userMatch[1].trim() : text.trim();
+                  if (cleanText) {
+                    pushToConsole(`→ ${cleanText}`, 'prompt');
+                    broadcast({ type: 'telem', event: 'recv', ts, label: cleanText.slice(0, 60) });
+                  }
+                } else if (role === 'assistant') {
+                  const dur = durMs ? `(${(durMs / 1000).toFixed(1)}s)` : '';
+                  pushToConsole(`← OpenClaw ${dur}: ${text}`, 'response');
+                  broadcast({ type: 'telem', event: 'reply', ts, durMs, label: text.slice(0, 60) });
+                } else if (role === 'toolResult') {
+                  const short = text.length > 120 ? text.slice(0, 120) + '…' : text;
+                  pushToConsole(`← [tool] ${short}`, 'sys');
+                  broadcast({ type: 'telem', event: 'done', ts, durMs, label: short.slice(0, 60), dataBytes: text.length });
+                }
+              } else if (part.type === 'toolCall' && role === 'assistant') {
+                const name = part.name || 'unknown';
+                pushToConsole(`← OpenClaw → running: ${name}`, 'sys');
+                broadcast({ type: 'telem', event: 'tool', ts, label: name });
+              } else if (part.type === 'thinking' && role === 'assistant') {
+                broadcast({ type: 'telem', event: 'think', ts, durMs });
+              }
             }
           }
         } catch (e) { /* skip bad lines */ }

@@ -85,9 +85,39 @@ The session watcher and other sources can fire the same message. Without dedup, 
 | `/api/openclaw-chat` | POST | Fire-and-forget: sends message to OpenClaw via CLI |
 | `/api/push` | POST | Push feed data (email, calendar, weather) to dashboard |
 | `/api/openclaw-status` | GET | Check if OpenClaw gateway is alive |
+| `/api/telemetry` | GET | System telemetry: CPU, memory, uptime, session, turns |
 | `/api/state` | GET | Get current dashboard state (for reload persistence) |
 | `/api/history` | GET | Get console history for replay on reconnect |
 | `/openclaw/*` | * | Reverse proxy to OpenClaw gateway (port 18789) |
+
+## Telemetry Strip (VERIFIED WORKING 2026-04-07)
+
+### What it is
+A wide, thin, 2-row status bar between the chat feed and the console. Shows real-time OpenClaw internals without consuming any tokens.
+
+### Row 1: System Metrics
+- **ONLINE** — green dot, WebSocket connection status
+- **UP** — server uptime counter (HH:MM:SS)
+- **SESSION** — active OpenClaw session ID (first 8 chars)
+- **TURNS** — conversation turn count from JSONL
+- **CPU** — sparkline + percentage (from `os.cpus()`)
+- **MEM** — segmented bar + percentage (from `os.totalmem()/freemem()`)
+
+### Row 2: Activity Chain
+- **ACTIVITY** — event chain ticker showing colored pills:
+  - `→ IN` (cyan) — input received
+  - `◎ THINK` (purple) — model thinking
+  - `▶ tool_name` (amber) — tool execution
+  - `✓ 1.2s ↓2.4KB` (green) — tool complete with timing + data size
+  - `◀ OUT` (blue) — response sent
+- **↓/↑** — cumulative data in/out counters (pulse green on update)
+- **LATENCY** — sparkline of last 10 response times + rolling average
+
+### Data sources (zero token cost)
+- CPU/memory: Node.js `os` module, polled every 4 seconds
+- Session/turns: JSONL file metadata
+- Events: Session watcher broadcasts `telem` WebSocket messages
+- Data sizes: `text.length` of tool results (sent as `dataBytes`)
 
 ## Feed Push Scripts (temporary — cron)
 

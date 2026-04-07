@@ -160,6 +160,43 @@
             <div class="chat-welcome-text">Monitoring OpenClaw activity. Messages will appear here in real time.</div>
           </div>
         </div>
+        <!-- Telemetry Activity Strip -->
+        <div class="telem-strip" id="telem-strip">
+          <div class="telem-row" id="telem-row1">
+            <span class="telem-dot" id="telem-dot"></span>
+            <span class="telem-lbl">ONLINE</span>
+            <span class="telem-sep">│</span>
+            <span class="telem-lbl">UP</span>
+            <span class="telem-val" id="telem-uptime">00:00:00</span>
+            <span class="telem-sep">│</span>
+            <span class="telem-lbl">SESSION</span>
+            <span class="telem-val" id="telem-session">—</span>
+            <span class="telem-sep">│</span>
+            <span class="telem-lbl">TURNS</span>
+            <span class="telem-val" id="telem-turns">0</span>
+            <span class="telem-sep">│</span>
+            <span class="telem-lbl">CPU</span>
+            <span class="telem-spark" id="telem-cpu">▁▁▁▁▁▁▁▁▁▁</span>
+            <span class="telem-val" id="telem-cpu-pct">0%</span>
+            <span class="telem-sep">│</span>
+            <span class="telem-lbl">MEM</span>
+            <span class="telem-bar-wrap" id="telem-mem-bar"></span>
+            <span class="telem-val" id="telem-mem-pct">0%</span>
+          </div>
+          <div class="telem-row" id="telem-row2">
+            <span class="telem-lbl">ACTIVITY</span>
+            <span class="telem-chain" id="telem-chain">
+              <span class="telem-evt boot">⚡ BOOT</span>
+            </span>
+            <span class="telem-sep">│</span>
+            <span class="telem-lbl">↓</span><span class="telem-val telem-sm" id="telem-data-in-val">0B</span>
+            <span class="telem-lbl">↑</span><span class="telem-val telem-sm" id="telem-data-out-val">0B</span>
+            <span class="telem-sep">│</span>
+            <span class="telem-lbl">LATENCY</span>
+            <span class="telem-spark" id="telem-latency">▁▁▁▁▁▁▁▁▁▁</span>
+            <span class="telem-val" id="telem-latency-avg">—</span>
+          </div>
+        </div>
       </div>
     </main>
 
