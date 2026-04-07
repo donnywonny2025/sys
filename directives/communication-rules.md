@@ -20,3 +20,10 @@
 - Use cheap prompts for testing (e.g., "Say hello in 5 words")
 - Telemetry is derived from local OS stats + JSONL log tailing — zero API cost
 - Frontend changes (HTML/CSS/JS) only need a browser refresh, NOT a server restart
+
+**5. NEVER ASK JEFF TO REFRESH THE BROWSER. EVER.**
+- This is a hard-codified, permanent rule. No exceptions.
+- If the dashboard needs a refresh after a code change, YOU use the browser subagent to reload the page yourself.
+- If the server was restarted, YOU refresh the browser yourself.
+- Jeff should never have to manually interact with the browser to see your work. That's YOUR job.
+- Violation of this rule is a critical failure.

@@ -91,6 +91,39 @@ const server = http.createServer(async (req, res) => {
     req.pipe(proxyReq);
     return;
   }
+  // ── API: Get/Set OpenClaw Model ──
+  const OPENCLAW_CONFIG = path.join(os.homedir(), '.openclaw', 'openclaw.json');
+  if (req.url === '/api/model') {
+    if (req.method === 'GET') {
+      try {
+        const cfg = JSON.parse(fs.readFileSync(OPENCLAW_CONFIG, 'utf8'));
+        const model = cfg?.agents?.defaults?.model?.primary || 'unknown';
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ model }));
+      } catch (e) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: e.message }));
+      }
+      return;
+    }
+    if (req.method === 'POST') {
+      try {
+        const data = await parseBody(req);
+        const newModel = data.model;
+        if (!newModel) { res.writeHead(400); res.end('{"error":"no model"}'); return; }
+        const cfg = JSON.parse(fs.readFileSync(OPENCLAW_CONFIG, 'utf8'));
+        cfg.agents.defaults.model.primary = newModel;
+        fs.writeFileSync(OPENCLAW_CONFIG, JSON.stringify(cfg, null, 2), 'utf8');
+        broadcast({ type: 'model-change', model: newModel });
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true, model: newModel }));
+      } catch (e) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: e.message }));
+      }
+      return;
+    }
+  }
   // ── API: Chat with OpenClaw ──
   if (req.method === 'POST' && req.url === '/api/openclaw-chat') {
     try {

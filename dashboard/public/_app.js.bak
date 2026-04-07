@@ -905,6 +905,48 @@
       .catch(function() {});
   }
 
+  // Model display & swap
+  var MODEL_OPTIONS = [
+    'google/gemini-3-flash-preview',
+    'google/gemini-2.5-flash',
+    'google/gemini-3.1-flash-lite-preview',
+    'google/gemini-2.5-flash-lite'
+  ];
+  function shortModelName(m) {
+    return (m || '').replace('google/', '').replace('-preview', '');
+  }
+  function fetchModel() {
+    fetch('/api/model').then(function(r) { return r.json(); }).then(function(d) {
+      var el = document.getElementById('telem-model');
+      if (el) el.textContent = shortModelName(d.model);
+    }).catch(function() {});
+  }
+  fetchModel();
+  setInterval(fetchModel, 30000);
+
+  // Click to cycle through models
+  var modelEl = document.getElementById('telem-model');
+  if (modelEl) {
+    modelEl.addEventListener('click', function() {
+      fetch('/api/model').then(function(r) { return r.json(); }).then(function(d) {
+        var idx = MODEL_OPTIONS.indexOf(d.model);
+        var next = MODEL_OPTIONS[(idx + 1) % MODEL_OPTIONS.length];
+        fetch('/api/model', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: next })
+        }).then(function(r) { return r.json(); }).then(function(r) {
+          var el2 = document.getElementById('telem-model');
+          if (el2) {
+            el2.textContent = shortModelName(r.model);
+            el2.style.color = '#ff6b6b';
+            setTimeout(function() { el2.style.color = '#4ecdc4'; }, 2000);
+          }
+        });
+      });
+    });
+  }
+
   var activityFrames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
   var activityFrameIdx = 0;
   var activityInterval = null;

@@ -274,6 +274,9 @@
       <span class="telem-lbl">TURNS</span>
       <span class="telem-val" id="telem-turns">0</span>
       <span class="telem-sep">│</span>
+      <span class="telem-lbl">MODEL</span>
+      <span class="telem-val" id="telem-model" style="color:#4ecdc4;cursor:pointer" title="Click to swap model">—</span>
+      <span class="telem-sep">│</span>
       <span class="telem-lbl">CPU</span>
       <span class="telem-spark" id="telem-cpu">▁▁▁▁▁▁▁▁▁▁</span>
       <span class="telem-val" id="telem-cpu-pct">0%</span>
@@ -314,8 +317,15 @@
     <div class="console-body" id="console-body"></div>
   </div>
 
+  <!-- Modular JS — load order matters: core first, websocket last -->
+  <script src="core.js"></script>
+  <script src="feeds.js"></script>
+  <script src="studio.js"></script>
   <script src="board.js"></script>
+  <script src="chat.js"></script>
+  <script src="telemetry.js"></script>
+  <script src="openclaw.js"></script>
   <script src="contacts.js"></script>
-  <script src="app.js"></script>
+  <script src="websocket.js"></script>
 </body>
 </html>

@@ -8,7 +8,7 @@
 ---
 
 ## Last Updated
-`2026-04-07T14:52:00-04:00` — Session: Scene Switch API, Split-Pane Inbox, Mail Snippets
+`2026-04-07T17:21:00-04:00` — Session: Dashboard Modular Refactor + Cron Job Repair
 
 ## Who Does What
 ```
@@ -61,10 +61,19 @@ User (Jeff) → Antigravity (orchestrator) → OpenClaw Gateway (18789) → Dash
 - Telemetry Status Strip (ONLINE, CPU, MEM, SESSION, ACTIVITY chain, LATENCY)
 - OpenClaw Console (scrolling log of all system activity)
 
-## OpenClaw Auth
-- Token stored in: `~/.openclaw/openclaw.json` → `gateway.auth.token`
-- Token prefix: `17561131...`
-- Retrieve with: `python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('gateway',{}).get('auth',{}).get('token',''))" < ~/.openclaw/openclaw.json`
+## OpenClaw Auth & API Key Architecture
+- **OpenClaw auth:** OAuth via Google account (`donnywonny2023@gmail.com`) — managed in `~/.openclaw/openclaw.json`
+- **Provider:** `google-antigravity` — tokens auto-refresh, no static key needed
+- **Default model:** `google/gemini-2.5-flash`
+- **Available models:** 50 total (see `research/gemini-models.md`)
+- **Rate limits (Tier 1):** 150 RPM, 1M TPM, 10K RPD
+- **Gateway token:** stored in `~/.openclaw/openclaw.json` → `gateway.auth.token`
+- **Gemini API key (admin only):** `AIzaSyDeaDQNsaRBcBv54RHkOCGiuUONFdyJGAw` — project `493315853766`
+  - Use ONLY for research (listing models, checking billing)
+  - All production execution goes through OpenClaw (never call Gemini API directly)
+  - Stored in `SYSTEM/.env` (gitignored)
+
+**CRITICAL:** `~/.hermes/` is an OLD unrelated framework. Never reference it. OpenClaw config is `~/.openclaw/`.
 
 ## Working API Patterns
 ```bash
@@ -96,30 +105,39 @@ curl -s -X POST http://localhost:3111/api/refresh -H "Content-Type: application/
 ## Dashboard Data Flow
 All data retrieval goes through deterministic scripts. No LLM tokens used for data feeds.
 ```
-Cron → bash scripts → AppleScript/curl → JSON → POST /api/push → Dashboard renders
+Cron → scripts → AppleScript/curl/API → JSON → POST /api/push → Dashboard renders
 ```
 
 ### Data Feed Scripts
 | Script | Depends On | Status | Cron |
 |--------|-----------|--------|------|
-| `execution/check_mail.sh` | Apple Mail (AppleScript) | ✅ Working | Every 5 min |
-| `execution/check_calendar.sh` | Apple Calendar (AppleScript) | ✅ Working | Every 15 min |
-| `execution/check_weather.sh` | wttr.in (no API key) | ✅ Working | Every 30 min |
+| `execution/check_mail_himalaya.py` | himalaya CLI (IMAP → iCloud) | ✅ Working | Every 5 min, ~1.5s |
+| `execution/check_calendar.sh` | Apple Calendar (AppleScript) | ✅ Working | Every 15 min, ~0.2s |
+| `execution/check_weather.py` | Open-Meteo API (free, no key) | ✅ Working | Every 30 min, ~0.9s |
 | `execution/check_contacts.sh` | Apple Contacts (AppleScript) | ✅ Working | Manual / on-demand |
 
 **Calendar script auto-launches Calendar.app** if not running (uses `pgrep` + `open -a Calendar`). Times are 12-hour AM/PM, all-day events show "All Day".
 
 **Contacts script** also symlinked at `~/.local/bin/check_contacts` for OpenClaw access. Supports: `search "name"`, `list`, `count`.
 
-### Cron Jobs (Auto-Refresh)
-Installed via `crontab`. Dashboard data stays fresh without manual intervention.
-| Interval | Script | What It Does |
-|----------|--------|-------------|
-| Every 5 min | `check_mail.sh 15` | Pulls latest 15 emails from Apple Mail → dashboard |
-| Every 15 min | `check_calendar.sh` | 30-day lookahead from Apple Calendar → dashboard |
-| Every 30 min | `check_weather.sh` | Weather from wttr.in → dashboard |
+**Deleted legacy scripts:** `check_mail.sh`, `check_weather.sh`, `check_mail_openclaw.sh` — replaced by himalaya + Open-Meteo versions.
 
-**Note:** These run direct AppleScript/curl — no LLM tokens used.
+### Cron Jobs (Auto-Refresh)
+**Calendar** runs on system `crontab` (reliable, zero tokens).
+**Mail + Weather** should run on OpenClaw cron for portability.
+
+| Interval | Script | Engine | Status |
+|----------|--------|--------|--------|
+| Every 5 min | `check_mail_himalaya.py` | ⚠️ NEEDS SETUP — OpenClaw cron | Pending |
+| Every 15 min | `check_calendar.sh` | ✅ System crontab | Working |
+| Every 30 min | `check_weather.py` | ⚠️ NEEDS SETUP — OpenClaw cron | Pending |
+
+**IMPORTANT — Cron job creation:**
+- OpenClaw cron uses `agentTurn` payload kind which burns a full Gemini inference just to exec a script
+- Previous crons failed because `delivery: announce` tried Telegram `@heartbeat` which doesn't exist
+- Use `delivery: { mode: "none" }` (silent) for data feed crons
+- Create via `./execution/agent_cmd.sh` or chat: "Create cron check-mail every 5 minutes, silent delivery, exec python3 /path/to/check_mail_himalaya.py"
+- The scripts themselves are fast (<2s each), the slowness was only from the AI inference wrapping them
 
 ### Monitoring & Logging
 | What | Where | Persists? |
@@ -191,6 +209,25 @@ Installed via `crontab`. Dashboard data stays fresh without manual intervention.
 - **Telemetry transparency** — all OpenClaw commands go through `agent_cmd.sh` for console visibility
 - **Jeff just talks** — Antigravity handles all technical execution and OpenClaw management
 
+## Dashboard Frontend Architecture (Modular — refactored 2026-04-07)
+The monolithic `app.js` (1,104 lines) was split into 7 focused modules:
+
+| Module | Purpose | Exposes |
+|--------|---------|--------|
+| `core.js` | Clock, date, scene switching, `window.DASH` namespace | `DASH.*` |
+| `feeds.js` | Email, calendar, weather, focus rendering | `DASH.renderInbox`, `DASH.renderCalendar`, etc. |
+| `studio.js` | Nano Banana image generation studio | `DASH.renderStudio` |
+| `chat.js` | OpenClaw chat interface | `DASH.renderChat`, `DASH.sendChat` |
+| `telemetry.js` | System metrics, activity chain, feed timers | `DASH.updateTelem` |
+| `openclaw.js` | Console log, health polling | `DASH.addConsoleEntry` |
+| `websocket.js` | WebSocket dispatch — loaded LAST | Central event router |
+
+**Load order in index.html:** core → feeds → studio → board → chat → telemetry → openclaw → contacts → websocket
+
+**Key pattern:** All modules attach to `window.DASH`. WebSocket is loaded last so it can dispatch to any module.
+**Backup:** Old monolith saved as `_app.js.bak`.
+**Backend:** `server.js` (809 lines) remains monolithic — still manageable, split when needed.
+
 ## Next Steps / TODO
 - [x] Wire calendar data into dashboard (30-day lookahead via AppleScript)
 - [x] Test rewritten check_mail.sh against live Mail.app
@@ -214,9 +251,13 @@ Installed via `crontab`. Dashboard data stays fresh without manual intervention.
 - [x] Restore lost data feed scripts from git history
 - [x] Install cron jobs for data freshness
 - [x] Create boot health check script (execution/health.sh)
+- [x] Refactor dashboard frontend into modules (core, feeds, studio, chat, telemetry, openclaw, websocket)
+- [x] Replace mail script with himalaya-based check_mail_himalaya.py
+- [x] Replace weather script with Open-Meteo-based check_weather.py
+- [x] Remove ugly weather timer from header display
+- [ ] **PRIORITY: Create OpenClaw cron jobs for mail + weather (silent delivery, lightweight model)**
 - [ ] Add more live activity to console (show OpenClaw thinking/executing in real-time)
 - [ ] Animate dashboard (micro-interactions, transitions, hover effects)
-- [ ] Migrate cron jobs from crontab to OpenClaw's `cron` tool
 - [ ] Fix whiteboard component
 - [ ] Add smart summarization (OpenClaw summarizes calendar + inbox)
 - [ ] Configure Google Workspace auth for `gog` skill
