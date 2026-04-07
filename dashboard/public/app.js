@@ -56,6 +56,13 @@
     document.querySelectorAll('.rail-btn').forEach(function (b) {
       b.classList.toggle('active', b.dataset.scene === name);
     });
+    // Auto-scroll chat to bottom when switching to chat tab
+    if (name === 'chat') {
+      setTimeout(function() {
+        var cm = document.getElementById('chat-messages');
+        if (cm) cm.scrollTop = cm.scrollHeight;
+      }, 50);
+    }
   }
 
   document.querySelectorAll('.rail-btn').forEach(function (btn) {
