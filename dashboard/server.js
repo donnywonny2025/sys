@@ -202,6 +202,32 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // ── API: Board State ──
+  if (req.url === '/api/board') {
+    const boardFile = path.join(DATA_DIR, 'board.json');
+    if (req.method === 'GET') {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      if (fs.existsSync(boardFile)) {
+        res.end(fs.readFileSync(boardFile, 'utf8'));
+      } else {
+        res.end('{}');
+      }
+      return;
+    }
+    if (req.method === 'POST') {
+      try {
+        const data = await parseBody(req);
+        fs.writeFileSync(boardFile, JSON.stringify(data, null, 2), 'utf8');
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true }));
+      } catch (e) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: e.message }));
+      }
+      return;
+    }
+  }
+
   // ── API: Get active state ──
   if (req.method === 'GET' && req.url === '/api/state') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -640,14 +666,25 @@ function startSessionWatcher() {
     setTimeout(startSessionWatcher, 10000);
   }
 
-  // Also check periodically if a newer session started
+  // Watch directory for new JSONL files instantly
+  fs.watch(SESSIONS_DIR, (eventType, filename) => {
+    if (eventType === 'rename' && filename && filename.endsWith('.jsonl')) {
+      const active = findActiveSession();
+      if (active && active !== watchingFile) {
+        console.log(`  New session detected: ${active}`);
+        tailSession(active);
+      }
+    }
+  });
+
+  // Keep a fallback poll checking every 5 seconds instead of 15
   setInterval(() => {
     const latest = findActiveSession();
     if (latest && latest !== watchingFile) {
-      console.log(`  Switching to newer session: ${latest}`);
+      console.log(`  Switching to newer session (fallback): ${latest}`);
       tailSession(latest);
     }
-  }, 15000);
+  }, 5000);
 }
 
 // Gateway log tailing for connection/status events

@@ -7,7 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="board.css">
 </head>
 <body>
   <div id="main-wrapper">
@@ -99,11 +100,43 @@
         </section>
       </div>
 
-      <!-- Row 3: Feed (system activity log) -->
-      <section id="feed-section">
-        <h2 class="section-label">Activity</h2>
-        <div id="feed-content"></div>
-      </section>
+      <!-- Row 3: Feed and Board side by side -->
+      <div style="display: flex; flex: 1; min-height: 0; gap: 20px;">
+        <section id="feed-section" style="display: none;">
+          <div class="section-header">
+            <h2 class="section-label">Activity</h2>
+          </div>
+          <div id="feed-content"></div>
+        </section>
+
+        <!-- The Whiteboard with tasks (board.js) -->
+        <section id="board-section">
+          <div class="board-wrap">
+            <div class="board-canvas-wrap">
+              <canvas id="board-canvas"></canvas>
+            </div>
+            <div id="board-empty" style="display:none; pointer-events: none;"></div>
+            
+            <!-- Floating Tasks -->
+            <div class="board-tasks">
+              <div class="section-header">
+                <span class="section-label">Board <span id="board-count" class="board-count"></span></span>
+              </div>
+              <div id="board-cards" class="board-cards"></div>
+            </div>
+
+            <!-- Floating Toolbar -->
+            <div class="board-toolbar">
+              <button class="board-btn active" id="board-pen" title="Pen">✏️</button>
+              <button class="board-btn" id="board-eraser" title="Eraser">🧹</button>
+              <input type="range" class="board-slider" id="board-brush" title="Brush size" min="1" max="20" value="3">
+              <input type="color" class="board-color" id="board-color" title="Color" value="#5bc4be">
+              <button class="board-btn" id="board-clear" title="Clear drawing">✕</button>
+              <button class="board-btn" id="board-clear-all" title="Clear all">🗑</button>
+            </div>
+          </div>
+        </section>
+      </div>
 
     </main>
 
@@ -147,55 +180,22 @@
       ></iframe>
     </main>
 
-    <!-- Scene: Chat — Live OpenClaw Feed -->
+    <!-- Scene: Chat with OpenClaw -->
     <main id="scene-chat" class="scene">
       <div class="chat-container">
         <div class="chat-header">
-          <span class="chat-title">OPENCLAW LIVE FEED</span>
+          <span class="chat-title">OPENCLAW CHAT</span>
           <span class="chat-model" id="chat-model">gemini-2.5-flash</span>
         </div>
         <div class="chat-messages" id="chat-messages">
           <div class="chat-welcome">
             <div class="chat-welcome-icon">🦞</div>
-            <div class="chat-welcome-text">Monitoring OpenClaw activity. Messages will appear here in real time.</div>
+            <div class="chat-welcome-text">OpenClaw is ready. Type a message to start.</div>
           </div>
         </div>
-        <!-- Telemetry Activity Strip -->
-        <div class="telem-strip" id="telem-strip">
-          <div class="telem-row" id="telem-row1">
-            <span class="telem-dot" id="telem-dot"></span>
-            <span class="telem-lbl">ONLINE</span>
-            <span class="telem-sep">│</span>
-            <span class="telem-lbl">UP</span>
-            <span class="telem-val" id="telem-uptime">00:00:00</span>
-            <span class="telem-sep">│</span>
-            <span class="telem-lbl">SESSION</span>
-            <span class="telem-val" id="telem-session">—</span>
-            <span class="telem-sep">│</span>
-            <span class="telem-lbl">TURNS</span>
-            <span class="telem-val" id="telem-turns">0</span>
-            <span class="telem-sep">│</span>
-            <span class="telem-lbl">CPU</span>
-            <span class="telem-spark" id="telem-cpu">▁▁▁▁▁▁▁▁▁▁</span>
-            <span class="telem-val" id="telem-cpu-pct">0%</span>
-            <span class="telem-sep">│</span>
-            <span class="telem-lbl">MEM</span>
-            <span class="telem-bar-wrap" id="telem-mem-bar"></span>
-            <span class="telem-val" id="telem-mem-pct">0%</span>
-          </div>
-          <div class="telem-row" id="telem-row2">
-            <span class="telem-lbl">ACTIVITY</span>
-            <span class="telem-chain" id="telem-chain">
-              <span class="telem-evt boot">⚡ BOOT</span>
-            </span>
-            <span class="telem-sep">│</span>
-            <span class="telem-lbl">↓</span><span class="telem-val telem-sm" id="telem-data-in-val">0B</span>
-            <span class="telem-lbl">↑</span><span class="telem-val telem-sm" id="telem-data-out-val">0B</span>
-            <span class="telem-sep">│</span>
-            <span class="telem-lbl">LATENCY</span>
-            <span class="telem-spark" id="telem-latency">▁▁▁▁▁▁▁▁▁▁</span>
-            <span class="telem-val" id="telem-latency-avg">—</span>
-          </div>
+        <div class="chat-input-bar">
+          <input type="text" id="chat-input" class="chat-input" placeholder="Message OpenClaw..." autocomplete="off" />
+          <button id="chat-send" class="chat-send-btn">→</button>
         </div>
       </div>
     </main>
@@ -252,6 +252,7 @@
     <div class="console-body" id="console-body"></div>
   </div>
 
-  <script src="app.js?v=6"></script>
+  <script src="board.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
