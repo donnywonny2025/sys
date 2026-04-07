@@ -1,5 +1,9 @@
 # Hermes Agent — Architecture Reference
 
+> ⚠️ **DEPRECATED**: Hermes has been replaced by **OpenClaw** as the execution engine.
+> See `system-architecture.md` and `openclaw-reference.md` for current system.
+> This file is kept for historical reference only.
+
 ## What Hermes IS
 
 Hermes Agent is a CLI-first AI assistant with **tool-calling capabilities**. It uses any LLM (currently Gemini 2.5 Flash via Google AI Studio) and wraps it with persistent tools: terminal, file I/O, browser automation, web search, skills, memory, cron jobs, and delegation.

@@ -104,3 +104,49 @@ These are temporary cron jobs. Target: migrate into OpenClaw's scheduled task sy
 - This enables cache-busting with `?v=N` params in HTML
 - Current: `style.css?v=3` and `app.js?v=3`
 - Bump the version number when making CSS/JS changes to force fresh loads
+
+## Feed Persistence (CRITICAL)
+
+### Problem solved
+Previously, every server restart wiped all feed data (calendar, inbox, weather), leaving the dashboard blank until the next cron cycle pushed new data.
+
+### How it works now
+- Feed data is persisted to `dashboard/data/feed-cache.json`
+- On server startup, `feedCache` is loaded from this file
+- On every feed push (`/api/push`), the cache is written to disk via `saveFeedCache()`
+- When a browser connects via WebSocket, cached feeds are replayed immediately
+- **Result**: Server restarts, browser refreshes — feeds are always there
+
+### Cache file location
+```
+dashboard/data/feed-cache.json
+```
+Contains keys: `email`, `calendar`, `weather` — each with the full feed payload and a `_cachedAt` timestamp.
+
+## Server Startup Procedure
+
+### Manual start (current)
+```bash
+cd /Volumes/WORK\ 2TB/WORK\ 2026/SYSTEM/dashboard
+nohup node server.js > /tmp/system-dashboard.log 2>&1 &
+```
+
+### After restart, feeds load automatically
+- No need to manually push feeds after restart
+- The disk cache provides instant data
+- Cron jobs continue to update feeds on their normal schedule
+
+### To force-refresh all feeds manually
+```bash
+bash execution/check_calendar.sh
+bash execution/check_mail.sh 15
+bash execution/check_weather.sh
+```
+
+### To restart the server cleanly
+```bash
+lsof -ti:3111 | xargs kill -9 2>/dev/null
+sleep 1
+cd /Volumes/WORK\ 2TB/WORK\ 2026/SYSTEM/dashboard
+nohup node server.js > /tmp/system-dashboard.log 2>&1 &
+```

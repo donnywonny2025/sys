@@ -40,7 +40,7 @@ DASHBOARD (Display — http://localhost:3111 — shows everything to the user)
   - Messages arrive via WebSocket from the session watcher
 - **Feed Timers**: Each section (Schedule, Inbox) shows countdown timers to next refresh
 - **Green Dot**: Top-right OPENCLAW indicator. Green = gateway connected.
-- **Persistence**: Feed data (email, calendar, weather) is cached server-side. Survives page refreshes.
+- **Persistence**: Feed data persisted to `dashboard/data/feed-cache.json`. Survives server restarts AND page refreshes.
 
 ## Console Rules
 - The console is NOT just a log. It is a LIVE WINDOW into OpenClaw's execution.
