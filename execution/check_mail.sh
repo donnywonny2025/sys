@@ -1,12 +1,12 @@
 #!/bin/bash
 # check_mail.sh — Pull emails via AppleScript and push to dashboard
-# No external dependencies. Reads directly from Apple Mail.
+# Uses Python for reliable JSON building (same pattern as check_calendar.sh)
 # Usage: ./execution/check_mail.sh [count]
 
 COUNT="${1:-15}"
 DASH_URL="http://localhost:3111/api/push"
 
-# Get emails directly from Mail.app via AppleScript
+# Get emails directly from Mail.app via AppleScript (with snippet from body)
 RAW=$(osascript -e "
 set output to \"\"
 tell application \"Mail\"
@@ -16,6 +16,15 @@ tell application \"Mail\"
     set sndr to sender of msg
     set dt to date received of msg
     set isRead to (read status of msg)
+    try
+      set bodyText to content of msg
+      -- Get first 200 chars as snippet
+      if length of bodyText > 200 then
+        set bodyText to text 1 thru 200 of bodyText
+      end if
+    on error
+      set bodyText to \"\"
+    end try
     set h to hours of dt
     set m to minutes of dt
     set mo to (month of dt as integer)
@@ -27,7 +36,7 @@ tell application \"Mail\"
     else
       set rdStr to \"false\"
     end if
-    set output to output & subj & \"<<>>\" & sndr & \"<<>>\" & dateStr & \"<<>>\" & rdStr & \"|||\"
+    set output to output & subj & \"<<>>\" & sndr & \"<<>>\" & dateStr & \"<<>>\" & rdStr & \"<<>>\" & bodyText & \"|||\"
   end repeat
 end tell
 return output
@@ -38,32 +47,46 @@ if [ -z "$RAW" ] || echo "$RAW" | grep -q "error"; then
   exit 0
 fi
 
-# Build JSON
-JSON_EMAILS="["
-FIRST=true
+# Build JSON with Python (reliable, handles escaping properly)
+JSON=$(python3 -c "
+import json, sys
 
-IFS='|||' read -ra ITEMS <<< "$RAW"
-for entry in "${ITEMS[@]}"; do
-  [ -z "$entry" ] && continue
-  
-  SUBJECT=$(echo "$entry" | awk -F'<<>>' '{print $1}' | sed 's/"/\\"/g;s/^ *//;s/ *$//')
-  SENDER=$(echo "$entry" | awk -F'<<>>' '{print $2}' | sed 's/<[^>]*>//g;s/"/\\"/g;s/^ *//;s/ *$//')
-  DATE=$(echo "$entry" | awk -F'<<>>' '{print $3}' | sed 's/^ *//;s/ *$//')
-  READ=$(echo "$entry" | awk -F'<<>>' '{print $4}' | sed 's/^ *//;s/ *$//')
-  
-  [ -z "$SUBJECT" ] && continue
-  
-  UNREAD="true"
-  [ "$READ" = "true" ] && UNREAD="false"
-  
-  if [ "$FIRST" = true ]; then FIRST=false; else JSON_EMAILS+=","; fi
-  JSON_EMAILS+="{\"subject\":\"$SUBJECT\",\"sender\":\"$SENDER\",\"date\":\"$DATE\",\"unread\":$UNREAD}"
-done
-JSON_EMAILS+="]"
+raw = sys.stdin.read().strip()
+emails = []
+for entry in raw.split('|||'):
+    entry = entry.strip()
+    if not entry:
+        continue
+    parts = entry.split('<<>>')
+    if len(parts) < 4:
+        continue
+    subject = parts[0].strip()
+    sender = parts[1].strip()
+    # Remove email angle brackets from sender display
+    import re
+    sender = re.sub(r'<[^>]*>', '', sender).strip()
+    date_str = parts[2].strip()
+    is_read = parts[3].strip().lower() == 'true'
+    snippet = parts[4].strip() if len(parts) > 4 else ''
+    # Clean snippet: collapse whitespace, remove weird chars
+    snippet = re.sub(r'[\r\n\t]+', ' ', snippet)
+    snippet = re.sub(r'  +', ' ', snippet).strip()
+    if not subject:
+        continue
+    emails.append({
+        'subject': subject,
+        'sender': sender,
+        'date': date_str,
+        'unread': not is_read,
+        'snippet': snippet
+    })
+
+print(json.dumps({'type': 'email', 'emails': emails}))
+" <<< "$RAW")
 
 # Push to dashboard
 curl -s -X POST "$DASH_URL" \
   -H "Content-Type: application/json" \
-  -d "{\"type\":\"email\",\"emails\":$JSON_EMAILS}" > /dev/null
+  -d "$JSON" > /dev/null
 
 echo "Pushed mail to dashboard"

@@ -118,6 +118,26 @@
   }
 
   // --- Email ---
+  var cachedEmails = [];
+
+  function showMailPreview(email, rowEl) {
+    // Highlight active row
+    document.querySelectorAll('#mail-full-content .email-row').forEach(function(r) { r.classList.remove('active'); });
+    if (rowEl) rowEl.classList.add('active');
+
+    var preview = document.getElementById('mail-preview');
+    if (!preview) return;
+    preview.innerHTML =
+      '<div class="mail-preview-header">' +
+        '<div class="mail-preview-subject">' + (email.subject || '(no subject)') + '</div>' +
+        '<div class="mail-preview-meta">' +
+          '<strong>From:</strong> ' + (email.sender || 'Unknown') + '<br>' +
+          '<strong>Date:</strong> ' + (email.date || '') +
+        '</div>' +
+      '</div>' +
+      '<div class="mail-preview-body">' + (email.snippet || email.subject || 'No preview available.') + '</div>';
+  }
+
   function renderEmail(emails, targetId) {
     var el = document.getElementById(targetId);
     el.innerHTML = '';
@@ -125,12 +145,18 @@
       el.innerHTML = '<div class="empty-state">No emails.</div>';
       return;
     }
-    emails.forEach(function (e) {
+    // Store for reference
+    if (targetId === 'mail-full-content') cachedEmails = emails;
+
+    emails.forEach(function (e, idx) {
       var div = document.createElement('div');
       div.className = 'email-row';
+      var dot = e.unread ? '<span class="email-unread-dot"></span>' : '';
       div.innerHTML =
-        '<div class="email-subject ' + (e.unread ? 'unread' : '') + '">' + e.subject + '</div>' +
+        '<div class="email-subject ' + (e.unread ? 'unread' : '') + '">' + dot + e.subject + '</div>' +
+        (e.snippet ? '<div class="email-snippet">' + e.snippet + '</div>' : '') +
         '<div class="email-sender">' + e.sender + ' · <span class="email-date">' + e.date + '</span></div>';
+      div.addEventListener('click', function() { showMailPreview(e, div); });
       el.appendChild(div);
     });
   }

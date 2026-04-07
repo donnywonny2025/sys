@@ -146,10 +146,15 @@
 
     <!-- Scene: Full Mail View -->
     <main id="scene-mail" class="scene">
-      <section class="full-scene">
-        <h2 class="section-label">Inbox — colour8k@mac.com</h2>
-        <div id="mail-full-content">
-          <div class="empty-state">Loading mail...</div>
+      <section class="mail-split">
+        <div class="mail-list-pane">
+          <h2 class="section-label">Inbox — colour8k@mac.com</h2>
+          <div id="mail-full-content">
+            <div class="empty-state">Loading mail...</div>
+          </div>
+        </div>
+        <div class="mail-preview-pane" id="mail-preview">
+          <div class="mail-preview-empty">Select a message to read</div>
         </div>
       </section>
     </main>
