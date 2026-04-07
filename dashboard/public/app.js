@@ -604,7 +604,7 @@
             break;
           case 'console':
             addConsoleLine(msg.entry, msg.style || 'sys', msg.ts);
-            addChatFeedBubble(msg.entry, msg.style);
+            addChatFeedBubble(msg.entry, msg.style, msg.ts);
             if (msg.status) {
               var statusEl = document.getElementById('console-status');
               statusEl.textContent = msg.status;
@@ -704,26 +704,28 @@
       var consoleItems = history.filter(function(h) { return h.type === 'console'; });
       consoleItems.forEach(function(item) {
         addConsoleLine(item.entry, item.style || 'sys', item.ts);
-        addChatFeedBubble(item.entry, item.style || 'sys');
+        addChatFeedBubble(item.entry, item.style || 'sys', item.timestamp || item.ts);
       });
       if (consoleItems.length === 0) {
         addConsoleLine('Console initialized. Waiting for OpenClaw activity...', 'sys');
       }
-      // Scroll chat and console to bottom after replay
-      if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
-      var consoleEl = document.getElementById('console-lines');
-      if (consoleEl) consoleEl.scrollTop = consoleEl.scrollHeight;
+      // Scroll chat and console to bottom after replay (setTimeout ensures DOM is rendered)
+      setTimeout(function() {
+        if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+        var consoleEl = document.getElementById('console-lines');
+        if (consoleEl) consoleEl.scrollTop = consoleEl.scrollHeight;
+      }, 100);
     })
     .catch(function() {
       addConsoleLine('Console initialized. Waiting for OpenClaw activity...', 'sys');
     });
 
-  function addChatFeedBubble(text, style) {
+  function addChatFeedBubble(text, style, ts) {
     if (!chatMessages) return;
-    // Only show chat-relevant messages (→ outgoing, ← incoming, system events)
+    // Only show chat-relevant messages (→ outgoing, ← incoming)
     var isOut = text.indexOf('→') === 0;
     var isIn = text.indexOf('←') === 0;
-    if (!isOut && !isIn) return; // skip non-chat console entries
+    if (!isOut && !isIn) return;
 
     // Remove welcome message on first real message
     var welcome = chatMessages.querySelector('.chat-welcome');
@@ -732,13 +734,36 @@
     var bubble = document.createElement('div');
     var cleanText = text;
 
+    // Format timestamp
+    var timeStr = '';
+    if (ts) {
+      var d = new Date(ts);
+      if (!isNaN(d.getTime())) {
+        var h = d.getHours(); var m = d.getMinutes();
+        var ampm = h >= 12 ? 'PM' : 'AM';
+        h = h % 12 || 12;
+        timeStr = h + ':' + (m < 10 ? '0' : '') + m + ' ' + ampm;
+      }
+    }
+    if (!timeStr) {
+      var now = new Date();
+      var h = now.getHours(); var m = now.getMinutes();
+      var ampm = h >= 12 ? 'PM' : 'AM';
+      h = h % 12 || 12;
+      timeStr = h + ':' + (m < 10 ? '0' : '') + m + ' ' + ampm;
+    }
+
     if (isOut) {
-      // User/Antigravity message: strip → prefix and timestamps
       cleanText = text.replace(/^→\s*/, '').replace(/^\[.*?\]\s*/, '');
       bubble.className = 'chat-bubble user';
-      bubble.textContent = cleanText;
+      var body = document.createElement('span');
+      body.textContent = cleanText;
+      bubble.appendChild(body);
+      var time = document.createElement('div');
+      time.className = 'chat-time';
+      time.textContent = timeStr;
+      bubble.appendChild(time);
     } else if (isIn) {
-      // OpenClaw response: strip ← prefix
       cleanText = text.replace(/^←\s*(OpenClaw\s*:\s*)?/i, '');
       bubble.className = 'chat-bubble assistant';
       var sender = document.createElement('div');
@@ -748,9 +773,13 @@
       var body = document.createElement('span');
       body.textContent = cleanText;
       bubble.appendChild(body);
+      var time = document.createElement('div');
+      time.className = 'chat-time';
+      time.textContent = timeStr;
+      bubble.appendChild(time);
     }
 
     chatMessages.appendChild(bubble);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    setTimeout(function() { chatMessages.scrollTop = chatMessages.scrollHeight; }, 50);
   }
 })();
