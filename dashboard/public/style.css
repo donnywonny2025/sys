@@ -4,6 +4,17 @@
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* Dark scrollbars — match theme everywhere */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--s3) transparent;
+}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--s3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--t2); }
+::-webkit-scrollbar-corner { background: transparent; }
+
 :root {
   --s0: #111113; --s1: #19191c; --s2: #222226; --s3: #2c2c31;
   --t0: #e8e4df; --t1: #b0aaa2; --t2: #78736b;
