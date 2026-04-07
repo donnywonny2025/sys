@@ -88,7 +88,7 @@ const server = http.createServer(async (req, res) => {
       const data = await parseBody(req);
       const message = data.message;
       if (!message) {
-        res.writeHead(400, CORS_JSON);
+        res.writeHead(400, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: 'No message provided' }));
         return;
       }
@@ -101,7 +101,7 @@ const server = http.createServer(async (req, res) => {
         if (err) {
           const errMsg = stderr || err.message;
           pushToConsole(`✗ OpenClaw error: ${errMsg.substring(0, 150)}`, 'err');
-          res.writeHead(500, CORS_JSON);
+          res.writeHead(500, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ error: errMsg }));
           return;
         }
@@ -118,11 +118,11 @@ const server = http.createServer(async (req, res) => {
         }
         if (!reply) reply = stdout.trim();
         pushToConsole(`← OpenClaw: ${reply.substring(0, 200)}`, 'in');
-        res.writeHead(200, CORS_JSON);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ reply }));
       });
     } catch (e) {
-      res.writeHead(500, CORS_JSON);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: e.message }));
     }
     return;

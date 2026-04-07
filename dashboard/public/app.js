@@ -604,6 +604,7 @@
             break;
           case 'console':
             addConsoleLine(msg.entry, msg.style || 'sys', msg.ts);
+            addChatFeedBubble(msg.entry, msg.style);
             if (msg.status) {
               var statusEl = document.getElementById('console-status');
               statusEl.textContent = msg.status;
@@ -709,86 +710,42 @@
       addConsoleLine('Console initialized. Waiting for OpenClaw activity...', 'sys');
     });
 
-  // --- Chat with OpenClaw ---
+  // --- Chat Live Feed ---
   var chatMessages = document.getElementById('chat-messages');
-  var chatInput = document.getElementById('chat-input');
-  var chatSend = document.getElementById('chat-send');
-  var chatBusy = false;
 
-  function addChatBubble(text, role) {
+  function addChatFeedBubble(text, style) {
+    if (!chatMessages) return;
+    // Only show chat-relevant messages (→ outgoing, ← incoming, system events)
+    var isOut = text.indexOf('→') === 0;
+    var isIn = text.indexOf('←') === 0;
+    if (!isOut && !isIn) return; // skip non-chat console entries
+
     // Remove welcome message on first real message
     var welcome = chatMessages.querySelector('.chat-welcome');
     if (welcome) welcome.remove();
 
     var bubble = document.createElement('div');
-    bubble.className = 'chat-bubble ' + role;
-    if (role === 'assistant') {
-      bubble.innerHTML = '<div class="chat-sender">OPENCLAW</div>' + escapeHtml(text);
-    } else {
-      bubble.textContent = text;
+    var cleanText = text;
+
+    if (isOut) {
+      // User/Antigravity message: strip → prefix and timestamps
+      cleanText = text.replace(/^→\s*/, '').replace(/^\[.*?\]\s*/, '');
+      bubble.className = 'chat-bubble user';
+      bubble.textContent = cleanText;
+    } else if (isIn) {
+      // OpenClaw response: strip ← prefix
+      cleanText = text.replace(/^←\s*(OpenClaw\s*:\s*)?/i, '');
+      bubble.className = 'chat-bubble assistant';
+      var sender = document.createElement('div');
+      sender.className = 'chat-sender';
+      sender.textContent = 'OPENCLAW';
+      bubble.appendChild(sender);
+      var body = document.createElement('span');
+      body.textContent = cleanText;
+      bubble.appendChild(body);
     }
+
     chatMessages.appendChild(bubble);
     chatMessages.scrollTop = chatMessages.scrollHeight;
-    return bubble;
   }
-
-  function escapeHtml(str) {
-    var d = document.createElement('div');
-    d.textContent = str;
-    return d.innerHTML;
-  }
-
-  function showTyping() {
-    var indicator = document.createElement('div');
-    indicator.className = 'chat-typing';
-    indicator.id = 'chat-typing-indicator';
-    indicator.innerHTML = '<span></span><span></span><span></span>';
-    chatMessages.appendChild(indicator);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-  }
-
-  function hideTyping() {
-    var indicator = document.getElementById('chat-typing-indicator');
-    if (indicator) indicator.remove();
-  }
-
-  function sendChatMessage() {
-    if (chatBusy) return;
-    var msg = chatInput.value.trim();
-    if (!msg) return;
-
-    chatInput.value = '';
-    addChatBubble(msg, 'user');
-    showTyping();
-    chatBusy = true;
-    chatSend.disabled = true;
-
-    fetch('/api/openclaw-chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: msg })
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      hideTyping();
-      chatBusy = false;
-      chatSend.disabled = false;
-      if (data.error) {
-        addChatBubble('Error: ' + data.error, 'assistant');
-      } else {
-        addChatBubble(data.reply, 'assistant');
-      }
-    })
-    .catch(function(e) {
-      hideTyping();
-      chatBusy = false;
-      chatSend.disabled = false;
-      addChatBubble('Connection error: ' + e.message, 'assistant');
-    });
-  }
-
-  if (chatSend) chatSend.addEventListener('click', sendChatMessage);
-  if (chatInput) chatInput.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatMessage(); }
-  });
 })();
