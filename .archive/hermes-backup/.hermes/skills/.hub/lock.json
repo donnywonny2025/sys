@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "installed": {
+    "apple-mail": {
+      "source": "skills.sh",
+      "identifier": "skills-sh/rbouschery/marketplace/apple-mail",
+      "trust_level": "community",
+      "scan_verdict": "caution",
+      "content_hash": "sha256:8c817e6e550f3286",
+      "install_path": "apple-mail",
+      "files": [
+        "SKILL.md",
+        "reference/applescript-patterns.md",
+        "scripts/archive-email.sh",
+        "scripts/create-draft.sh",
+        "scripts/create-reply-draft.sh",
+        "scripts/delete-email.sh",
+        "scripts/get-email-by-id.sh",
+        "scripts/get-emails.sh",
+        "scripts/get-unread-count.sh",
+        "scripts/list-accounts.sh",
+        "scripts/list-mailboxes.sh",
+        "scripts/mark-read.sh",
+        "scripts/mark-unread.sh",
+        "scripts/search-emails.sh",
+        "scripts/send-draft.sh",
+        "scripts/send-email.sh"
+      ],
+      "metadata": {
+        "detail_url": "https://skills.sh/rbouschery/marketplace/apple-mail",
+        "repo_url": "https://github.com/rbouschery/marketplace",
+        "weekly_installs": "404",
+        "install_command": "npx skills add https://github.com/rbouschery/marketplace --skill apple-mail",
+        "security_audits": {
+          "agent-trust-hub": "Warn",
+          "socket": "Pass",
+          "snyk": "Warn"
+        }
+      },
+      "installed_at": "2026-04-07T05:06:22.985931+00:00",
+      "updated_at": "2026-04-07T05:06:22.985936+00:00"
+    },
+    "excalidraw": {
+      "source": "clawhub",
+      "identifier": "excalidraw",
+      "trust_level": "community",
+      "scan_verdict": "safe",
+      "content_hash": "sha256:631b0afc77858ead",
+      "install_path": "excalidraw",
+      "files": [
+        "references/element-schema.md",
+        "scripts/package-lock.json",
+        "scripts/package.json",
+        "scripts/render.js",
+        "scripts/setup.sh",
+        "SKILL.md",
+        "_meta.json"
+      ],
+      "metadata": {},
+      "installed_at": "2026-04-07T05:17:30.489770+00:00",
+      "updated_at": "2026-04-07T05:17:30.489780+00:00"
+    }
+  }
+}

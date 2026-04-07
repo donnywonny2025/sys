@@ -595,5 +595,19 @@
     consoleBody.scrollTop = consoleBody.scrollHeight;
   }
 
-  addConsoleLine('Console initialized. Waiting for OpenClaw activity...', 'sys');
+  // Load console history from persistent storage
+  fetch('/api/history')
+    .then(function(r) { return r.json(); })
+    .then(function(history) {
+      var consoleItems = history.filter(function(h) { return h.type === 'console'; });
+      consoleItems.forEach(function(item) {
+        addConsoleLine(item.entry, item.style || 'sys', item.ts);
+      });
+      if (consoleItems.length === 0) {
+        addConsoleLine('Console initialized. Waiting for OpenClaw activity...', 'sys');
+      }
+    })
+    .catch(function() {
+      addConsoleLine('Console initialized. Waiting for OpenClaw activity...', 'sys');
+    });
 })();

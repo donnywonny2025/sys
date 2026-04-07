@@ -1258,5 +1258,535 @@
       }
     ],
     "timestamp": "2026-04-07T08:16:55.208Z"
+  },
+  {
+    "type": "calendar",
+    "events": [
+      {
+        "name": "Final Video Review Bronson Cancer Patients",
+        "time": "Mar 31 · 5:00 PM"
+      },
+      {
+        "name": "Passover",
+        "time": "Apr 1 · All Day"
+      },
+      {
+        "name": "Arbor Circle",
+        "time": "Apr 1 · 1:00 PM"
+      },
+      {
+        "name": "Good Friday",
+        "time": "Apr 3 · All Day"
+      },
+      {
+        "name": "Easter",
+        "time": "Apr 5 · All Day"
+      },
+      {
+        "name": "Counseling at Arbor Circle",
+        "time": "Apr 9 · 3:00 PM"
+      },
+      {
+        "name": "Orthodox Easter",
+        "time": "Apr 12 · All Day"
+      },
+      {
+        "name": "Tax Day",
+        "time": "Apr 15 · All Day"
+      }
+    ],
+    "timestamp": "2026-04-07T08:28:30.535Z"
+  },
+  {
+    "type": "calendar",
+    "events": [],
+    "timestamp": "2026-04-07T09:14:47.552Z"
+  },
+  {
+    "type": "weather",
+    "data": {
+      "summary": "☁️   +48°F",
+      "detail": "☁️   +48°F 58% ↓4mph"
+    },
+    "timestamp": "2026-04-07T09:15:17.898Z"
+  },
+  {
+    "type": "email",
+    "emails": [
+      {
+        "subject": "New job opportunities at Molina Talent Acquisition",
+        "sender": "Molina Healthcare",
+        "date": "4/7 04:41",
+        "unread": true
+      },
+      {
+        "subject": "More Perfect Union is hiring for Video Editor. 6 more Video Editor jobs in United States.",
+        "sender": "Indeed",
+        "date": "4/7 02:59",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "4/7 02:16",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "4/7 02:15",
+        "unread": true
+      },
+      {
+        "subject": "Quick question about your application at Reputation.com, Inc.",
+        "sender": "Glassdoor",
+        "date": "4/7 01:30",
+        "unread": true
+      },
+      {
+        "subject": "USPS® Expected Delivery by Monday, April 13, 2026 arriving by 9:00pm 9400111206241421253727",
+        "sender": "auto-reply@usps.com",
+        "date": "4/7 00:49",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "4/6 23:41",
+        "unread": true
+      },
+      {
+        "subject": "Receipt from GOOGLE*CLOUD CHTCX4 - $10.00",
+        "sender": "Venmo",
+        "date": "4/6 23:41",
+        "unread": true
+      },
+      {
+        "subject": "Security alert for kerrjeff1977@gmail.com",
+        "sender": "Google",
+        "date": "4/6 23:39",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "4/6 23:37",
+        "unread": true
+      }
+    ],
+    "timestamp": "2026-04-07T09:18:59.607Z"
+  },
+  {
+    "type": "weather",
+    "data": {
+      "summary": "☁️ +48°F",
+      "detail": "☁️ +48°F 58% ↓4mph — New York"
+    },
+    "timestamp": "2026-04-07T09:23:07.462Z"
+  },
+  {
+    "type": "weather",
+    "data": {
+      "summary": "☁️ +48°F",
+      "detail": "☁️ +48°F 58% ↓4mph — New York"
+    },
+    "timestamp": "2026-04-07T09:24:54.530Z"
+  },
+  {
+    "type": "calendar",
+    "events": [
+      {
+        "name": "Colonoscopy",
+        "time": "12:00"
+      },
+      {
+        "name": "Test OpenClaw Reminder",
+        "time": "09:00"
+      }
+    ],
+    "timestamp": "2026-04-07T09:24:54.703Z"
+  },
+  {
+    "type": "email",
+    "emails": [
+      {
+        "subject": "New job opportunities at Molina Talent Acquisition",
+        "sender": "Molina Healthcare",
+        "date": "4/7 04:41",
+        "unread": true
+      },
+      {
+        "subject": "More Perfect Union is hiring for Video Editor. 6 more Video Editor jobs in United States.",
+        "sender": "Indeed",
+        "date": "4/7 02:59",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "4/7 02:16",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "4/7 02:15",
+        "unread": true
+      },
+      {
+        "subject": "Quick question about your application at Reputation.com, Inc.",
+        "sender": "Glassdoor",
+        "date": "4/7 01:30",
+        "unread": true
+      },
+      {
+        "subject": "USPS® Expected Delivery by Monday, April 13, 2026 arriving by 9:00pm 9400111206241421253727",
+        "sender": "auto-reply@usps.com",
+        "date": "4/7 00:49",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "4/6 23:41",
+        "unread": true
+      },
+      {
+        "subject": "Receipt from GOOGLE*CLOUD CHTCX4 - $10.00",
+        "sender": "Venmo",
+        "date": "4/6 23:41",
+        "unread": true
+      },
+      {
+        "subject": "Security alert for kerrjeff1977@gmail.com",
+        "sender": "Google",
+        "date": "4/6 23:39",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "4/6 23:37",
+        "unread": true
+      }
+    ],
+    "timestamp": "2026-04-07T09:25:12.044Z"
+  },
+  {
+    "type": "email",
+    "emails": [
+      {
+        "subject": "New job opportunities at Molina Talent Acquisition",
+        "sender": "Molina Healthcare",
+        "date": "4/7 04:41",
+        "unread": true
+      },
+      {
+        "subject": "More Perfect Union is hiring for Video Editor. 6 more Video Editor jobs in United States.",
+        "sender": "Indeed",
+        "date": "4/7 02:59",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "4/7 02:16",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "4/7 02:15",
+        "unread": true
+      },
+      {
+        "subject": "Quick question about your application at Reputation.com, Inc.",
+        "sender": "Glassdoor",
+        "date": "4/7 01:30",
+        "unread": true
+      },
+      {
+        "subject": "USPS® Expected Delivery by Monday, April 13, 2026 arriving by 9:00pm 9400111206241421253727",
+        "sender": "auto-reply@usps.com",
+        "date": "4/7 00:49",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "4/6 23:41",
+        "unread": true
+      },
+      {
+        "subject": "Receipt from GOOGLE*CLOUD CHTCX4 - $10.00",
+        "sender": "Venmo",
+        "date": "4/6 23:41",
+        "unread": true
+      },
+      {
+        "subject": "Security alert for kerrjeff1977@gmail.com",
+        "sender": "Google",
+        "date": "4/6 23:39",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "4/6 23:37",
+        "unread": true
+      }
+    ],
+    "timestamp": "2026-04-07T09:26:09.452Z"
+  },
+  {
+    "type": "calendar",
+    "events": [],
+    "timestamp": "2026-04-07T09:26:30.225Z"
+  },
+  {
+    "type": "calendar",
+    "events": [],
+    "timestamp": "2026-04-07T09:27:32.423Z"
+  },
+  {
+    "type": "calendar",
+    "events": [
+      {
+        "name": "Counseling at Arbor Circle",
+        "time": "4/9 15:00"
+      },
+      {
+        "name": "Orthodox Easter",
+        "time": "4/12"
+      },
+      {
+        "name": "Tax Day",
+        "time": "4/15"
+      },
+      {
+        "name": "Callie Bea",
+        "time": "4/27"
+      },
+      {
+        "name": "J. Kerr",
+        "time": "4/27 11:00"
+      },
+      {
+        "name": "Court",
+        "time": "4/29 11:00"
+      }
+    ],
+    "timestamp": "2026-04-07T09:32:04.010Z"
+  },
+  {
+    "type": "console",
+    "entry": "→ OpenClaw: check weather for New York",
+    "style": "out",
+    "status": "PROCESSING",
+    "timestamp": "2026-04-07T09:36:12.398Z"
+  },
+  {
+    "type": "console",
+    "entry": "← OpenClaw: ☁️ +48°F (13.2s)",
+    "style": "in",
+    "status": "IDLE",
+    "timestamp": "2026-04-07T09:36:13.432Z"
+  },
+  {
+    "type": "console",
+    "entry": "→ OpenClaw: check apple-reminders for today",
+    "style": "out",
+    "status": "PROCESSING",
+    "timestamp": "2026-04-07T09:36:14.468Z"
+  },
+  {
+    "type": "console",
+    "entry": "← OpenClaw: 2 reminders found (9.0s)",
+    "style": "in",
+    "status": "IDLE",
+    "timestamp": "2026-04-07T09:36:15.502Z"
+  },
+  {
+    "type": "weather",
+    "data": {
+      "summary": "☁️ +48°F",
+      "detail": "☁️ +48°F — New York"
+    },
+    "timestamp": "2026-04-07T09:36:27.072Z"
+  },
+  {
+    "type": "calendar",
+    "events": [
+      {
+        "name": "Counseling at Arbor Circle",
+        "time": "4/9 15:00"
+      },
+      {
+        "name": "Orthodox Easter",
+        "time": "4/12"
+      },
+      {
+        "name": "Tax Day",
+        "time": "4/15"
+      },
+      {
+        "name": "Callie Bea",
+        "time": "4/27"
+      },
+      {
+        "name": "J. Kerr",
+        "time": "4/27 11:00"
+      },
+      {
+        "name": "Court",
+        "time": "4/29 11:00"
+      }
+    ],
+    "timestamp": "2026-04-07T09:36:27.080Z"
+  },
+  {
+    "type": "email",
+    "emails": [
+      {
+        "subject": "New job opportunities at Molina Talent Acquisition",
+        "sender": "Molina Healthcare",
+        "date": "4/7 04:41",
+        "unread": true
+      },
+      {
+        "subject": "More Perfect Union is hiring for Video Editor. 6 more Video Editor jobs in United States.",
+        "sender": "Indeed",
+        "date": "4/7 02:59",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "4/7 02:16",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "4/7 02:15",
+        "unread": true
+      },
+      {
+        "subject": "Quick question about your application at Reputation.com, Inc.",
+        "sender": "Glassdoor",
+        "date": "4/7 01:30",
+        "unread": true
+      },
+      {
+        "subject": "USPS® Expected Delivery by Monday, April 13, 2026 arriving by 9:00pm 9400111206241421253727",
+        "sender": "auto-reply@usps.com",
+        "date": "4/7 00:49",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "4/6 23:41",
+        "unread": true
+      },
+      {
+        "subject": "Receipt from GOOGLE*CLOUD CHTCX4 - $10.00",
+        "sender": "Venmo",
+        "date": "4/6 23:41",
+        "unread": true
+      },
+      {
+        "subject": "Security alert for kerrjeff1977@gmail.com",
+        "sender": "Google",
+        "date": "4/6 23:39",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "4/6 23:37",
+        "unread": true
+      }
+    ],
+    "timestamp": "2026-04-07T09:36:43.818Z"
+  },
+  {
+    "type": "console",
+    "entry": "→ What time is it in New York right now?",
+    "style": "out",
+    "status": "PROCESSING",
+    "ts": "05:38:04",
+    "timestamp": "2026-04-07T09:38:04.780Z"
+  },
+  {
+    "type": "console",
+    "entry": "← OpenClaw (15.5s): The time in New York right now is 05:38:17 AM (EDT).",
+    "style": "in",
+    "status": "IDLE",
+    "ts": "05:38:20",
+    "timestamp": "2026-04-07T09:38:20.389Z"
+  },
+  {
+    "type": "console",
+    "entry": "→ How many skills do you have installed? Just give me the count.",
+    "style": "out",
+    "status": "PROCESSING",
+    "ts": "05:38:39",
+    "timestamp": "2026-04-07T09:38:39.257Z"
+  },
+  {
+    "type": "console",
+    "entry": "← OpenClaw (18.5s): I have 70 skills installed.",
+    "style": "in",
+    "status": "IDLE",
+    "ts": "05:38:57",
+    "timestamp": "2026-04-07T09:38:57.885Z"
+  },
+  {
+    "type": "console",
+    "entry": "← OpenClaw (0.0s): Error parsing response",
+    "style": "in",
+    "status": "IDLE",
+    "ts": "05:42:08",
+    "timestamp": "2026-04-07T09:42:08.097Z"
+  },
+  {
+    "type": "console",
+    "entry": "✓ Cron jobs installed: mail/5min, calendar/15min, weather/30min",
+    "style": "sys",
+    "status": "IDLE",
+    "timestamp": "2026-04-07T09:43:47.538Z"
+  },
+  {
+    "type": "console",
+    "entry": "→ Confirm you are alive. One sentence.",
+    "style": "out",
+    "status": "PROCESSING",
+    "ts": "05:43:47",
+    "timestamp": "2026-04-07T09:43:47.664Z"
+  },
+  {
+    "type": "console",
+    "entry": "← OpenClaw (7.5s): Yes, I am alive and ready to assist you.",
+    "style": "in",
+    "status": "IDLE",
+    "ts": "05:43:55",
+    "timestamp": "2026-04-07T09:43:55.229Z"
+  },
+  {
+    "type": "console",
+    "entry": "→ List 3 things you can help with. Number them 1, 2, 3.",
+    "style": "out",
+    "status": "PROCESSING",
+    "ts": "05:44:06",
+    "timestamp": "2026-04-07T09:44:06.345Z"
+  },
+  {
+    "type": "console",
+    "entry": "← OpenClaw (6.3s): 1. I can help you manage your files by reading, writing, and editing them, as well as executing shell commands. 2. I can find information for you by searching the web or recalling details from my memory. 3. I can assist with creative tasks like generating images, music, or even videos based on your prompts.",
+    "style": "in",
+    "status": "IDLE",
+    "ts": "05:44:12",
+    "timestamp": "2026-04-07T09:44:12.684Z"
   }
 ]

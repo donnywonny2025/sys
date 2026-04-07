@@ -7,7 +7,7 @@
 ---
 
 ## Last Updated
-`2026-04-07T05:23:30-04:00` — Session: OpenClaw Migration
+`2026-04-07T05:43:00-04:00` — Session: Console + Cron + Persistence
 
 ## Response Timing Benchmarks
 | Query | Time | Notes |
@@ -75,7 +75,24 @@ Antigravity → curl OpenClaw /v1/chat/completions → OpenClaw uses skills → 
 | `execution/check_weather.sh` | wttr.in (no API key) | ✅ Working |
 | `execution/check_calendar.sh` | Apple Calendar AppleScript | ✅ Working (needs Calendar.app running) |
 | `execution/check_mail.sh` | Apple Mail AppleScript | ✅ Rewritten — direct AppleScript |
-| `execution/openclaw.sh` | OpenClaw Gateway API | ✅ Working |
+| `execution/openclaw.sh` | OpenClaw Gateway API | ✅ Fixed — handles multiline, logs to console |
+
+### Cron Jobs (Auto-Refresh)
+Installed via `crontab` on 2026-04-07. Dashboard data stays fresh without manual intervention.
+| Interval | Script | What It Does |
+|----------|--------|-------------|
+| Every 5 min | `check_mail.sh 15` | Pulls latest 15 emails from Apple Mail → dashboard |
+| Every 15 min | `check_calendar.sh` | 30-day lookahead from Apple Calendar → dashboard |
+| Every 30 min | `check_weather.sh` | Weather from wttr.in → dashboard |
+
+**Note:** These run direct AppleScript/curl — no LLM tokens used.
+
+### Monitoring & Logging
+| What | Where | Persists? |
+|------|-------|-----------|
+| OpenClaw health | Dashboard polls `/api/hermes-status` every 15s | No (live only) |
+| Console log | `dashboard/data/history.json` | ✅ Yes — reloads on page refresh |
+| OpenClaw raw logs | `/tmp/openclaw/openclaw-YYYY-MM-DD.log` | ✅ Yes (daily rotation) |
 
 ## Key File Locations
 - **OpenClaw source:** `/Volumes/WORK 2TB/WORK 2026/SYSTEM/openclaw/`
@@ -106,12 +123,15 @@ Antigravity → curl OpenClaw /v1/chat/completions → OpenClaw uses skills → 
 - **Product engineer mindset** — make the dashboard a daily command center
 
 ## Next Steps / TODO
-- [ ] Wire calendar data into dashboard (run check_calendar.sh when Calendar.app is available)
-- [ ] Test rewritten check_mail.sh against live Mail.app
+- [x] Wire calendar data into dashboard (30-day lookahead via AppleScript)
+- [x] Test rewritten check_mail.sh against live Mail.app
+- [x] Add auto-refresh cron for dashboard data feeds
+- [x] Add OpenClaw console panel to dashboard
+- [x] Fix openclaw.sh multiline parsing
 - [ ] Fix OpenClaw Control UI blank screen (low priority)
 - [ ] Update AGENTS.md to reflect OpenClaw instead of Hermes
 - [ ] Fix whiteboard component
-- [ ] Add auto-refresh cron for dashboard data feeds
+- [ ] Add smart summarization (OpenClaw summarizes calendar + inbox)
 
 ---
 
