@@ -365,7 +365,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   // ── Static files ──
-  let filePath = req.url === '/' ? '/index.html' : req.url;
+  let filePath = req.url === '/' ? '/index.html' : req.url.split('?')[0];
   filePath = path.join(PUBLIC_DIR, filePath);
 
   if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
@@ -462,7 +462,15 @@ const { spawn } = require('child_process');
 
 const SESSIONS_DIR = path.join(process.env.HOME || '/Users/jeffkerr', '.openclaw/agents/main/sessions');
 
+const recentMessages = [];
+
 function pushToConsole(text, style) {
+  // Dedup: skip if same text appeared in last 5 seconds
+  const now = Date.now();
+  const isDupe = recentMessages.some(m => m.text === text && (now - m.ts) < 5000);
+  if (isDupe) return;
+  recentMessages.push({ text, ts: now });
+  while (recentMessages.length > 20) recentMessages.shift();
   const ts = new Date().toLocaleTimeString('en-US', {
     hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
   });
