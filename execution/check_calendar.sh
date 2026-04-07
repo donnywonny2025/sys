@@ -5,14 +5,15 @@
 
 DASH_URL="http://localhost:3111/api/push"
 
+# Ensure Calendar.app is running (open it if not, wait for it to be ready)
+if ! pgrep -q "Calendar"; then
+  open -a Calendar
+  sleep 5
+fi
+
 # Get next 30 days of events from Apple Calendar via AppleScript
-# Launches Calendar.app automatically if not running
 EVENTS=$(osascript -e '
 set output to ""
-if application "Calendar" is not running then
-  tell application "Calendar" to launch
-  delay 2
-end if
 tell application "Calendar"
   set today to current date
   set time of today to 0
@@ -35,23 +36,33 @@ tell application "Calendar"
 end tell
 return output' 2>/dev/null)
 
-# Build JSON
-JSON_EVENTS="["
-FIRST=true
-
-IFS='|||' read -ra ITEMS <<< "$EVENTS"
-for entry in "${ITEMS[@]}"; do
-  [ -z "$entry" ] && continue
-  
-  NAME=$(echo "$entry" | awk -F'<<>>' '{print $1}' | sed 's/"/\\"/g;s/^ *//;s/ *$//')
-  TIME=$(echo "$entry" | awk -F'<<>>' '{print $2}' | sed 's/^ *//;s/ *$//')
-  
-  [ -z "$NAME" ] && continue
-  
-  if [ "$FIRST" = true ]; then FIRST=false; else JSON_EVENTS+=","; fi
-  JSON_EVENTS+="{\"name\":\"$NAME\",\"time\":\"$TIME\"}"
-done
-JSON_EVENTS+="]"
+# Build JSON from ||| delimited output using python for reliable parsing
+# Converts 24h time to 12h AM/PM, marks 00:00 as "All Day"
+JSON_EVENTS=$(python3 -c "
+import json, sys
+raw = '''$EVENTS'''
+items = [x.strip() for x in raw.split('|||') if x.strip()]
+events = []
+for item in items:
+    parts = item.split('<<>>')
+    if len(parts) == 2:
+        name = parts[0].strip()
+        raw_time = parts[1].strip()
+        # Parse date and time
+        dt_parts = raw_time.split(' ')
+        date_str = dt_parts[0] if dt_parts else ''
+        time_str = dt_parts[1] if len(dt_parts) > 1 else '00:00'
+        # Convert to 12h
+        h, m = int(time_str.split(':')[0]), int(time_str.split(':')[1])
+        if h == 0 and m == 0:
+            display_time = date_str + ' · All Day'
+        else:
+            period = 'AM' if h < 12 else 'PM'
+            h12 = h if 1 <= h <= 12 else (h - 12 if h > 12 else 12)
+            display_time = date_str + ' · ' + str(h12) + (':' + str(m).zfill(2) if m else '') + ' ' + period
+        events.append({'name': name, 'time': display_time})
+print(json.dumps(events))
+")
 
 # Push to dashboard
 curl -s -X POST "$DASH_URL" \
