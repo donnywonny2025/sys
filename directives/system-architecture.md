@@ -30,14 +30,16 @@ DASHBOARD (Display — http://localhost:3111 — shows everything to the user)
 ### Dashboard = The Display
 - URL: http://localhost:3111
 - Shows: Schedule, Inbox, Weather, Today's Focus, Activity Feed
-- **OPENCLAW CONSOLE**: The bottom panel. Shows ALL OpenClaw activity in real-time:
-  - Chat messages (→ user, ← assistant)
-  - Task execution (mail checks, calendar refreshes, weather updates)
-  - Connection events, model info, errors
-  - Cron/scheduled task activity
-  - ANY background work OpenClaw is doing
+- **Sidebar tabs**: Home, Mail, Calendar, Whiteboard, Image Studio, Chat Live Feed, OpenClaw Control
+- **OPENCLAW CONSOLE**: The bottom panel. Shows ALL OpenClaw activity in real-time.
+- **CHAT LIVE FEED** (scene-chat): Full-screen view of OpenClaw back-and-forth as chat bubbles.
+  - → messages become right-aligned user bubbles (dark blue-grey)
+  - ← messages become left-aligned assistant bubbles with "OPENCLAW" label
+  - System/feed messages are filtered out — only chat traffic shows
+  - NO input bar — this is a monitoring view, not a messaging interface
+  - Messages arrive via WebSocket from the session watcher
 - **Feed Timers**: Each section (Schedule, Inbox) shows countdown timers to next refresh
-- **Green Dot**: Top-right OPENCLAW indicator. Green = gateway connected. Only green if actually connected.
+- **Green Dot**: Top-right OPENCLAW indicator. Green = gateway connected.
 - **Persistence**: Feed data (email, calendar, weather) is cached server-side. Survives page refreshes.
 
 ## Console Rules
@@ -63,7 +65,14 @@ openclaw agent --agent main --message "Your message here"
 - OpenClaw processes it (Gemini 2.5 Flash) and responds
 - The exchange is written to the active session JSONL file
 - The dashboard session watcher picks it up and pushes it to the console
-- User sees: `→ [timestamp] message` and `← OpenClaw : response`
+- User sees the prompt and response in both the console AND the chat live feed
+
+### ⚠️ CRITICAL: CLI stdout is NOT the response
+- The CLI only outputs `completed` — it does NOT return the model's actual response text
+- The REAL response is in the JSONL session files
+- The session watcher handles all display
+- The `/api/openclaw-chat` endpoint is fire-and-forget: returns `{"ok": true}`
+- NEVER parse CLI stdout for the response — it's always just `completed`
 
 ### Pairing (FIXED)
 - The CLI device (`40802b48...`) was originally scoped to `operator.read` only
@@ -120,14 +129,15 @@ Antigravity sends CLI command
 ```
 
 ## Known Issues
-- **Duplicate console messages**: Session watcher may pick up the same message from both `main.jsonl` and the UUID session file. Needs dedup logic.
 - **OpenClaw can't access Google Calendar directly**: Needs `gog` CLI setup (OAuth). Currently using macOS Calendar.app via AppleScript as workaround.
 - **Dashboard server not auto-started**: Needs a LaunchAgent or the dashboard needs to be started manually after reboot.
 
 ## Migration TODO
 - [x] Establish Antigravity ↔ OpenClaw communication (CLI: `openclaw agent --agent main --message "..."`)
 - [x] Verify communication shows in dashboard console
-- [ ] Fix duplicate console messages (dedup in session watcher)
+- [x] Fix duplicate console messages (dedup in pushToConsole — 5s rolling window)
+- [x] Build Chat Live Feed tab (scene-chat) — mirrors console as chat bubbles
+- [x] Fix static file cache-busting (query string stripping in server.js)
 - [ ] Migrate mail/calendar/weather checks from crontab into OpenClaw scheduled tasks
 - [ ] Remove raw crontab entries once OpenClaw handles scheduling
 - [ ] Set up dashboard server as LaunchAgent for auto-start
