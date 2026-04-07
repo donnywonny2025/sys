@@ -28,5 +28,10 @@
     "type": "info",
     "content": "**PBS NewsHour** — Trump recounts Iran rescue mission, says U.S. has plan to 'decimate' infrastructure.",
     "timestamp": "2026-04-07T04:22:39.720Z"
+  },
+  {
+    "type": "success",
+    "content": "**Hermes Agent online.** Gemini 2.5 Flash responding via direct terminal pipe. Model confirmed, API key working.",
+    "timestamp": "2026-04-07T04:36:33.614Z"
   }
 ]
