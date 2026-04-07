@@ -63,3 +63,35 @@ osascript -e 'tell application "Google Chrome"
   if (count of theTabs) > 1 then close item 2 of theTabs
 end tell'
 ```
+
+## RULE #8: HARDCODED DASHBOARD COORDINATES
+
+When using browser subagents to interact with the dashboard at http://localhost:3111/ (viewport 961x963):
+
+**Sidebar icons (left rail, x=27):**
+- Home: (27, 80)
+- Mail: (27, 120)
+- Calendar: (27, 160)
+- Whiteboard: (27, 210)
+- Image Studio: (27, 250)
+- OpenClaw Control: (27, 770) — the gear/claw icon at bottom
+
+**OpenClaw UI elements (inside iframe after clicking OpenClaw):**
+- Chat input field: Execute JS `document.querySelector('iframe')?.contentDocument?.querySelector('textarea')?.focus()` or click pixel (500, 684)
+- Send button: (855, 724)
+- The chat input is a `<textarea>` with placeholder "Message Assistant (Enter to send)"
+
+**Always use these coordinates directly. Do NOT waste time searching for elements by scanning the DOM or trying different positions.**
+
+## RULE #9: SUBAGENT TIMING
+
+- `WaitMsBeforeAsync` should be 3000ms max for simple commands (file ops, kill/restart)
+- 5000ms for server restarts that need boot time
+- **NEVER use 60s waits** — no dashboard command takes that long
+- `WaitDurationSeconds` for command_status: use 5-10s, not 30-60s
+- If a command hasn't finished in 10s, something is wrong — investigate, don't wait longer
+
+## RULE #10: FAIL FAST
+
+If a browser subagent step doesn't work on the first try (e.g., click misses the target, page doesn't load), report the failure immediately with a screenshot. Do NOT retry 3-4 times adjusting coordinates by a few pixels. Report exactly what happened and let the orchestrator fix it.
+

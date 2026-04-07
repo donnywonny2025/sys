@@ -1,6 +1,34 @@
 (function () {
   'use strict';
 
+  // --- Feed Timer Tracking ---
+  var feedTimestamps = { email: null, calendar: null, weather: null };
+  var feedIntervals = { email: 5, calendar: 15, weather: 30 }; // minutes
+
+  function updateFeedTimers() {
+    var now = Date.now();
+    ['email', 'calendar', 'weather'].forEach(function(type) {
+      var el = document.getElementById(type === 'email' ? 'email-timer' : (type === 'calendar' ? 'calendar-timer' : null));
+      if (!el) return;
+      var ts = feedTimestamps[type];
+      if (!ts) { el.textContent = 'waiting…'; return; }
+      var agoSec = Math.floor((now - ts) / 1000);
+      var agoStr = agoSec < 60 ? agoSec + 's ago' : Math.floor(agoSec / 60) + 'm ago';
+      var nextSec = (feedIntervals[type] * 60) - agoSec;
+      var nextStr = nextSec <= 0 ? 'any moment' : (nextSec < 60 ? nextSec + 's' : Math.ceil(nextSec / 60) + 'm');
+      el.textContent = agoStr + ' · next ' + nextStr;
+    });
+    // Weather in top bar
+    var wTs = feedTimestamps.weather;
+    if (wTs) {
+      var wAgo = Math.floor((now - wTs) / 1000);
+      var topW = document.getElementById('top-weather');
+      if (topW && topW._baseText) {
+        topW.textContent = topW._baseText + ' (' + (wAgo < 60 ? wAgo + 's' : Math.floor(wAgo / 60) + 'm') + ')';
+      }
+    }
+  }
+
   // --- Clock & Date ---
   function updateClock() {
     var now = new Date();
@@ -157,7 +185,9 @@
   // --- Weather ---
   function renderWeather(data) {
     if (data && data.summary) {
-      document.getElementById('top-weather').textContent = data.summary;
+      var el = document.getElementById('top-weather');
+      el._baseText = data.summary;
+      el.textContent = data.summary;
     }
   }
 
@@ -549,16 +579,19 @@
             renderFocus(msg.items);
             break;
           case 'email':
+            feedTimestamps.email = msg._cachedAt || Date.now();
             renderEmail(msg.emails, 'email-content');
             if (msg.emails.length > 5) renderEmail(msg.emails, 'mail-full-content');
             break;
           case 'calendar':
+            feedTimestamps.calendar = msg._cachedAt || Date.now();
             renderCalendar(msg.events, 'calendar-content');
             renderCalendar(msg.events, 'calendar-full-content');
             // Auto-populate Today's Focus from calendar
             autoFocusFromCalendar(msg.events);
             break;
           case 'weather':
+            feedTimestamps.weather = msg._cachedAt || Date.now();
             renderWeather(msg.data);
             break;
           case 'mail-full':
@@ -584,9 +617,9 @@
     };
   }
 
-  // --- Hermes Status Polling ---
-  function checkHermes() {
-    fetch('/api/hermes-status')
+  // --- OpenClaw Status Polling ---
+  function checkOpenClaw() {
+    fetch('/api/openclaw-status')
       .then(function(r) { return r.json(); })
       .then(function(data) {
         var dot = document.getElementById('hermes-dot');
@@ -611,9 +644,10 @@
   updateClock();
   updateDate();
   setInterval(updateClock, 1000);
+  setInterval(updateFeedTimers, 1000);
   connectWS();
-  checkHermes();
-  setInterval(checkHermes, 15000);
+  checkOpenClaw();
+  setInterval(checkOpenClaw, 15000);
   
   // FETCH ACTIVE PERSISTENT STATE ON BOOT
   fetch('/api/state')

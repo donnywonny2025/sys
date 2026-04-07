@@ -32,9 +32,9 @@
       </button>
     </div>
     <div class="rail-bottom">
-      <a href="http://localhost:18789" target="_blank" class="rail-btn" title="OpenClaw Control UI" style="text-decoration:none;">
+      <button class="rail-btn" data-scene="openclaw" title="OpenClaw Control UI">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-      </a>
+      </button>
       <div class="rail-status-wrap" title="Dashboard connection">
         <span class="status-dot" id="status-dot"></span>
       </div>
@@ -81,7 +81,7 @@
       <div id="panels-grid">
         <!-- Calendar Panel -->
         <section id="calendar-panel" class="panel">
-          <h2 class="section-label">Schedule</h2>
+          <div class="section-header"><h2 class="section-label">Schedule</h2><span class="feed-timer" id="calendar-timer"></span></div>
           <div id="calendar-content">
             <div class="empty-state">Calendar not synced yet.</div>
           </div>
@@ -89,7 +89,7 @@
 
         <!-- Email Panel -->
         <section id="email-panel" class="panel">
-          <h2 class="section-label">Inbox</h2>
+          <div class="section-header"><h2 class="section-label">Inbox</h2><span class="feed-timer" id="email-timer"></span></div>
           <div id="email-content">
             <div class="empty-state">Mail not loaded yet.</div>
           </div>
@@ -130,6 +130,16 @@
         id="excalidraw-frame"
         src="/whiteboard/index.html"
         style="width:100%; height:100%; border:none; border-radius:6px;"
+        allow="clipboard-read; clipboard-write"
+      ></iframe>
+    </main>
+
+    <!-- Scene: OpenClaw Control UI -->
+    <main id="scene-openclaw" class="scene">
+      <iframe
+        id="openclaw-frame"
+        src="http://127.0.0.1:18789/#token=1756113129b92892b720b6b6ef1ba1819566554056a7e081"
+        style="width:100%; height:100%; border:none; border-radius:6px; color-scheme:dark;"
         allow="clipboard-read; clipboard-write"
       ></iframe>
     </main>

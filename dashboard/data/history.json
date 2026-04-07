@@ -1,895 +1,5 @@
 [
   {
-    "type": "info",
-    "content": "<strong>📬 Mail — colour8k@mac.com (via Hermes)</strong><br>1. USPS® Delivery — Mon Apr 13 · 12:49 AM<br>2. Venmo Card disabled · 11:41 PM<br>3. Google Cloud receipt $10.00 · 11:41 PM<br>4. Security alert · 11:39 PM<br>5. Venmo Card enabled · 11:37 PM",
-    "timestamp": "2026-04-07T05:07:54.301Z"
-  },
-  {
-    "type": "info",
-    "content": "<strong>📬 Inbox — colour8k@mac.com</strong><br>› USPS® Delivery Mon Apr 13 · <em>12:49 AM</em><br>› Venmo Card disabled · <em>11:41 PM</em><br>› Google Cloud receipt $10.00 · <em>11:41 PM</em><br>› Security alert · <em>11:39 PM</em><br>› Venmo Card enabled · <em>11:37 PM</em>",
-    "timestamp": "2026-04-07T05:08:52.063Z"
-  },
-  {
-    "type": "message",
-    "text": "<strong>📬 Inbox — colour8k@mac.com</strong><br>› USPS® Delivery Mon Apr 13<br>› Venmo Card disabled<br>› Google Cloud receipt $10.00<br>› Security alert<br>› Venmo Card enabled",
-    "style": "info",
-    "timestamp": "2026-04-07T05:09:57.947Z"
-  },
-  {
-    "type": "message",
-    "text": "<strong>📬 Inbox — iCloud</strong><br><br>",
-    "style": "info",
-    "timestamp": "2026-04-07T05:11:10.413Z"
-  },
-  {
-    "type": "email",
-    "emails": [
-      {
-        "subject": "USPS® Expected Delivery by Monday, April 13, 2026 arriving by 9:00pm 9400111206241421253727",
-        "sender": "auto-reply@usps.com",
-        "date": "Tuesday, April 7, 2026 at 12:49:06 AM",
-        "unread": true
-      },
-      {
-        "subject": "Your Venmo Debit Card is now disabled",
-        "sender": "Venmo",
-        "date": "Monday, April 6, 2026 at 11:41:45 PM",
-        "unread": true
-      },
-      {
-        "subject": "Receipt from GOOGLE*CLOUD CHTCX4 - $10.00",
-        "sender": "Venmo",
-        "date": "Monday, April 6, 2026 at 11:41:17 PM",
-        "unread": true
-      },
-      {
-        "subject": "Security alert for kerrjeff1977@gmail.com",
-        "sender": "Google",
-        "date": "Monday, April 6, 2026 at 11:39:38 PM",
-        "unread": true
-      },
-      {
-        "subject": "Your Venmo Debit Card is now enabled",
-        "sender": "Venmo",
-        "date": "Monday, April 6, 2026 at 11:37:45 PM",
-        "unread": true
-      },
-      {
-        "subject": "Apr 6, 2026 Digest: 1 new message from PVSchools today",
-        "sender": "PVSchools via ParentSquare",
-        "date": "Monday, April 6, 2026 at 9:19:33 PM",
-        "unread": true
-      },
-      {
-        "subject": "Apr 6, 2026 Digest: 1 new message from Desert Shadows Elementary School today",
-        "sender": "Desert Shadows Elementary School via ParentSquare",
-        "date": "Monday, April 6, 2026 at 9:19:14 PM",
-        "unread": true
-      },
-      {
-        "subject": "Amir Frenkel recently posted",
-        "sender": "LinkedIn",
-        "date": "Monday, April 6, 2026 at 9:04:16 PM",
-        "unread": true
-      },
-      {
-        "subject": "4/6 Daily Jobs Digest",
-        "sender": "Arena Careers",
-        "date": "Monday, April 6, 2026 at 9:02:56 PM",
-        "unread": true
-      },
-      {
-        "subject": "No dangers found after thorough search of Desert Shadows Elementary School parking lot.",
-        "sender": "PVSchools via ParentSquare",
-        "date": "Monday, April 6, 2026 at 8:41:54 PM",
-        "unread": true
-      },
-      {
-        "subject": "[AINews] Gemma 4 crosses 2 million downloads",
-        "sender": "AINews",
-        "date": "Monday, April 6, 2026 at 8:17:23 PM",
-        "unread": true
-      },
-      {
-        "subject": "Your job matches for “Video Producer” — curated for you from Jobright - 04/06/2026",
-        "sender": "Jobright Job Alert",
-        "date": "Monday, April 6, 2026 at 8:11:06 PM",
-        "unread": true
-      },
-      {
-        "subject": "USPS® Expected Delivery on Tuesday, April 7, 2026 arriving by 9:00pm 9261290376142072331419",
-        "sender": "auto-reply@usps.com",
-        "date": "Monday, April 6, 2026 at 8:01:07 PM",
-        "unread": true
-      },
-      {
-        "subject": "Important Pick-Up Location Information for Desert Shadows Elementary and Middle School",
-        "sender": "PVSchools via ParentSquare",
-        "date": "Monday, April 6, 2026 at 7:27:24 PM",
-        "unread": false
-      },
-      {
-        "subject": "Threat Received Related to Desert Shadows Elementary, No Evidence of Dangers",
-        "sender": "PVSchools via ParentSquare",
-        "date": "Monday, April 6, 2026 at 7:09:26 PM",
-        "unread": false
-      },
-      {
-        "subject": "Hey Jeff! 35% off ends soon. ***",
-        "sender": "BlackPeopleMeet",
-        "date": "Monday, April 6, 2026 at 6:00:25 PM",
-        "unread": true
-      },
-      {
-        "subject": "Creative Producer insights: $110K/yr+ salary at 160 job openings",
-        "sender": "LinkedIn",
-        "date": "Monday, April 6, 2026 at 5:55:01 PM",
-        "unread": true
-      },
-      {
-        "subject": "4/6/26 Job Alert: Insight Global just started hiring.",
-        "sender": "MatchedJobs Alerts",
-        "date": "Monday, April 6, 2026 at 5:43:13 PM",
-        "unread": true
-      },
-      {
-        "subject": "New: Get sick day supplies delivered 😷",
-        "sender": "Grubhub",
-        "date": "Monday, April 6, 2026 at 5:35:43 PM",
-        "unread": true
-      },
-      {
-        "subject": "Your SoFi banking statement is available",
-        "sender": "SoFi",
-        "date": "Monday, April 6, 2026 at 5:17:54 PM",
-        "unread": true
-      }
-    ],
-    "timestamp": "2026-04-07T05:15:03.006Z"
-  },
-  {
-    "type": "focus",
-    "items": [
-      {
-        "text": "SYSTEM Dashboard — build command center",
-        "meta": "In progress",
-        "urgent": true
-      },
-      {
-        "text": "Hermes Agent integration — mail, calendar, weather",
-        "meta": "Configuring skills"
-      },
-      {
-        "text": "Lemmings game — CRT display fix",
-        "meta": "Paused"
-      },
-      {
-        "text": "Data Annotation — Factuality Research qualification",
-        "meta": "Awaiting results"
-      },
-      {
-        "text": "Vince narrative — B-roll assembly final export",
-        "meta": "Blocked on color grade"
-      }
-    ],
-    "timestamp": "2026-04-07T05:15:18.580Z"
-  },
-  {
-    "type": "scene",
-    "scene": "whiteboard",
-    "timestamp": "2026-04-07T05:18:19.709Z"
-  },
-  {
-    "type": "weather",
-    "data": {
-      "summary": "☁️   +49°F",
-      "detail": "☁️   +49°F 46% ↖4mph"
-    },
-    "timestamp": "2026-04-07T05:31:13.143Z"
-  },
-  {
-    "type": "calendar",
-    "events": [],
-    "timestamp": "2026-04-07T05:31:25.595Z"
-  },
-  {
-    "type": "email",
-    "emails": [
-      {
-        "subject": "Quick question about your application at Reputation.com, Inc.",
-        "sender": "Glassdoor",
-        "date": "Tuesday, April 7, 2026 at 1:30:03 AM",
-        "unread": true
-      },
-      {
-        "subject": "USPS® Expected Delivery by Monday, April 13, 2026 arriving by 9:00pm 9400111206241421253727",
-        "sender": "auto-reply@usps.com",
-        "date": "Tuesday, April 7, 2026 at 12:49:06 AM",
-        "unread": true
-      },
-      {
-        "subject": "Your Venmo Debit Card is now disabled",
-        "sender": "Venmo",
-        "date": "Monday, April 6, 2026 at 11:41:45 PM",
-        "unread": true
-      },
-      {
-        "subject": "Receipt from GOOGLE*CLOUD CHTCX4 - $10.00",
-        "sender": "Venmo",
-        "date": "Monday, April 6, 2026 at 11:41:17 PM",
-        "unread": true
-      },
-      {
-        "subject": "Security alert for kerrjeff1977@gmail.com",
-        "sender": "Google",
-        "date": "Monday, April 6, 2026 at 11:39:38 PM",
-        "unread": true
-      },
-      {
-        "subject": "Your Venmo Debit Card is now enabled",
-        "sender": "Venmo",
-        "date": "Monday, April 6, 2026 at 11:37:45 PM",
-        "unread": true
-      },
-      {
-        "subject": "Apr 6, 2026 Digest: 1 new message from PVSchools today",
-        "sender": "PVSchools via ParentSquare",
-        "date": "Monday, April 6, 2026 at 9:19:33 PM",
-        "unread": true
-      },
-      {
-        "subject": "Apr 6, 2026 Digest: 1 new message from Desert Shadows Elementary School today",
-        "sender": "Desert Shadows Elementary School via ParentSquare",
-        "date": "Monday, April 6, 2026 at 9:19:14 PM",
-        "unread": true
-      },
-      {
-        "subject": "Amir Frenkel recently posted",
-        "sender": "LinkedIn",
-        "date": "Monday, April 6, 2026 at 9:04:16 PM",
-        "unread": true
-      },
-      {
-        "subject": "4/6 Daily Jobs Digest",
-        "sender": "Arena Careers",
-        "date": "Monday, April 6, 2026 at 9:02:56 PM",
-        "unread": true
-      },
-      {
-        "subject": "No dangers found after thorough search of Desert Shadows Elementary School parking lot.",
-        "sender": "PVSchools via ParentSquare",
-        "date": "Monday, April 6, 2026 at 8:41:54 PM",
-        "unread": true
-      },
-      {
-        "subject": "[AINews] Gemma 4 crosses 2 million downloads",
-        "sender": "AINews",
-        "date": "Monday, April 6, 2026 at 8:17:23 PM",
-        "unread": true
-      },
-      {
-        "subject": "Your job matches for “Video Producer” — curated for you from Jobright - 04/06/2026",
-        "sender": "Jobright Job Alert",
-        "date": "Monday, April 6, 2026 at 8:11:06 PM",
-        "unread": true
-      },
-      {
-        "subject": "USPS® Expected Delivery on Tuesday, April 7, 2026 arriving by 9:00pm 9261290376142072331419",
-        "sender": "auto-reply@usps.com",
-        "date": "Monday, April 6, 2026 at 8:01:07 PM",
-        "unread": true
-      },
-      {
-        "subject": "Important Pick-Up Location Information for Desert Shadows Elementary and Middle School",
-        "sender": "PVSchools via ParentSquare",
-        "date": "Monday, April 6, 2026 at 7:27:24 PM",
-        "unread": false
-      },
-      {
-        "subject": "Threat Received Related to Desert Shadows Elementary, No Evidence of Dangers",
-        "sender": "PVSchools via ParentSquare",
-        "date": "Monday, April 6, 2026 at 7:09:26 PM",
-        "unread": false
-      },
-      {
-        "subject": "Hey Jeff! 35% off ends soon. ***",
-        "sender": "BlackPeopleMeet",
-        "date": "Monday, April 6, 2026 at 6:00:25 PM",
-        "unread": true
-      },
-      {
-        "subject": "Creative Producer insights: $110K/yr+ salary at 160 job openings",
-        "sender": "LinkedIn",
-        "date": "Monday, April 6, 2026 at 5:55:01 PM",
-        "unread": true
-      },
-      {
-        "subject": "4/6/26 Job Alert: Insight Global just started hiring.",
-        "sender": "MatchedJobs Alerts",
-        "date": "Monday, April 6, 2026 at 5:43:13 PM",
-        "unread": true
-      },
-      {
-        "subject": "New: Get sick day supplies delivered 😷",
-        "sender": "Grubhub",
-        "date": "Monday, April 6, 2026 at 5:35:43 PM",
-        "unread": true
-      }
-    ],
-    "timestamp": "2026-04-07T05:31:34.960Z"
-  },
-  {
-    "type": "focus",
-    "items": [
-      {
-        "text": "SYSTEM Dashboard — build command center",
-        "meta": "In progress",
-        "urgent": true
-      },
-      {
-        "text": "Hermes Agent integration — mail, calendar, weather",
-        "meta": "Configuring skills"
-      },
-      {
-        "text": "Excalidraw Real-time Bridge",
-        "meta": "Deployed"
-      }
-    ],
-    "timestamp": "2026-04-07T05:31:34.970Z"
-  },
-  {
-    "type": "scene",
-    "scene": "whiteboard",
-    "timestamp": "2026-04-07T05:31:42.841Z"
-  },
-  {
-    "type": "system",
-    "content": "COMMUNICATION RULE CODIFIED: Artifacts banned. All updates will route directly to chat or display visually on this dashboard.",
-    "urgent": true,
-    "timestamp": "2026-04-07T05:37:25.949Z"
-  },
-  {
-    "type": "studio",
-    "hero": "/data/gallery/black_cat.png",
-    "gallery": [
-      "/data/gallery/black_cat.png"
-    ],
-    "timestamp": "2026-04-07T05:40:19.836Z"
-  },
-  {
-    "type": "studio",
-    "hero": "/data/gallery/black_cat.png",
-    "gallery": [
-      "/data/gallery/black_cat.png"
-    ],
-    "timestamp": "2026-04-07T05:41:07.784Z"
-  },
-  {
-    "type": "studio",
-    "hero": "data/gallery/black_cat.png",
-    "gallery": [
-      "/data/gallery/black_cat.png"
-    ],
-    "timestamp": "2026-04-07T05:41:15.120Z"
-  },
-  {
-    "type": "studio",
-    "hero": "/data/gallery/black_cat.png",
-    "gallery": [
-      "/data/gallery/black_cat.png"
-    ],
-    "timestamp": "2026-04-07T05:43:07.508Z"
-  },
-  {
-    "type": "studio",
-    "hero": {
-      "src": "/data/gallery/black_cat.png",
-      "size": "1024x1024",
-      "aspect": "1:1",
-      "prompt": "A hyper-realistic photograph of a sleek black cat sitting elegantly on a wooden table, studio lighting, highly detailed focus on the eyes and fur."
-    },
-    "gallery": [
-      {
-        "src": "/data/gallery/black_cat.png",
-        "size": "1024x1024",
-        "aspect": "1:1",
-        "prompt": "A hyper-realistic photograph of a sleek black cat sitting elegantly on a wooden table, studio lighting, highly detailed focus on the eyes and fur."
-      }
-    ],
-    "timestamp": "2026-04-07T05:44:42.936Z"
-  },
-  {
-    "type": "studio",
-    "hero": {
-      "src": "/data/gallery/cat_16_9.png",
-      "size": "1024x576",
-      "aspect": "16:9",
-      "prompt": "A hyper-realistic cinematic photograph of a sleek black cat sitting elegantly on a wooden table, wide landscape shot, 16:9 aspect ratio, studio lighting, highly detailed focus."
-    },
-    "gallery": [
-      {
-        "src": "/data/gallery/cat_16_9.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic photograph of a sleek black cat sitting elegantly on a wooden table, wide landscape shot, 16:9 aspect ratio, studio lighting, highly detailed focus."
-      },
-      {
-        "src": "/data/gallery/black_cat.png",
-        "size": "1024x1024",
-        "aspect": "1:1",
-        "prompt": "A hyper-realistic photograph of a sleek black cat sitting elegantly on a wooden table, studio lighting, highly detailed focus on the eyes and fur."
-      }
-    ],
-    "timestamp": "2026-04-07T05:46:21.194Z"
-  },
-  {
-    "type": "studio",
-    "hero": {
-      "src": "/data/gallery/cat_16_9.png",
-      "size": "1024x576",
-      "aspect": "16:9",
-      "prompt": "A hyper-realistic cinematic photograph of a sleek black cat sitting elegantly on a wooden table, wide landscape shot, 16:9 aspect ratio, studio lighting, highly detailed focus."
-    },
-    "gallery": [
-      {
-        "src": "/data/gallery/cat_16_9.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic photograph of a sleek black cat sitting elegantly on a wooden table, wide landscape shot, 16:9 aspect ratio, studio lighting, highly detailed focus."
-      },
-      {
-        "src": "/data/gallery/black_cat.png",
-        "size": "1024x1024",
-        "aspect": "1:1",
-        "prompt": "A hyper-realistic photograph of a sleek black cat sitting elegantly on a wooden table, studio lighting, highly detailed focus on the eyes and fur."
-      }
-    ],
-    "timestamp": "2026-04-07T05:49:17.145Z"
-  },
-  {
-    "type": "studio",
-    "hero": {
-      "src": "/data/gallery/space_station.png",
-      "size": "1024x576",
-      "aspect": "16:9",
-      "prompt": "A hyper-realistic cinematic wide shot of a massive futuristic space station orbiting a glowing blue gas giant. Detailed neon lighting, spaceships docking."
-    },
-    "gallery": [
-      {
-        "src": "/data/gallery/space_station.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a massive futuristic space station orbiting a glowing blue gas giant."
-      },
-      {
-        "src": "/data/gallery/cat_16_9.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic photograph of a sleek black cat sitting elegantly on a wooden table."
-      },
-      {
-        "src": "/data/gallery/black_cat.png",
-        "size": "1024x1024",
-        "aspect": "1:1",
-        "prompt": "A hyper-realistic photograph of a sleek black cat sitting elegantly on a wooden table."
-      }
-    ],
-    "timestamp": "2026-04-07T05:55:13.205Z"
-  },
-  {
-    "type": "studio",
-    "hero": {
-      "src": "/data/gallery/nano_test.png",
-      "size": "1024x576",
-      "aspect": "16:9",
-      "prompt": "A quick futuristic cyberpunk street cat"
-    },
-    "gallery": [
-      {
-        "src": "/data/gallery/nano_test.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A quick futuristic cyberpunk street cat"
-      }
-    ],
-    "timestamp": "2026-04-07T05:56:49.874Z"
-  },
-  {
-    "type": "studio",
-    "hero": {
-      "src": "/data/gallery/fireman_cat.png",
-      "size": "1024x576",
-      "aspect": "16:9",
-      "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform and red helmet, standing proudly in front of a fire engine, dramatic lighting."
-    },
-    "gallery": [
-      {
-        "src": "/data/gallery/fireman_cat.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform."
-      },
-      {
-        "src": "/data/gallery/space_station.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a massive futuristic space station orbiting a glowing blue gas giant."
-      },
-      {
-        "src": "/data/gallery/cat_16_9.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic photograph of a sleek black cat sitting elegantly on a wooden table."
-      }
-    ],
-    "timestamp": "2026-04-07T05:59:08.972Z"
-  },
-  {
-    "type": "studio",
-    "hero": {
-      "src": "/data/gallery/firecat_nano.png",
-      "size": "1024x576",
-      "aspect": "16:9",
-      "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform and red helmet, standing proudly in front of a fire engine, dramatic lighting.",
-      "model": "Nano Banana 2 Pro (gemini-3.1-pro-image-preview)"
-    },
-    "gallery": [
-      {
-        "src": "/data/gallery/firecat_nano.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Nano Banana 2 Pro"
-      },
-      {
-        "src": "/data/gallery/fireman_cat.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Imagen 4 Fast"
-      },
-      {
-        "src": "/data/gallery/cat_16_9.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic photograph of a sleek black cat sitting elegantly on a wooden table.",
-        "model": "Default"
-      }
-    ],
-    "timestamp": "2026-04-07T06:04:27.820Z"
-  },
-  {
-    "type": "studio",
-    "hero": {
-      "src": "/data/gallery/firecat_nano.png",
-      "size": "1024x576",
-      "aspect": "16:9",
-      "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform and red helmet, standing proudly in front of a fire engine, dramatic lighting.",
-      "model": "Nano Banana 2 Pro (gemini-3.1-pro-image-preview)"
-    },
-    "gallery": [
-      {
-        "src": "/data/gallery/firecat_nano.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Nano Banana 2 Pro"
-      },
-      {
-        "src": "/data/gallery/fireman_cat.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Imagen 4 Fast"
-      },
-      {
-        "src": "/data/gallery/cat_16_9.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic photograph of a sleek black cat sitting elegantly on a wooden table.",
-        "model": "Default"
-      }
-    ],
-    "timestamp": "2026-04-07T06:06:38.516Z"
-  },
-  {
-    "type": "studio",
-    "hero": {
-      "src": "/data/gallery/firecat_nano.png",
-      "size": "1024x576",
-      "aspect": "16:9",
-      "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform and red helmet, standing proudly in front of a fire engine, dramatic lighting.",
-      "model": "Nano Banana 2 Pro (gemini-3.1-pro-image-preview)"
-    },
-    "gallery": [
-      {
-        "src": "/data/gallery/firecat_nano.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Nano Banana 2 Pro"
-      },
-      {
-        "src": "/data/gallery/fireman_cat.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Imagen 4 Fast"
-      },
-      {
-        "src": "/data/gallery/cat_16_9.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic photograph of a sleek black cat sitting elegantly on a wooden table.",
-        "model": "Default"
-      }
-    ],
-    "timestamp": "2026-04-07T06:08:25.585Z"
-  },
-  {
-    "type": "studio",
-    "hero": {
-      "src": "/data/gallery/firecat_nano.png",
-      "size": "1584x672",
-      "aspect": "16:9",
-      "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform and red helmet, standing proudly in front of a fire engine, dramatic lighting.",
-      "model": "Nano Banana 2 Pro (gemini-3.1-pro-image-preview)"
-    },
-    "gallery": [
-      {
-        "src": "/data/gallery/firecat_nano.png",
-        "size": "1584x672",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Nano Banana 2 Pro"
-      },
-      {
-        "src": "/data/gallery/fireman_cat.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Imagen 4 Fast"
-      },
-      {
-        "src": "/data/gallery/cat_16_9.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic photograph of a sleek black cat sitting elegantly on a wooden table.",
-        "model": "Default"
-      }
-    ],
-    "timestamp": "2026-04-07T06:14:00.546Z"
-  },
-  {
-    "type": "studio",
-    "hero": {
-      "src": "/data/gallery/firecat_nano_upscaled.png",
-      "size": "3168x1344",
-      "aspect": "16:9",
-      "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform and red helmet, standing proudly in front of a fire engine, dramatic lighting.",
-      "model": "Nano Banana 2 Pro [UPSCALED]"
-    },
-    "gallery": [
-      {
-        "src": "/data/gallery/firecat_nano_upscaled.png",
-        "size": "3168x1344",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Nano Banana 2 Pro [UPSCALED]"
-      },
-      {
-        "src": "/data/gallery/firecat_nano.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Nano Banana 2 Pro"
-      },
-      {
-        "src": "/data/gallery/fireman_cat.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Imagen 4 Fast"
-      }
-    ],
-    "timestamp": "2026-04-07T06:18:18.652Z"
-  },
-  {
-    "type": "studio",
-    "hero": {
-      "src": "/data/gallery/firecat_nano_upscaled.png",
-      "size": "3168x1344",
-      "aspect": "16:9",
-      "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform and red helmet, standing proudly in front of a fire engine, dramatic lighting.",
-      "model": "Nano Banana 2 Pro [UPSCALED]"
-    },
-    "gallery": [
-      {
-        "src": "/data/gallery/firecat_nano_upscaled.png",
-        "size": "3168x1344",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Nano Banana 2 Pro [UPSCALED]"
-      },
-      {
-        "src": "/data/gallery/firecat_nano.png",
-        "size": "1584x672",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Nano Banana 2 Pro"
-      },
-      {
-        "src": "/data/gallery/fireman_cat.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Imagen 4 Fast"
-      },
-      {
-        "src": "/data/gallery/cat_16_9.png",
-        "size": "1024x576",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic photograph of a sleek black cat sitting elegantly on a wooden table.",
-        "model": "Default"
-      }
-    ],
-    "timestamp": "2026-04-07T06:19:38.768Z"
-  },
-  {
-    "type": "studio",
-    "hero": {
-      "src": "/data/gallery/firecat_nano_upscaled.png",
-      "size": "3168x1344",
-      "aspect": "16:9",
-      "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform and red helmet, standing proudly in front of a fire engine, dramatic lighting.",
-      "model": "Nano Banana 2 Pro [UPSCALED]"
-    },
-    "gallery": [
-      {
-        "src": "/data/gallery/firecat_nano_upscaled.png",
-        "size": "3168x1344",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Nano Banana 2 Pro [UPSCALED]"
-      },
-      {
-        "src": "/data/gallery/firecat_nano.png",
-        "size": "1584x672",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Nano Banana 2 Pro"
-      }
-    ],
-    "timestamp": "2026-04-07T06:23:25.712Z"
-  },
-  {
-    "type": "studio",
-    "hero": {
-      "src": "/data/gallery/firecat_nano_upscaled.png",
-      "size": "3168x1344",
-      "aspect": "16:9",
-      "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform and red helmet, standing proudly in front of a fire engine, dramatic lighting.",
-      "model": "Nano Banana 2 Pro [UPSCALED]"
-    },
-    "gallery": [
-      {
-        "src": "/data/gallery/firecat_nano_upscaled.png",
-        "size": "3168x1344",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Nano Banana 2 Pro [UPSCALED]"
-      },
-      {
-        "src": "/data/gallery/firecat_nano.png",
-        "size": "1584x672",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Nano Banana 2 Pro"
-      }
-    ],
-    "timestamp": "2026-04-07T06:27:02.603Z"
-  },
-  {
-    "type": "studio",
-    "hero": {
-      "src": "/data/gallery/firecat_nano_upscaled.png",
-      "size": "3168x1344",
-      "aspect": "16:9",
-      "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform and red helmet, standing proudly in front of a fire engine, dramatic lighting.",
-      "model": "Nano Banana 2 Pro [UPSCALED]"
-    },
-    "gallery": [
-      {
-        "src": "/data/gallery/firecat_nano_upscaled.png",
-        "size": "3168x1344",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Nano Banana 2 Pro [UPSCALED]"
-      },
-      {
-        "src": "/data/gallery/firecat_nano.png",
-        "size": "1584x672",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Nano Banana 2 Pro"
-      }
-    ],
-    "timestamp": "2026-04-07T06:28:05.042Z"
-  },
-  {
-    "type": "studio",
-    "hero": {
-      "src": "/data/gallery/moon.png",
-      "size": "1584x672",
-      "aspect": "16:9",
-      "prompt": "A professional high-resolution astrophotography shot of the moon in deep space, glowing white and crisp against the pitch-black void of space. Hyper-detailed crater textures, realistic lunar surface with raw physical imperfections, shot through a high-powered astronomical telescope, sharp focus, cinematic lighting, 16:9 aspect ratio.",
-      "model": "Nano Banana 2 Pro"
-    },
-    "gallery": [
-      {
-        "src": "/data/gallery/moon.png",
-        "size": "1584x672",
-        "aspect": "16:9",
-        "prompt": "A professional high-resolution astrophotography shot of the moon in deep space...",
-        "model": "Nano Banana 2 Pro"
-      },
-      {
-        "src": "/data/gallery/firecat_nano_upscaled.png",
-        "size": "3168x1344",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Nano Banana 2 Pro [UPSCALED]"
-      },
-      {
-        "src": "/data/gallery/firecat_nano.png",
-        "size": "1584x672",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Nano Banana 2 Pro"
-      }
-    ],
-    "timestamp": "2026-04-07T06:34:33.553Z"
-  },
-  {
-    "type": "reference",
-    "src": "/data/references/moon.jpg",
-    "timestamp": "2026-04-07T06:38:05.845Z"
-  },
-  {
-    "type": "studio",
-    "hero": {
-      "src": "/data/gallery/moon.png",
-      "size": "1584x672",
-      "aspect": "16:9",
-      "prompt": "A professional high-resolution astrophotography shot of the moon in deep space...",
-      "model": "Nano Banana 2 Pro"
-    },
-    "gallery": [
-      {
-        "src": "/data/gallery/moon.png",
-        "size": "1584x672",
-        "aspect": "16:9",
-        "prompt": "A professional high-resolution astrophotography shot of the moon in deep space...",
-        "model": "Nano Banana 2 Pro"
-      },
-      {
-        "src": "/data/gallery/firecat_nano_upscaled.png",
-        "size": "3168x1344",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Nano Banana 2 Pro [UPSCALED]"
-      },
-      {
-        "src": "/data/gallery/firecat_nano.png",
-        "size": "1584x672",
-        "aspect": "16:9",
-        "prompt": "A hyper-realistic cinematic wide shot of a sleek black cat dressed in a rugged yellow fireman uniform.",
-        "model": "Nano Banana 2 Pro"
-      }
-    ],
-    "timestamp": "2026-04-07T06:42:10.283Z"
-  },
-  {
     "type": "close_reference",
     "timestamp": "2026-04-07T06:42:11.321Z"
   },
@@ -2041,5 +1151,779 @@
       "detail": "☁️   +48°F 58% ↓4mph"
     },
     "timestamp": "2026-04-07T09:58:18.167Z"
+  },
+  {
+    "type": "calendar",
+    "events": [
+      {
+        "name": "Callie Bea",
+        "time": "4/27 00:00",
+        "calendar": "Work"
+      },
+      {
+        "name": "Court",
+        "time": "4/29 11:00",
+        "calendar": "Freelance"
+      },
+      {
+        "name": "Counseling at arbor circle",
+        "time": "4/9 15:00",
+        "calendar": "Freelance"
+      },
+      {
+        "name": "Orthodox Easter",
+        "time": "4/12 00:00",
+        "calendar": "US Holidays"
+      },
+      {
+        "name": "Tax Day",
+        "time": "4/15 00:00",
+        "calendar": "US Holidays"
+      },
+      {
+        "name": "J. Kerr",
+        "time": "4/27 11:00",
+        "calendar": "Siri Suggestions"
+      }
+    ],
+    "timestamp": "2026-04-07T10:03:39.191Z"
+  },
+  {
+    "type": "email",
+    "emails": [
+      {
+        "subject": "New job opportunities at Molina Talent Acquisition",
+        "sender": "Molina Healthcare",
+        "date": "4/7 04:41",
+        "unread": true
+      },
+      {
+        "subject": "More Perfect Union is hiring for Video Editor. 6 more Video Editor jobs in United States.",
+        "sender": "Indeed",
+        "date": "4/7 02:59",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "4/7 02:16",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "4/7 02:15",
+        "unread": true
+      },
+      {
+        "subject": "Quick question about your application at Reputation.com, Inc.",
+        "sender": "Glassdoor",
+        "date": "4/7 01:30",
+        "unread": true
+      },
+      {
+        "subject": "USPS® Expected Delivery by Monday, April 13, 2026 arriving by 9:00pm 9400111206241421253727",
+        "sender": "auto-reply@usps.com",
+        "date": "4/7 00:49",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "4/6 23:41",
+        "unread": true
+      },
+      {
+        "subject": "Receipt from GOOGLE*CLOUD CHTCX4 - $10.00",
+        "sender": "Venmo",
+        "date": "4/6 23:41",
+        "unread": true
+      },
+      {
+        "subject": "Security alert for kerrjeff1977@gmail.com",
+        "sender": "Google",
+        "date": "4/6 23:39",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "4/6 23:37",
+        "unread": true
+      }
+    ],
+    "timestamp": "2026-04-07T10:03:47.465Z"
+  },
+  {
+    "type": "weather",
+    "data": {
+      "summary": "☁️   +48°F",
+      "detail": "☁️   +48°F 56% ↓4mph"
+    },
+    "timestamp": "2026-04-07T10:03:48.257Z"
+  },
+  {
+    "type": "calendar",
+    "events": [
+      {
+        "name": "Callie Bea",
+        "time": "4/27 00:00",
+        "calendar": "Work"
+      },
+      {
+        "name": "Court",
+        "time": "4/29 11:00",
+        "calendar": "Freelance"
+      },
+      {
+        "name": "Counseling at arbor circle",
+        "time": "4/9 15:00",
+        "calendar": "Freelance"
+      },
+      {
+        "name": "Orthodox Easter",
+        "time": "4/12 00:00",
+        "calendar": "US Holidays"
+      },
+      {
+        "name": "Tax Day",
+        "time": "4/15 00:00",
+        "calendar": "US Holidays"
+      },
+      {
+        "name": "J. Kerr",
+        "time": "4/27 11:00",
+        "calendar": "Siri Suggestions"
+      }
+    ],
+    "timestamp": "2026-04-07T10:07:39.150Z"
+  },
+  {
+    "type": "email",
+    "emails": [
+      {
+        "subject": "Aifos Logistics LLC is hiring for Owner Operators Needed ASAP! Box Trucks • Cargo Vans • Sprinter Vans — Start Earning Now. 29 more hiring immediately jobs in Phoenix, AZ.",
+        "sender": "Indeed",
+        "date": "4/7 06:06",
+        "unread": true
+      },
+      {
+        "subject": "New job opportunities at Molina Talent Acquisition",
+        "sender": "Molina Healthcare",
+        "date": "4/7 04:41",
+        "unread": true
+      },
+      {
+        "subject": "More Perfect Union is hiring for Video Editor. 6 more Video Editor jobs in United States.",
+        "sender": "Indeed",
+        "date": "4/7 02:59",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "4/7 02:16",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "4/7 02:15",
+        "unread": true
+      },
+      {
+        "subject": "Quick question about your application at Reputation.com, Inc.",
+        "sender": "Glassdoor",
+        "date": "4/7 01:30",
+        "unread": true
+      },
+      {
+        "subject": "USPS® Expected Delivery by Monday, April 13, 2026 arriving by 9:00pm 9400111206241421253727",
+        "sender": "auto-reply@usps.com",
+        "date": "4/7 00:49",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "4/6 23:41",
+        "unread": true
+      },
+      {
+        "subject": "Receipt from GOOGLE*CLOUD CHTCX4 - $10.00",
+        "sender": "Venmo",
+        "date": "4/6 23:41",
+        "unread": true
+      },
+      {
+        "subject": "Security alert for kerrjeff1977@gmail.com",
+        "sender": "Google",
+        "date": "4/6 23:39",
+        "unread": true
+      }
+    ],
+    "timestamp": "2026-04-07T10:07:42.176Z"
+  },
+  {
+    "type": "weather",
+    "data": {
+      "summary": "☁️   +48°F",
+      "detail": "☁️   +48°F 56% ↓4mph"
+    },
+    "timestamp": "2026-04-07T10:07:42.916Z"
+  },
+  {
+    "type": "console",
+    "entry": "🔌 OpenClaw Control UI disconnected",
+    "style": "warn",
+    "ts": "06:54:36"
+  },
+  {
+    "type": "console",
+    "entry": "🔗 OpenClaw Control UI connected",
+    "style": "sys",
+    "ts": "06:54:36"
+  },
+  {
+    "type": "console",
+    "entry": "💬 ⇄ res ✓ chat.send 79ms runId=8f492f69-0a3b-4034-8c1a-01018d93bc95  id=a9f6eafa…835b",
+    "style": "sys",
+    "ts": "06:55:23"
+  },
+  {
+    "type": "console",
+    "entry": "🔗 OpenClaw Control UI connected",
+    "style": "sys",
+    "ts": "07:04:45"
+  },
+  {
+    "type": "console",
+    "entry": "🔗 OpenClaw Control UI connected",
+    "style": "sys",
+    "ts": "07:05:54"
+  },
+  {
+    "type": "console",
+    "entry": "→ [Tue 2026-04-07 07:06 EDT] Say hi",
+    "style": "prompt",
+    "ts": "07:06:13"
+  },
+  {
+    "type": "console",
+    "entry": "← OpenClaw : Hi!",
+    "style": "response",
+    "ts": "07:06:14"
+  },
+  {
+    "type": "console",
+    "entry": "🔌 OpenClaw Control UI disconnected",
+    "style": "warn",
+    "ts": "07:07:50"
+  },
+  {
+    "type": "console",
+    "entry": "🔌 OpenClaw Control UI disconnected",
+    "style": "warn",
+    "ts": "07:07:59"
+  },
+  {
+    "type": "console",
+    "entry": "🔌 OpenClaw Control UI disconnected",
+    "style": "warn",
+    "ts": "07:07:59"
+  },
+  {
+    "type": "console",
+    "entry": "🔌 OpenClaw Control UI disconnected",
+    "style": "warn",
+    "ts": "07:07:59"
+  },
+  {
+    "type": "console",
+    "entry": "🔗 OpenClaw Control UI connected",
+    "style": "sys",
+    "ts": "07:07:59"
+  },
+  {
+    "type": "scene",
+    "scene": "home",
+    "timestamp": "2026-04-07T11:08:06.950Z"
+  },
+  {
+    "type": "weather",
+    "data": {
+      "summary": "☁️   +50°F",
+      "detail": "☁️   +50°F 46% ↘4mph"
+    },
+    "timestamp": "2026-04-07T11:08:59.845Z"
+  },
+  {
+    "type": "email",
+    "emails": [
+      {
+        "subject": "New color drops",
+        "sender": "HOKA®",
+        "date": "4/7 07:02",
+        "unread": true
+      },
+      {
+        "subject": "Aifos Logistics LLC is hiring for Owner Operators Needed ASAP! Box Trucks • Cargo Vans • Sprinter Vans — Start Earning Now. 29 more hiring immediately jobs in Phoenix, AZ.",
+        "sender": "Indeed",
+        "date": "4/7 06:06",
+        "unread": true
+      },
+      {
+        "subject": "New job opportunities at Molina Talent Acquisition",
+        "sender": "Molina Healthcare",
+        "date": "4/7 04:41",
+        "unread": true
+      },
+      {
+        "subject": "More Perfect Union is hiring for Video Editor. 6 more Video Editor jobs in United States.",
+        "sender": "Indeed",
+        "date": "4/7 02:59",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "4/7 02:16",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "4/7 02:15",
+        "unread": true
+      },
+      {
+        "subject": "Quick question about your application at Reputation.com, Inc.",
+        "sender": "Glassdoor",
+        "date": "4/7 01:30",
+        "unread": true
+      },
+      {
+        "subject": "USPS® Expected Delivery by Monday, April 13, 2026 arriving by 9:00pm 9400111206241421253727",
+        "sender": "auto-reply@usps.com",
+        "date": "4/7 00:49",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "4/6 23:41",
+        "unread": true
+      },
+      {
+        "subject": "Receipt from GOOGLE*CLOUD CHTCX4 - $10.00",
+        "sender": "Venmo",
+        "date": "4/6 23:41",
+        "unread": true
+      },
+      {
+        "subject": "Security alert for kerrjeff1977@gmail.com",
+        "sender": "Google",
+        "date": "4/6 23:39",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "4/6 23:37",
+        "unread": true
+      },
+      {
+        "subject": "Apr 6, 2026 Digest: 1 new message from PVSchools today",
+        "sender": "PVSchools via ParentSquare",
+        "date": "4/6 21:19",
+        "unread": true
+      },
+      {
+        "subject": "Apr 6, 2026 Digest: 1 new message from Desert Shadows Elementary School today",
+        "sender": "Desert Shadows Elementary School via ParentSquare",
+        "date": "4/6 21:19",
+        "unread": true
+      },
+      {
+        "subject": "Amir Frenkel recently posted",
+        "sender": "LinkedIn",
+        "date": "4/6 21:04",
+        "unread": true
+      }
+    ],
+    "timestamp": "2026-04-07T11:09:19.545Z"
+  },
+  {
+    "type": "calendar",
+    "events": [
+      {
+        "name": "Callie Bea",
+        "time": "4/27 00:00",
+        "calendar": "Work"
+      },
+      {
+        "name": "Court",
+        "time": "4/29 11:00",
+        "calendar": "Freelance"
+      },
+      {
+        "name": "Counseling at arbor circle",
+        "time": "4/9 15:00",
+        "calendar": "Freelance"
+      },
+      {
+        "name": "Orthodox Easter",
+        "time": "4/12 00:00",
+        "calendar": "US Holidays"
+      },
+      {
+        "name": "Tax Day",
+        "time": "4/15 00:00",
+        "calendar": "US Holidays"
+      },
+      {
+        "name": "J. Kerr",
+        "time": "4/27 11:00",
+        "calendar": "Siri Suggestions"
+      }
+    ],
+    "timestamp": "2026-04-07T11:09:41.862Z"
+  },
+  {
+    "type": "console",
+    "entry": "🔌 OpenClaw Control UI disconnected",
+    "style": "warn",
+    "ts": "07:10:36"
+  },
+  {
+    "type": "console",
+    "entry": "🔗 OpenClaw Control UI connected",
+    "style": "sys",
+    "ts": "07:10:37"
+  },
+  {
+    "type": "weather",
+    "data": {
+      "summary": "☁️   +50°F",
+      "detail": "☁️   +50°F 46% ↘4mph"
+    },
+    "timestamp": "2026-04-07T11:12:05.106Z"
+  },
+  {
+    "type": "calendar",
+    "events": [
+      {
+        "name": "Callie Bea",
+        "time": "4/27 00:00",
+        "calendar": "Work"
+      },
+      {
+        "name": "Court",
+        "time": "4/29 11:00",
+        "calendar": "Freelance"
+      },
+      {
+        "name": "Counseling at arbor circle",
+        "time": "4/9 15:00",
+        "calendar": "Freelance"
+      },
+      {
+        "name": "Orthodox Easter",
+        "time": "4/12 00:00",
+        "calendar": "US Holidays"
+      },
+      {
+        "name": "Tax Day",
+        "time": "4/15 00:00",
+        "calendar": "US Holidays"
+      },
+      {
+        "name": "J. Kerr",
+        "time": "4/27 11:00",
+        "calendar": "Siri Suggestions"
+      }
+    ],
+    "timestamp": "2026-04-07T11:12:36.682Z"
+  },
+  {
+    "type": "email",
+    "emails": [
+      {
+        "subject": "New color drops",
+        "sender": "HOKA®",
+        "date": "4/7 07:02",
+        "unread": true
+      },
+      {
+        "subject": "Aifos Logistics LLC is hiring for Owner Operators Needed ASAP! Box Trucks • Cargo Vans • Sprinter Vans — Start Earning Now. 29 more hiring immediately jobs in Phoenix, AZ.",
+        "sender": "Indeed",
+        "date": "4/7 06:06",
+        "unread": true
+      },
+      {
+        "subject": "New job opportunities at Molina Talent Acquisition",
+        "sender": "Molina Healthcare",
+        "date": "4/7 04:41",
+        "unread": true
+      },
+      {
+        "subject": "More Perfect Union is hiring for Video Editor. 6 more Video Editor jobs in United States.",
+        "sender": "Indeed",
+        "date": "4/7 02:59",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "4/7 02:16",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "4/7 02:15",
+        "unread": true
+      },
+      {
+        "subject": "Quick question about your application at Reputation.com, Inc.",
+        "sender": "Glassdoor",
+        "date": "4/7 01:30",
+        "unread": true
+      },
+      {
+        "subject": "USPS® Expected Delivery by Monday, April 13, 2026 arriving by 9:00pm 9400111206241421253727",
+        "sender": "auto-reply@usps.com",
+        "date": "4/7 00:49",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "4/6 23:41",
+        "unread": true
+      },
+      {
+        "subject": "Receipt from GOOGLE*CLOUD CHTCX4 - $10.00",
+        "sender": "Venmo",
+        "date": "4/6 23:41",
+        "unread": true
+      },
+      {
+        "subject": "Security alert for kerrjeff1977@gmail.com",
+        "sender": "Google",
+        "date": "4/6 23:39",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "4/6 23:37",
+        "unread": true
+      },
+      {
+        "subject": "Apr 6, 2026 Digest: 1 new message from PVSchools today",
+        "sender": "PVSchools via ParentSquare",
+        "date": "4/6 21:19",
+        "unread": true
+      },
+      {
+        "subject": "Apr 6, 2026 Digest: 1 new message from Desert Shadows Elementary School today",
+        "sender": "Desert Shadows Elementary School via ParentSquare",
+        "date": "4/6 21:19",
+        "unread": true
+      },
+      {
+        "subject": "Amir Frenkel recently posted",
+        "sender": "LinkedIn",
+        "date": "4/6 21:04",
+        "unread": true
+      }
+    ],
+    "timestamp": "2026-04-07T11:12:47.811Z"
+  },
+  {
+    "type": "console",
+    "entry": "🌤 Weather refreshed",
+    "style": "sys",
+    "ts": "07:15:48"
+  },
+  {
+    "type": "weather",
+    "data": {
+      "summary": "☁️   +50°F",
+      "detail": "☁️   +50°F 46% ↘4mph"
+    },
+    "_cachedAt": 1775560548161,
+    "timestamp": "2026-04-07T11:15:48.191Z"
+  },
+  {
+    "type": "console",
+    "entry": "🔌 OpenClaw Control UI disconnected",
+    "style": "warn",
+    "ts": "07:16:12"
+  },
+  {
+    "type": "console",
+    "entry": "🔗 OpenClaw Control UI connected",
+    "style": "sys",
+    "ts": "07:16:12"
+  },
+  {
+    "type": "console",
+    "entry": "📅 Schedule refreshed (6 events)",
+    "style": "sys",
+    "ts": "07:16:23"
+  },
+  {
+    "type": "calendar",
+    "events": [
+      {
+        "name": "Callie Bea",
+        "time": "4/27 00:00",
+        "calendar": "Work"
+      },
+      {
+        "name": "Court",
+        "time": "4/29 11:00",
+        "calendar": "Freelance"
+      },
+      {
+        "name": "Counseling at arbor circle",
+        "time": "4/9 15:00",
+        "calendar": "Freelance"
+      },
+      {
+        "name": "Orthodox Easter",
+        "time": "4/12 00:00",
+        "calendar": "US Holidays"
+      },
+      {
+        "name": "Tax Day",
+        "time": "4/15 00:00",
+        "calendar": "US Holidays"
+      },
+      {
+        "name": "J. Kerr",
+        "time": "4/27 11:00",
+        "calendar": "Siri Suggestions"
+      }
+    ],
+    "_cachedAt": 1775560583569,
+    "timestamp": "2026-04-07T11:16:23.573Z"
+  },
+  {
+    "type": "console",
+    "entry": "📬 Inbox refreshed (15 items)",
+    "style": "sys",
+    "ts": "07:16:38"
+  },
+  {
+    "type": "email",
+    "emails": [
+      {
+        "subject": "New color drops",
+        "sender": "HOKA®",
+        "date": "4/7 07:02",
+        "unread": true
+      },
+      {
+        "subject": "Aifos Logistics LLC is hiring for Owner Operators Needed ASAP! Box Trucks • Cargo Vans • Sprinter Vans — Start Earning Now. 29 more hiring immediately jobs in Phoenix, AZ.",
+        "sender": "Indeed",
+        "date": "4/7 06:06",
+        "unread": true
+      },
+      {
+        "subject": "New job opportunities at Molina Talent Acquisition",
+        "sender": "Molina Healthcare",
+        "date": "4/7 04:41",
+        "unread": true
+      },
+      {
+        "subject": "More Perfect Union is hiring for Video Editor. 6 more Video Editor jobs in United States.",
+        "sender": "Indeed",
+        "date": "4/7 02:59",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "4/7 02:16",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "4/7 02:15",
+        "unread": true
+      },
+      {
+        "subject": "Quick question about your application at Reputation.com, Inc.",
+        "sender": "Glassdoor",
+        "date": "4/7 01:30",
+        "unread": true
+      },
+      {
+        "subject": "USPS® Expected Delivery by Monday, April 13, 2026 arriving by 9:00pm 9400111206241421253727",
+        "sender": "auto-reply@usps.com",
+        "date": "4/7 00:49",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "4/6 23:41",
+        "unread": true
+      },
+      {
+        "subject": "Receipt from GOOGLE*CLOUD CHTCX4 - $10.00",
+        "sender": "Venmo",
+        "date": "4/6 23:41",
+        "unread": true
+      },
+      {
+        "subject": "Security alert for kerrjeff1977@gmail.com",
+        "sender": "Google",
+        "date": "4/6 23:39",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "4/6 23:37",
+        "unread": true
+      },
+      {
+        "subject": "Apr 6, 2026 Digest: 1 new message from PVSchools today",
+        "sender": "PVSchools via ParentSquare",
+        "date": "4/6 21:19",
+        "unread": true
+      },
+      {
+        "subject": "Apr 6, 2026 Digest: 1 new message from Desert Shadows Elementary School today",
+        "sender": "Desert Shadows Elementary School via ParentSquare",
+        "date": "4/6 21:19",
+        "unread": true
+      },
+      {
+        "subject": "Amir Frenkel recently posted",
+        "sender": "LinkedIn",
+        "date": "4/6 21:04",
+        "unread": true
+      }
+    ],
+    "_cachedAt": 1775560598456,
+    "timestamp": "2026-04-07T11:16:38.460Z"
+  },
+  {
+    "type": "console",
+    "entry": "← OpenClaw : I need your Google account email address to check your calendar. Please provide it so I can proceed.",
+    "style": "response",
+    "ts": "07:22:59"
+  },
+  {
+    "type": "console",
+    "entry": "← OpenClaw : I need your Google account email address to check your calendar. Please provide it so I can proceed.",
+    "style": "response",
+    "ts": "07:22:59"
   }
 ]
