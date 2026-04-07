@@ -138,6 +138,29 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // ── API: Switch scene (Antigravity backend control) ──
+  if (req.method === 'POST' && req.url === '/api/scene') {
+    try {
+      const data = await parseBody(req);
+      const scene = data.scene; // e.g. "home", "chat", "contacts", "studio", "mail", "calendar", "board"
+      if (!scene) { res.writeHead(400); res.end(JSON.stringify({error:'missing scene'})); return; }
+      broadcast({ type: 'scene', scene });
+      pushToConsole(`🎯 Scene switched to: ${scene}`, 'sys');
+      res.writeHead(200, {'Content-Type':'application/json'});
+      res.end(JSON.stringify({ ok: true, scene }));
+    } catch(e) { res.writeHead(500); res.end(JSON.stringify({error:e.message})); }
+    return;
+  }
+
+  // ── API: Force browser refresh ──
+  if (req.method === 'POST' && req.url === '/api/refresh') {
+    broadcast(JSON.stringify({ type: 'refresh' }));
+    pushToConsole('🔄 Dashboard refresh triggered', 'sys');
+    res.writeHead(200, {'Content-Type':'application/json'});
+    res.end(JSON.stringify({ ok: true }));
+    return;
+  }
+
   // ── API: Push content to dashboard ──
   if (req.method === 'POST' && req.url === '/api/push') {
     try {

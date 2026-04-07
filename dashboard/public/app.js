@@ -628,6 +628,9 @@
           case 'telem':
             handleTelemEvent(msg);
             break;
+          case 'refresh':
+            window.location.reload();
+            break;
         }
       } catch (err) {
         addFeedItem(e.data, 'info');
