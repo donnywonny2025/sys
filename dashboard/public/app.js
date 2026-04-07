@@ -101,17 +101,53 @@
   }
 
   // --- Calendar ---
+  function parseCalDate(timeStr) {
+    // Parse "4/9 15:00" or "4/12 00:00" into a sortable value
+    if (!timeStr) return 99999;
+    var parts = timeStr.trim().split(' ');
+    var dateParts = parts[0].split('/');
+    var month = parseInt(dateParts[0]) || 0;
+    var day = parseInt(dateParts[1]) || 0;
+    var timeParts = (parts[1] || '00:00').split(':');
+    var hour = parseInt(timeParts[0]) || 0;
+    var min = parseInt(timeParts[1]) || 0;
+    return month * 100000 + day * 1000 + hour * 60 + min;
+  }
+
+  // Calendar color map (matches Apple Calendar categories)
+  var calendarColors = {
+    'Home': '#3478f6',
+    'Family': '#34c759',
+    'Work': '#ff9500',
+    'Freelance': '#ff9500',
+    'US Holidays': '#8e8e93',
+    'Birthdays': '#af52de',
+    'Scheduled Reminders': '#ff3b30',
+    'Siri Suggestions': '#5ac8fa'
+  };
+
+  function getCalColor(calName) {
+    if (!calName) return '#555';
+    return calendarColors[calName] || '#555';
+  }
+
   function renderCalendar(events, targetId) {
     var el = document.getElementById(targetId);
     el.innerHTML = '';
     if (!events || events.length === 0) {
-      el.innerHTML = '<div class="empty-state">No events today.</div>';
+      el.innerHTML = '<div class="empty-state">No upcoming events.</div>';
       return;
     }
-    events.forEach(function (ev) {
+    // Sort chronologically
+    var sorted = events.slice().sort(function(a, b) {
+      return parseCalDate(a.time) - parseCalDate(b.time);
+    });
+    sorted.forEach(function (ev) {
       var div = document.createElement('div');
       div.className = 'cal-row';
+      var dotColor = getCalColor(ev.calendar);
       div.innerHTML =
+        '<span class="cal-dot" style="background:' + dotColor + ';" title="' + (ev.calendar || '') + '"></span>' +
         '<span class="cal-name">' + ev.name + '</span>' +
         '<span class="cal-time">' + ev.time + '</span>';
       el.appendChild(div);

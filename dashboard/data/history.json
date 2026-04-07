@@ -1,20 +1,5 @@
 [
   {
-    "type": "success",
-    "content": "**Hermes Agent online.** Gemini 2.5 Flash responding via direct terminal pipe. Model confirmed, API key working.",
-    "timestamp": "2026-04-07T04:36:33.614Z"
-  },
-  {
-    "type": "success",
-    "content": "<strong>Dashboard v2 deployed.</strong> Hermes bridge active. Gateway connected.",
-    "timestamp": "2026-04-07T04:57:42.740Z"
-  },
-  {
-    "type": "info",
-    "content": "<strong>Mail — colour8k@mac.com</strong><br>1. USPS Expected Delivery by Mon Apr 13<br>2. Your Venmo Debit Card is now disabled<br>3. Receipt from GOOGLE*CLOUD — $10.00<br>4. Security alert for kerrjeff1977@gmail.com<br>5. Your Venmo Debit Card is now enabled",
-    "timestamp": "2026-04-07T05:04:22.020Z"
-  },
-  {
     "type": "info",
     "content": "<strong>📬 Mail — colour8k@mac.com (via Hermes)</strong><br>1. USPS® Delivery — Mon Apr 13 · 12:49 AM<br>2. Venmo Card disabled · 11:41 PM<br>3. Google Cloud receipt $10.00 · 11:41 PM<br>4. Security alert · 11:39 PM<br>5. Venmo Card enabled · 11:37 PM",
     "timestamp": "2026-04-07T05:07:54.301Z"
@@ -1946,5 +1931,115 @@
       "detail": "☁️   +48°F 58% ↓4mph"
     },
     "timestamp": "2026-04-07T09:48:59.995Z"
+  },
+  {
+    "type": "calendar",
+    "events": [
+      {
+        "name": "Callie Bea",
+        "time": "4/27 00:00",
+        "calendar": "Work"
+      },
+      {
+        "name": "Court",
+        "time": "4/29 11:00",
+        "calendar": "Freelance"
+      },
+      {
+        "name": "Counseling at arbor circle",
+        "time": "4/9 15:00",
+        "calendar": "Freelance"
+      },
+      {
+        "name": "Orthodox Easter",
+        "time": "4/12 00:00",
+        "calendar": "US Holidays"
+      },
+      {
+        "name": "Tax Day",
+        "time": "4/15 00:00",
+        "calendar": "US Holidays"
+      },
+      {
+        "name": "J. Kerr",
+        "time": "4/27 11:00",
+        "calendar": "Siri Suggestions"
+      }
+    ],
+    "timestamp": "2026-04-07T09:58:05.177Z"
+  },
+  {
+    "type": "email",
+    "emails": [
+      {
+        "subject": "New job opportunities at Molina Talent Acquisition",
+        "sender": "Molina Healthcare",
+        "date": "4/7 04:41",
+        "unread": true
+      },
+      {
+        "subject": "More Perfect Union is hiring for Video Editor. 6 more Video Editor jobs in United States.",
+        "sender": "Indeed",
+        "date": "4/7 02:59",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "4/7 02:16",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "4/7 02:15",
+        "unread": true
+      },
+      {
+        "subject": "Quick question about your application at Reputation.com, Inc.",
+        "sender": "Glassdoor",
+        "date": "4/7 01:30",
+        "unread": true
+      },
+      {
+        "subject": "USPS® Expected Delivery by Monday, April 13, 2026 arriving by 9:00pm 9400111206241421253727",
+        "sender": "auto-reply@usps.com",
+        "date": "4/7 00:49",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "4/6 23:41",
+        "unread": true
+      },
+      {
+        "subject": "Receipt from GOOGLE*CLOUD CHTCX4 - $10.00",
+        "sender": "Venmo",
+        "date": "4/6 23:41",
+        "unread": true
+      },
+      {
+        "subject": "Security alert for kerrjeff1977@gmail.com",
+        "sender": "Google",
+        "date": "4/6 23:39",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "4/6 23:37",
+        "unread": true
+      }
+    ],
+    "timestamp": "2026-04-07T09:58:17.443Z"
+  },
+  {
+    "type": "weather",
+    "data": {
+      "summary": "☁️   +48°F",
+      "detail": "☁️   +48°F 58% ↓4mph"
+    },
+    "timestamp": "2026-04-07T09:58:18.167Z"
   }
 ]

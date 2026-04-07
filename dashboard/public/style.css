@@ -155,11 +155,14 @@ body {
 
 /* --- Calendar Events --- */
 .cal-row {
-  display: flex; align-items: baseline; justify-content: space-between;
+  display: flex; align-items: center; gap: 8px;
   padding: 8px 0; border-bottom: 1px solid var(--s2);
 }
 .cal-row:last-child { border-bottom: none; }
-.cal-name { font-size: 0.82rem; color: var(--t0); }
+.cal-dot {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+}
+.cal-name { font-size: 0.82rem; color: var(--t0); flex: 1; }
 .cal-time {
   font-family: var(--font-m); font-size: 0.68rem;
   color: var(--t2); white-space: nowrap; margin-left: 12px;
