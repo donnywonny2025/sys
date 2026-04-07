@@ -1,34 +1,34 @@
 #!/bin/bash
-# check_calendar.sh — Pull today's calendar events via AppleScript and push to dashboard
+# check_calendar.sh — Pull upcoming calendar events via AppleScript and push to dashboard
+# Looks 30 days ahead, not just today
 # Usage: ./execution/check_calendar.sh
 
 DASH_URL="http://localhost:3111/api/push"
 
-# Get today's events from Apple Calendar via AppleScript
-EVENTS=$(osascript << 'EOF'
-set today to current date
-set time of today to 0
-set tomorrow to today + (1 * days)
+# Get next 30 days of events from Apple Calendar via AppleScript
+EVENTS=$(osascript -e '
 set output to ""
-
 tell application "Calendar"
-    repeat with cal in calendars
-        set calEvents to (every event of cal whose start date ≥ today and start date < tomorrow)
-        repeat with ev in calEvents
-            set evName to summary of ev
-            set evStart to start date of ev
-            set evEnd to end date of ev
-            set h to hours of evStart
-            set m to minutes of evStart
-            set timeStr to (text -2 thru -1 of ("0" & h)) & ":" & (text -2 thru -1 of ("0" & m))
-            set output to output & evName & "<<>>" & timeStr & "|||"
-        end repeat
+  set today to current date
+  set time of today to 0
+  set futureDate to today + (30 * days)
+  
+  repeat with cal in calendars
+    set calEvents to (every event of cal whose start date ≥ today and start date < futureDate)
+    repeat with ev in calEvents
+      set evName to summary of ev
+      set evStart to start date of ev
+      set h to hours of evStart
+      set m to minutes of evStart
+      set mo to (month of evStart as integer)
+      set d to day of evStart
+      set timeStr to (text -2 thru -1 of ("0" & h)) & ":" & (text -2 thru -1 of ("0" & m))
+      set dateStr to (mo as text) & "/" & (d as text)
+      set output to output & evName & "<<>>" & dateStr & " " & timeStr & "|||"
     end repeat
+  end repeat
 end tell
-
-return output
-EOF
-)
+return output' 2>&1)
 
 # Build JSON
 JSON_EVENTS="["
@@ -53,4 +53,4 @@ curl -s -X POST "$DASH_URL" \
   -H "Content-Type: application/json" \
   -d "{\"type\":\"calendar\",\"events\":$JSON_EVENTS}" > /dev/null
 
-echo "Calendar pushed to dashboard"
+echo "Calendar pushed to dashboard (30-day lookahead)"

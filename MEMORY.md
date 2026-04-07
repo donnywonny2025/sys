@@ -7,7 +7,17 @@
 ---
 
 ## Last Updated
-`2026-04-07T05:16:00-04:00` — Session: OpenClaw Migration
+`2026-04-07T05:23:30-04:00` — Session: OpenClaw Migration
+
+## Response Timing Benchmarks
+| Query | Time | Notes |
+|-------|------|-------|
+| Simple text ("say OK") | 9.0s | Baseline, no tool use |
+| Weather check (wttr.in) | 27s | Used weather skill |
+| Reminders query | 13.2s | Used apple-reminders skill, returned real data |
+| Tool listing | 38s | Listed all 51 skills |
+
+**Target:** Sub-10s for simple queries, sub-20s for tool use.
 
 ## Current Architecture
 ```
@@ -44,12 +54,27 @@ curl -s http://127.0.0.1:18789/v1/chat/completions -H "Authorization: Bearer $TO
 curl -sS http://127.0.0.1:18789/tools/invoke -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d '{"tool":"sessions_list","action":"json","args":{}}'
 ```
 
-## Dashboard Data Scripts
+## Dashboard Data Flow (via OpenClaw)
+All data retrieval goes through OpenClaw. The flow is:
+```
+Antigravity → curl OpenClaw /v1/chat/completions → OpenClaw uses skills → returns data → push to dashboard /api/push
+```
+
+### Available Skills for Dashboard
+| Data | OpenClaw Skill | Status |
+|------|---------------|--------|
+| Weather | `weather` (wttr.in/Open-Meteo) | ✅ Verified — returned "☁️ +48°F" |
+| Calendar | `gog` (Google Workspace) | ⚠️ Needs Google auth setup |
+| Reminders | `apple-reminders` (remindctl CLI) | ✅ Verified — returned real reminders |
+| Email | `himalaya` (IMAP/SMTP) or `gog` (Gmail) | ⚠️ Needs account config |
+| Notes | `apple-notes` / `bear-notes` / `obsidian` | Available, untested |
+
+### Fallback Scripts (still work independently)
 | Script | Depends On | Status |
 |--------|-----------|--------|
 | `execution/check_weather.sh` | wttr.in (no API key) | ✅ Working |
 | `execution/check_calendar.sh` | Apple Calendar AppleScript | ✅ Working (needs Calendar.app running) |
-| `execution/check_mail.sh` | Apple Mail AppleScript | ✅ Rewritten — no longer depends on Hermes |
+| `execution/check_mail.sh` | Apple Mail AppleScript | ✅ Rewritten — direct AppleScript |
 | `execution/openclaw.sh` | OpenClaw Gateway API | ✅ Working |
 
 ## Key File Locations
