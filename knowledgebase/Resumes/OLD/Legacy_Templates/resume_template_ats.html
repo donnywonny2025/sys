@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Jeffery Kerr Resume</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="resume_style.css?v=4">
+    <script>
+        window.addEventListener('load', () => {
+            const page = document.querySelector('.page');
+            const targetHeight = 960; // 10 inches at 96 DPI, 0.5in bottom buffer
+            let maxBottom = 0;
+            const els = page.getElementsByTagName('*');
+            for (let i = 0; i < els.length; i++) {
+                const rect = els[i].getBoundingClientRect();
+                if (rect.bottom > maxBottom) maxBottom = rect.bottom;
+            }
+            if (maxBottom > targetHeight) {
+                const scale = (targetHeight / maxBottom) - 0.03; // 3% safety margin
+                page.style.transform = `scale(${scale})`;
+                page.style.transformOrigin = 'top left';
+                console.log(`Scale-to-fit: Target=${targetHeight}px | Actual=${Math.round(maxBottom)}px | Scale=${scale.toFixed(3)}`);
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="page">
+        <div class="layout">
+
+            <!-- ===== DARK SIDEBAR ===== -->
+            <aside class="sidebar">
+                <img src="JKMONO.png" class="monogram" alt="JK">
+
+                <div class="sb-section">
+                    <div class="sb-title">Contact</div>
+                    <div class="sb-contact-row"><strong>Phone</strong><a href="tel:4076203618">407-620-3618</a></div>
+                    <div class="sb-contact-row"><strong>Email</strong><a href="mailto:colour8k@mac.com">colour8k@mac.com</a></div>
+                    <div class="sb-contact-row"><strong>Web</strong><a href="https://jefferykerr.com">jefferykerr.com</a></div>
+                    <div class="sb-contact-row"><strong>LinkedIn</strong><a href="https://www.linkedin.com/in/jefferykerrcreative">linkedin.com/in/jefferykerrcreative</a></div>
+                    <div class="sb-contact-row"><strong>Location</strong>Wayland, MI</div>
+                </div>
+
+                <div class="sb-section">
+                    <div class="sb-title">Technical Ops</div>
+                    [[SKILLS_MAPPING_HTML]]
+                </div>
+
+                <div class="sb-section">
+                    <div class="sb-title">Education</div>
+                    <div class="sb-edu-name">Full Sail University</div>
+                    <div class="sb-edu-degree">A.S., Film / Production</div>
+                </div>
+
+                <div class="sb-section">
+                    <div class="sb-title">Notable</div>
+                    <div class="sb-notable">10M+ views across campaign suites</div>
+                    <div class="sb-notable">Live events for 10k+ attendees</div>
+                    <div class="sb-notable">Clients: Disney, Boeing, DoD, FTC</div>
+                </div>
+
+                <div class="sb-footer">
+                    On-site, hybrid, or remote<br>
+                    Staff roles or long-term engagements
+                </div>
+            </aside>
+
+            <!-- ===== MAIN CONTENT ===== -->
+            <main class="main">
+                <header class="header">
+                    <h1>JEFFERY KERR</h1>
+                    <div class="tagline">[[TARGET_JOB_TITLE]]</div>
+                </header>
+
+                <p class="profile">
+                    [[SUMMARY]]
+                </p>
+
+                <section class="exp-section">
+                    <div class="exp-title">Experience</div>
+
+                    <div class="role">
+                        <div class="role-head">
+                            <span class="role-name">[[ROLE_0_TITLE]]</span>
+                            <span class="role-dates">2014 - Present</span>
+                        </div>
+                        <div class="role-co">jefferykerr.com - Grand Rapids, MI</div>
+                        <ul class="bul">
+                            [[ROLE_0_BULLETS]]
+                        </ul>
+                    </div>
+
+                    <div class="role">
+                        <div class="role-head">
+                            <span class="role-name">[[ROLE_1_TITLE]]</span>
+                            <span class="role-dates">2015 - 2025</span>
+                        </div>
+                        <div class="role-co">Signal Group DC - Washington, DC</div>
+                        <ul class="bul">
+                            [[ROLE_1_BULLETS]]
+                        </ul>
+                    </div>
+
+                    <div class="role">
+                        <div class="role-head">
+                            <span class="role-name">[[ROLE_2_TITLE]]</span>
+                            <span class="role-dates">2010 - 2015</span>
+                        </div>
+                        <div class="role-co">AVmedia, Inc. - Orlando, FL</div>
+                        <ul class="bul">
+                            [[ROLE_2_BULLETS]]
+                        </ul>
+                    </div>
+
+                    <div class="role">
+                        <div class="role-head">
+                            <span class="role-name">[[ROLE_3_TITLE]]</span>
+                            <span class="role-dates">2012 - 2019</span>
+                        </div>
+                        <div class="role-co">Chatham Light Media - Alexandria, VA</div>
+                        <ul class="bul">
+                            [[ROLE_3_BULLETS]]
+                        </ul>
+                    </div>
+
+                    <p class="earlier">
+                        Earlier: Digital Brew, VScreen, ShineCreative, Two Door Productions, MG Visual Studios, Super Bowl creative (Century 21), 2008 presidential campaign post/edit
+                    </p>
+                </section>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

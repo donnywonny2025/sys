@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Jeffery Kerr Resume</title>
+    <link rel="stylesheet" href="resume_style.css">
+    <script>
+        window.addEventListener('load', () => {
+            const container = document.querySelector('.printable-area');
+            const targetHeight = 11 * 96; // 11 inches at 96 DPI
+            const currentHeight = container.scrollHeight;
+
+            if (currentHeight > targetHeight) {
+                const scale = (targetHeight / currentHeight) - 0.01; // Tiny extra buffer
+                container.style.transform = `scale(${scale})`;
+                container.style.transformOrigin = 'top left';
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <div class="printable-area">
+        <header>
+            <div class="header-main">
+                <img src="JKMONO.png" class="monogram">
+                <div class="name-block">
+                    <h1>J E F F E R Y &nbsp; K E R R</h1>
+                    <p class="subtitle">Video Editor / Creative Producer / Director</p>
+                </div>
+            </div>
+            <div class="contact-info">
+                <p>407-620-3618 &nbsp;&bull;&nbsp; colour8k@mac.com &nbsp;&bull;&nbsp; Wayland, MI</p>
+                <p><strong>jefferykerr.com</strong> &nbsp;&bull;&nbsp; linkedin.com/in/jefferykerrcreative</p>
+            </div>
+            <div class="orange-line"></div>
+        </header>
+
+        <section class="summary">
+            <h2>SUMMARY</h2>
+            <p>Experienced <strong>Video Editor</strong> and Creative Producer with a mastery of <strong>Premiere
+                    Pro</strong>, <strong>DaVinci Resolve</strong>, and end-to-end <strong>post-production</strong>
+                workflows. I specialize in <strong>narrative editing</strong>, <strong>color correction</strong>, and
+                delivering high-fidelity visual stories for global brands and the public sector. Trusted by
+                <strong>Disney</strong>, <strong>Boeing</strong>, <strong>Century 21</strong>,
+                <strong>Raytheon</strong>,
+                <strong>DoD</strong>, <strong>FTC</strong>, and <strong>New Balance</strong> to turn complex ideas into
+                clear, high-impact deliverables. Beyond traditional editing, I leverage AI workflows and custom API
+                integrations to accelerate production timelines without compromising quality.
+            </p>
+        </section>
+
+        <div class="divider"></div>
+
+        <section class="skills">
+            <h2>SKILLS</h2>
+            <div class="skill-item">
+                <span class="label">Video Production:</span>
+                <span class="content">Video Production Processes, Briefs, Treatments, Budgets, Live Events</span>
+            </div>
+            <div class="skill-item">
+                <span class="label">Video Editing:</span>
+                <span class="content">Video Editing Software, Motion Graphics, Social Media Understanding</span>
+            </div>
+            <div class="skill-item">
+                <span class="label">Writing:</span>
+                <span class="content">Interview/VO Direction, Scripting, Compliance</span>
+            </div>
+            <div class="skill-item">
+                <span class="label">Creative Dev:</span>
+                <span class="content">React, NextJS, Three.js, Puppeteer, Browser Automation, API Integration,
+                    Git</span>
+            </div>
+            <div class="skill-item">
+                <span class="label">Tools:</span>
+                <span class="content">Premiere Pro, After Effects, Cinema 4D, DaVinci Resolve, Frame.io, Logic Pro, VS
+                    Code, Google, Git</span>
+            </div>
+            <div class="skill-item">
+                <span class="label">AI:</span>
+                <span class="content">Veo, Sora, Kling, Flux, Hailuo, AI Foundation Models</span>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <section class="experience">
+            <h2>EXPERIENCE</h2>
+
+            <div class="job">
+                <h3>Owner / Creative Director</h3>
+                <p class="company">jefferykerr.com | Apr 2014 - Present | Orlando, FL</p>
+                <ul class="bullets">
+                    <li>Produce and direct video production campaigns: launch pieces, explainers, interviews, and large
+                        event packages</li>
+                    <li>Lead projects end-to-end with clear milestones, delivering high-end video editing and finishing
+                        using <strong>Premiere Pro</strong> for Fortune 500 brands</li>
+                    <li>Build internal workflow tools and API pipelines to automate video production processes and
+                        accelerate delivery times</li>
+                    <li>Design and deploy custom web applications utilizing modern scripting and browser automation</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <h3>Associate Producer</h3>
+                <p class="company">Signal Group DC | Feb 2015 - Jan 2025 | Washington, DC</p>
+                <ul class="bullets">
+                    <li>Managed projects from intake to delivery: brief, script/interviews, production, edit/finish
+                        using <strong>DaVinci Resolve</strong>, and distribution</li>
+                    <li>Tightened review cadence and refreshed creative standards for steadier delivery and healthier
+                        engagement</li>
+                    <li>Coordinated creative, vendors, and compliance/legal to reduce last-minute fire drills</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <h3>Freelance Director, Motion Designer, Editor</h3>
+                <p class="company">AVmedia, Inc. | Jan 2010 - Sep 2015 | Orlando, FL</p>
+                <ul class="bullets">
+                    <li>Produced live corporate events and screen content for shows nationwide</li>
+                    <li>Improved playback reliability and cue timing with cleaner run-of-show docs</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <h3>Freelance Motion Designer/Editor</h3>
+                <p class="company">Chatham Light Media | Jul 2012 - Nov 2019 | Alexandria, VA</p>
+                <ul class="bullets">
+                    <li>Produced political spots on rapid, compliance-heavy timelines; delivered broadcast and social
+                        cutdowns</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <h3 class="earlier-roles">Earlier Roles</h3>
+                <p class="company-simple">Digital Brew &bull; VScreen &bull; ShineCreative &bull; Two Door Productions
+                    &bull; MG Visual Studios</p>
+                <ul class="bullets">
+                    <li>Super Bowl creative (Century 21), 2008 presidential campaign post/edit</li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <section class="education">
+            <h2>EDUCATION</h2>
+            <p><strong>Full Sail University</strong> | A.S., Film/Production</p>
+        </section>
+
+        <footer>
+            <p>Operating modes: on-site, hybrid, or remote | Availability: staff roles or long-term engagements</p>
+        </footer>
+    </div>
+</body>
+
+</html>

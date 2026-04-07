@@ -1,0 +1,278 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ============================================================
+   JEFFERY KERR RESUME — "GATE CRUSHER" 
+   Reverted to Version 1 (The accepted layout structure)
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    /* Brand Palette */
+    --jk-orange: #E8832B;
+    --jk-amber: #F59E0B;
+    --jk-violet: #7C3AED;
+    --jk-cyan: #06B6D4;
+    
+    /* Neutrals */
+    --ink: #0A0A0A;
+    --charcoal: #1A1A1A;
+    --graphite: #2D2D2D;
+    --body-dark: #B8B8B8;
+    --body-light: #475569;
+    --muted: #94A3B8;
+    --border-light: #E2E8F0;
+    --bg-light: #F8FAFC;
+    --white: #FFFFFF;
+}
+
+html, body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-variant-ligatures: none;
+}
+
+/* ================== PAGE ================== */
+@media screen {
+    body { background: #E2E8F0; }
+    .page {
+        width: 8.5in;
+        min-height: 11in;
+        margin: 0 auto;
+        overflow: hidden;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+        background: var(--white);
+    }
+}
+@media print {
+    @page { margin: 0; size: letter; }
+    body { margin: 0; padding: 0; }
+    .page { width: 8.5in; height: 11in; overflow: hidden; background: var(--white); }
+}
+
+/* ================== MAIN CONTENT ================== */
+.main {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* ================== HERO HEADER ================== */
+.hero {
+    background-color: #0c0c0c;
+    background-image: 
+        radial-gradient(ellipse at bottom, rgba(30,30,30,0) 0%, rgba(0,0,0,0.85) 100%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+    color: var(--white);
+    padding: 0.45in 0.5in 0.4in 0.5in;
+    box-shadow: inset 0 -5px 15px rgba(0,0,0,0.5);
+    border-bottom: 2px solid var(--jk-orange);
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center; 
+    gap: 0.35in;
+}
+
+.monogram {
+    width: 75px; /* Strict brand guideline size */
+    height: auto;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+}
+
+.hero-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.hero .name {
+    font-size: 32pt;
+    font-weight: 900;
+    letter-spacing: -0.03em; /* Branding.md specified tracking */
+    line-height: 1;
+    color: var(--white);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.hero .tagline {
+    font-size: 10pt;
+    font-weight: 700;
+    color: var(--jk-orange);
+    text-transform: uppercase;
+    letter-spacing: 0.12em; /* Branding.md specification */
+    margin-bottom: 16px;
+}
+
+/* Premium Contact List Styling */
+.contact-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5pt;
+    font-weight: 500;
+    color: var(--body-dark);
+}
+
+.contact-list li {
+    display: flex;
+    align-items: center;
+}
+
+.contact-list li:not(:last-child)::after {
+    content: ""; /* Clean subtle dot separator */
+    display: block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: var(--graphite);
+    margin-left: 18px;
+}
+
+.contact-list a {
+    color: var(--body-dark);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.contact-list a:hover {
+    color: var(--white);
+}
+
+/* ================== CONTENT BODY ================== */
+.content-body {
+    padding: 0.35in 0.5in;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Section Shared */
+.section-title {
+    font-size: 10pt;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--jk-orange);
+    margin-bottom: 0.15in;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+/* Profile */
+.profile-section { margin-bottom: 0.25in; }
+.profile {
+    font-size: 10pt;
+    line-height: 1.6;
+    color: var(--body-light);
+}
+.profile strong { color: var(--ink); font-weight: 700; }
+
+/* Skills Grid */
+.skills-section { margin-bottom: 0.25in; }
+.skills-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.skill-category {
+    font-size: 9pt;
+    line-height: 1.5;
+    color: var(--body-light);
+}
+.skill-category strong {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8pt;
+    font-weight: 600;
+    color: var(--ink);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--bg-light);
+    border-left: 2px solid var(--jk-orange);
+    padding: 2px 6px;
+    margin-right: 6px;
+    display: inline-block;
+}
+
+/* Experience */
+.exp-section { margin-bottom: 0.15in; }
+.role { margin-bottom: 0.15in; }
+.role:last-of-type { margin-bottom: 0.1in; }
+
+.role-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 2px;
+}
+.role-name { font-size: 11pt; font-weight: 800; color: var(--ink); }
+.role-dates {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5pt;
+    font-weight: 500;
+    color: var(--muted);
+    white-space: nowrap;
+}
+.role-co {
+    font-size: 9.5pt;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+/* Bullets */
+ul.bul { list-style: none; padding-left: 14px; }
+ul.bul li {
+    font-size: 9.5pt;
+    line-height: 1.55;
+    color: var(--body-light);
+    margin-bottom: 4px;
+    position: relative;
+}
+ul.bul li::before {
+    content: "›";
+    position: absolute;
+    left: -13px;
+    color: var(--jk-orange);
+    font-weight: 800;
+    font-size: 12pt;
+    line-height: 1.25;
+}
+ul.bul li strong { color: var(--ink); font-weight: 600; }
+
+.earlier {
+    font-size: 8.5pt;
+    line-height: 1.5;
+    color: var(--muted);
+    font-style: italic;
+    border-top: 1px dashed var(--border-light);
+    padding-top: 8px;
+    margin-top: 5px;
+}
+
+/* Bottom Split (Edu & Notable) */
+.bottom-split {
+    display: flex;
+    gap: 0.5in;
+    margin-bottom: 0.15in;
+}
+.edu-section { flex: 1; }
+.notable-section { flex: 1; }
+.notable-list li { margin-bottom: 1px !important; }
+
+/* Footer Note */
+.footer-note {
+    margin-top: auto;
+    font-size: 8pt;
+    text-align: center;
+    color: var(--muted);
+    font-style: italic;
+    border-top: 1px solid var(--border-light);
+    padding-top: 0.1in;
+}

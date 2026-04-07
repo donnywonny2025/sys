@@ -1,0 +1,179 @@
+@page {
+    size: letter;
+    margin: 0;
+}
+
+html,
+body {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #f8f8f8;
+}
+
+body {
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #2d3436;
+    line-height: 1.5;
+    font-size: 9.5pt;
+    font-variant-ligatures: none;
+    -webkit-font-variant-ligatures: none;
+}
+
+.printable-area {
+    width: 8.5in;
+    height: 11in;
+    background: white;
+    display: flex;
+    overflow: hidden;
+}
+
+/* LEFT SIDEBAR */
+.sidebar {
+    width: 2.5in;
+    background: #1a1a1a;
+    color: white;
+    padding: 0.5in 0.3in;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar h2 {
+    color: #E8832B;
+    font-size: 10pt;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    margin-top: 25px;
+    font-weight: 800;
+}
+
+.sidebar .contact-item {
+    margin-bottom: 12px;
+    font-size: 8.5pt;
+}
+
+.sidebar .contact-item strong {
+    display: block;
+    color: #E8832B;
+    font-size: 7.5pt;
+    text-transform: uppercase;
+}
+
+.sidebar .skill-group {
+    margin-bottom: 15px;
+}
+
+.sidebar .skill-group h3 {
+    font-size: 9pt;
+    color: #ccc;
+    margin-bottom: 5px;
+}
+
+.sidebar .skill-group p {
+    font-size: 8.5pt;
+    line-height: 1.4;
+    color: #eee;
+    margin: 0;
+}
+
+/* MAIN CONTENT */
+.main-content {
+    flex: 1;
+    padding: 0.5in 0.4in;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    margin-bottom: 25px;
+}
+
+header h1 {
+    font-size: 28pt;
+    font-weight: 900;
+    color: #1a1a1a;
+    line-height: 1;
+    margin-bottom: 5px;
+}
+
+header .subtitle {
+    font-size: 12pt;
+    color: #E8832B;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+section h2 {
+    font-size: 11pt;
+    font-weight: 800;
+    color: #1a1a1a;
+    border-bottom: 2px solid #E8832B;
+    display: inline-block;
+    padding-bottom: 2px;
+    margin-bottom: 12px;
+}
+
+.summary p {
+    font-size: 10pt;
+    color: #444;
+}
+
+.job {
+    margin-bottom: 15px;
+}
+
+.job h3 {
+    font-size: 11pt;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.job .meta {
+    font-size: 8.5pt;
+    color: #777;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.bullets {
+    margin: 0;
+    padding-left: 14pt;
+    list-style-type: none;
+}
+
+.bullets li {
+    position: relative;
+    font-size: 9pt;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.bullets li::before {
+    content: "•";
+    color: #E8832B;
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+}
+
+footer {
+    margin-top: auto;
+    font-size: 8pt;
+    color: #999;
+    text-align: center;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+.monogram-sidebar {
+    width: 60px;
+    margin-bottom: 30px;
+    filter: brightness(0) invert(1);
+    /* Make it white for dark sidebar */
+}
