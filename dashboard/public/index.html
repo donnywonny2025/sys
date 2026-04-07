@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SYSTEM</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <span class="status-bar__name">SYSTEM</span>
+    <span class="status-bar__time" id="clock"></span>
+    <div class="status-bar__indicators">
+      <span class="status-dot status-dot--active"></span>
+      <span class="status-label">Live</span>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main" id="feed">
+    <div class="empty-state" id="empty">
+      <div class="empty-state__icon">◆</div>
+      <div class="empty-state__text">Waiting for input.<br>Connected and ready.</div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

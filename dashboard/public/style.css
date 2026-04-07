@@ -1,0 +1,242 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #1a1917;
+  --bg-elevated: #222120;
+  --bg-surface: #2a2928;
+  --border: #3a3836;
+  --text: #e8e4de;
+  --text-dim: #9b9590;
+  --text-muted: #6b6560;
+  --accent: #c8a55a;
+  --accent-dim: rgba(200, 165, 90, 0.15);
+  --success: #6bba6b;
+  --warn: #d4a04a;
+  --error: #c45b5b;
+  --radius: 8px;
+  --font: 'DM Sans', -apple-system, sans-serif;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Status Bar ── */
+.status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+
+.status-bar__name {
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+.status-bar__time {
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.status-bar__indicators {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot--active { background: var(--success); }
+.status-dot--pending { background: var(--warn); }
+
+.status-label {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+/* ── Main Content ── */
+.main {
+  padding: 24px;
+  height: calc(100vh - 50px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Feed ── */
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ── Message ── */
+.message {
+  padding: 16px 20px;
+  background: var(--bg-elevated);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  opacity: 0;
+  transform: translateY(12px);
+  animation: messageIn 0.3s ease-out forwards;
+}
+
+.message + .message {
+  margin-top: 8px;
+}
+
+.message--system {
+  border-left-color: var(--text-muted);
+  background: transparent;
+}
+
+.message--info {
+  border-left-color: var(--accent);
+}
+
+.message--success {
+  border-left-color: var(--success);
+}
+
+.message--error {
+  border-left-color: var(--error);
+}
+
+.message--image {
+  border-left-color: var(--accent);
+}
+
+.message__time {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 4px;
+}
+
+.message__content {
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.message__content strong {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.message__image {
+  margin-top: 12px;
+  border-radius: var(--radius);
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+}
+
+/* ── Headline / Big Text ── */
+.message--headline .message__content {
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+/* ── Empty State ── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  color: var(--text-muted);
+  text-align: center;
+  gap: 12px;
+}
+
+.empty-state__icon {
+  font-size: 32px;
+  opacity: 0.4;
+}
+
+.empty-state__text {
+  font-size: 14px;
+  max-width: 280px;
+  line-height: 1.6;
+}
+
+/* ── Connection indicator ── */
+.connection {
+  position: fixed;
+  top: 14px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+  z-index: 100;
+}
+
+.connection__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--error);
+  transition: background 0.3s ease;
+}
+
+.connection--live .connection__dot {
+  background: var(--success);
+}
+
+/* ── Animations ── */
+@keyframes messageIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Scrollbar ── */
+.main::-webkit-scrollbar {
+  width: 4px;
+}
+
+.main::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.main::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.main::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}

@@ -1,0 +1,13 @@
+{
+  "name": "system-dashboard",
+  "version": "1.0.0",
+  "description": "Personal command center — visual display controlled by Antigravity + Hermes",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

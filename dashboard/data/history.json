@@ -1,0 +1,32 @@
+[
+  {
+    "type": "success",
+    "content": "**Browser control confirmed.** I can open tabs, close tabs, navigate, refresh, and push content to this screen — all from terminal. No dialogs.",
+    "timestamp": "2026-04-07T04:17:46.445Z"
+  },
+  {
+    "type": "success",
+    "content": "**Speed test.** This was sent with one command.",
+    "timestamp": "2026-04-07T04:20:14.553Z"
+  },
+  {
+    "type": "headline",
+    "content": "**BREAKING — AP News** (58 min ago)",
+    "timestamp": "2026-04-07T04:22:38.727Z"
+  },
+  {
+    "type": "info",
+    "content": "**Trump widens threat to all of Iran's power plants and bridges as his deadline for a deal approaches.** President Donald Trump has expanded his threat against Iran to include all power plants and bridges as his Tuesday ultimatum approaches.",
+    "timestamp": "2026-04-07T04:22:39.060Z"
+  },
+  {
+    "type": "info",
+    "content": "**Axios** — Iran mediators make last-ditch push for 45-day ceasefire. The U.S., Iran and a group of regional mediators are discussing terms for a potential 45-day ceasefire that could lead to a permanent deal.",
+    "timestamp": "2026-04-07T04:22:39.386Z"
+  },
+  {
+    "type": "info",
+    "content": "**PBS NewsHour** — Trump recounts Iran rescue mission, says U.S. has plan to 'decimate' infrastructure.",
+    "timestamp": "2026-04-07T04:22:39.720Z"
+  }
+]
