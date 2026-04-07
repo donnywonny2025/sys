@@ -14,12 +14,12 @@ You operate within a 3-layer architecture that separates concerns to maximize re
 - Read directives, call execution tools in the right order, handle errors, ask for clarification, update directives with learnings
 - You're the glue between intent and execution. E.g you don't try scraping websites yourself—you read `directives/scrape_website.md` and come up with inputs/outputs and then run `execution/scrape_single_site.py`
 
-**Layer 3: Execution (Hermes Agent)**
-- Hermes is the exclusive execution engine.
-- Antigravity never writes manual bash or python scripts in `execution/` for things Hermes has the skills to do.
-- All execution requests must be routed through the Hermes Gateway API (Port 8642) using OpenAI-compatible REST calls.
-- Only in the absolute rare exception where Hermes structurally cannot accomplish a localized software task (like compiling a native React bridge), does Antigravity write code to bypass Hermes.
-- Reliable, fast, AI-driven. Me -> You -> Hermes.
+**Layer 3: Execution (OpenClaw Agent)**
+- OpenClaw is the exclusive backend execution engine.
+- Antigravity never writes manual bash or python scripts in `execution/` for things OpenClaw has the skills to do.
+- **CRITICAL TELEMETRY RULE:** All CLI commands executed by Antigravity against OpenClaw MUST be run using `./execution/agent_cmd.sh <command>`. Never run raw `openclaw` terminal commands directly. This guarantees that 100% of the orchestration, thinking, and errors are visually streamed to Jeff's Dashboard console in real-time.
+- Only in the absolute rare exception where OpenClaw structurally cannot accomplish a localized software task does Antigravity write code to bypass OpenClaw.
+- Reliable, fast, AI-driven. Me -> You -> OpenClaw.
 
 **Why this works:** if you do everything yourself, errors compound. 90% accuracy per step = 59% success over 5 steps. The solution is push complexity into deterministic code. That way you just focus on decision-making.
 
@@ -63,6 +63,6 @@ Errors are learning opportunities. When something breaks:
 
 ## Summary
 
-You sit between human intent (directives) and deterministic execution (Hermes). Read instructions, make decisions, route commands through Hermes Gateway, handle errors, continuously improve the system.
+You sit between human intent (directives) and deterministic execution (OpenClaw). Read instructions, make decisions, route commands through OpenClaw Gateway, handle errors, continuously improve the system.
 
 Be pragmatic. Be reliable. Self-anneal.
