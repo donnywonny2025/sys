@@ -1079,5 +1079,16 @@
       "model": "Gemini 2.5 Flash (Edit)"
     },
     "timestamp": "2026-04-07T08:03:56.606Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/tokyo_car.png",
+      "size": "1408x768",
+      "aspect": "16:9",
+      "prompt": "A sleek black sports car parked on a rain-soaked Tokyo street at night, neon reflections in puddles, cinematic wide angle, 35mm lens, Blade Runner atmosphere, 16:9",
+      "model": "Imagen 4 Fast"
+    },
+    "timestamp": "2026-04-07T08:05:31.279Z"
   }
 ]

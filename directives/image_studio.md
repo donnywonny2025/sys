@@ -95,17 +95,18 @@ curl -X POST http://localhost:3111/api/push \
 
 When Jeff says "edit this", "change X", "add Y to the image", or any modification of the current studio image:
 
-**Script:** `execution/edit_image.py`
+**Script:** `execution/studio.py edit`
 **Model:** `gemini-2.5-flash-image` via `generateContent`
 **How it works:** Sends the source image (base64) + edit instruction to Gemini, gets back the edited image. Auto-pushes to dashboard.
 
 ```bash
-python3 execution/edit_image.py '<source_image>' '<edit_instruction>' '<output_file>'
+python3 execution/studio.py generate '<expanded_prompt>' 'dashboard/data/gallery/<filename>.png'
+python3 execution/studio.py edit '<source_image>' '<edit_instruction>' '<output_file>'
 ```
 
 **Example:**
 ```bash
-python3 execution/edit_image.py \
+python3 execution/studio.py edit \
   dashboard/data/gallery/white_rabbit.png \
   "Put a birthday hat on the rabbit" \
   dashboard/data/gallery/white_rabbit_birthday.png
@@ -127,8 +128,9 @@ python3 execution/edit_image.py \
 ## 8. File Layout
 ```
 execution/
-├── generate_nano_banana.py    ← text-to-image (Imagen 4 Fast, 16:9)
-├── edit_image.py              ← image editing (Gemini 2.5 Flash Image)
+├── studio.py                  ← unified CLI (generate + edit)
+├── generate_nano_banana.py    ← legacy generate (still works)
+├── edit_image.py              ← legacy edit (still works)
 └── upscale_local.sh           ← 2x upscale
 dashboard/data/
 ├── gallery/                   ← generated + edited images
