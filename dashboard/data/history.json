@@ -1046,5 +1046,38 @@
   {
     "type": "close_reference",
     "timestamp": "2026-04-07T07:51:08.371Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/white_rabbit.png",
+      "size": "1408x768",
+      "aspect": "16:9",
+      "prompt": "A professional close-up portrait of a pristine white rabbit sitting in a lush mossy forest clearing, soft volumetric morning light filtering through ancient oak trees, dewdrops on its whiskers, shallow depth of field, 85mm lens, f/1.8 aperture, natural fur texture with individual hair detail, raw physical imperfections, shot on medium format film, gentle bokeh background",
+      "model": "Imagen 4 Fast"
+    },
+    "timestamp": "2026-04-07T08:01:06.777Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/white_rabbit_snow.png",
+      "size": "edited",
+      "aspect": "16:9",
+      "prompt": "[EDIT] Add falling snow to this scene, make the ground covered in fresh white snow, add frost to the leaves, keep the rabbit exactly the same",
+      "model": "Gemini 2.5 Flash (Edit)"
+    },
+    "timestamp": "2026-04-07T08:03:04.479Z"
+  },
+  {
+    "type": "studio",
+    "hero": {
+      "src": "/data/gallery/white_rabbit_birthday.png",
+      "size": "edited",
+      "aspect": "16:9",
+      "prompt": "[EDIT] Put a colorful cone-shaped birthday party hat on the rabbit's head, the hat should be bright red and blue with polka dots, with a small pom-pom on top and an elastic string under the chin. Keep everything else in the image exactly the same.",
+      "model": "Gemini 2.5 Flash (Edit)"
+    },
+    "timestamp": "2026-04-07T08:03:56.606Z"
   }
 ]

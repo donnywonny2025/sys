@@ -91,9 +91,46 @@ curl -X POST http://localhost:3111/api/push \
 - **Z-ordering** — Click a PIP to bring it to front
 - **State persistence** — Server caches all active references as an array; restored on page refresh
 
-## 6. Operational Rules
+## 6. Image Editing Workflow
+
+When Jeff says "edit this", "change X", "add Y to the image", or any modification of the current studio image:
+
+**Script:** `execution/edit_image.py`
+**Model:** `gemini-2.5-flash-image` via `generateContent`
+**How it works:** Sends the source image (base64) + edit instruction to Gemini, gets back the edited image. Auto-pushes to dashboard.
+
+```bash
+python3 execution/edit_image.py '<source_image>' '<edit_instruction>' '<output_file>'
+```
+
+**Example:**
+```bash
+python3 execution/edit_image.py \
+  dashboard/data/gallery/white_rabbit.png \
+  "Put a birthday hat on the rabbit" \
+  dashboard/data/gallery/white_rabbit_birthday.png
+```
+
+**Rules:**
+- Source image is always the current studio hero image (use the most recent file in `dashboard/data/gallery/`)
+- Output files follow the naming convention: `<base>_<edit_description>.png`
+- Each edit creates a new file — never overwrite the original
+- Timeout is 60 seconds (Gemini edits take ~10–15s)
+
+## 7. Operational Rules
 - **Never wait > 10 seconds** for generation command status. Fire and check back.
 - **Always auto-run** generation commands (`SafeToAutoRun: true`). Jeff should never see permission dialogs for image generation.
 - **Never use browser subagents** to interact with the studio. Use the WebSocket API exclusively.
 - **Gallery images** are saved to `dashboard/data/gallery/`. Reference images to `dashboard/data/references/`.
 - **ALL files stay in the SYSTEM project directory** (`/Volumes/WORK 2TB/WORK 2026/SYSTEM/`). Never save assets to `~/.hermes/`, `/tmp/`, or anywhere outside the project. The only exception is reading API keys from `~/.hermes/.env`.
+
+## 8. File Layout
+```
+execution/
+├── generate_nano_banana.py    ← text-to-image (Imagen 4 Fast, 16:9)
+├── edit_image.py              ← image editing (Gemini 2.5 Flash Image)
+└── upscale_local.sh           ← 2x upscale
+dashboard/data/
+├── gallery/                   ← generated + edited images
+└── references/                ← real-world reference photos
+```
