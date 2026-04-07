@@ -694,6 +694,9 @@
     consoleBody.scrollTop = consoleBody.scrollHeight;
   }
 
+  // --- Chat Live Feed ---
+  var chatMessages = document.getElementById('chat-messages');
+
   // Load console history from persistent storage
   fetch('/api/history')
     .then(function(r) { return r.json(); })
@@ -706,13 +709,14 @@
       if (consoleItems.length === 0) {
         addConsoleLine('Console initialized. Waiting for OpenClaw activity...', 'sys');
       }
+      // Scroll chat and console to bottom after replay
+      if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+      var consoleEl = document.getElementById('console-lines');
+      if (consoleEl) consoleEl.scrollTop = consoleEl.scrollHeight;
     })
     .catch(function() {
       addConsoleLine('Console initialized. Waiting for OpenClaw activity...', 'sys');
     });
-
-  // --- Chat Live Feed ---
-  var chatMessages = document.getElementById('chat-messages');
 
   function addChatFeedBubble(text, style) {
     if (!chatMessages) return;
