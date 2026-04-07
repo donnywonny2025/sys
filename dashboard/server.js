@@ -102,30 +102,32 @@ const server = http.createServer(async (req, res) => {
         return;
       }
       
-      // Tell UI we are processing so spinner activates (don't echo the user message here — the JSONL watcher handles it to avoid duplicates)
+      // Let the JSONL watcher handle → and ← chat bubbles to avoid duplicates
+      broadcast({ type: 'telem', event: 'recv', ts: new Date().toISOString(), label: message.slice(0, 60) });
       broadcast({ type: 'console', entry: `⏳ Processing request...`, style: 'sys', status: 'PROCESSING', ts: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) });
 
       const { spawn } = require('child_process');
+      const startTime = Date.now();
       const proc = spawn('openclaw', ['agent', '--agent', 'main', '--message', message], {
         env: { ...process.env, PATH: process.env.PATH + ':/Users/jeffkerr/Library/pnpm' }
       });
-      
-      // Push stderr blocks (which contain CLI thinking/tool calls) to the console live
+
+      // Push stderr blocks (CLI thinking/tool calls) to console live
       proc.stderr.on('data', (chunk) => {
         let text = chunk.toString().trim();
-        // Skip some repetitive static terminal clear codes if any
         text = text.replace(/[\x1b\x9b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
         if (text && !text.includes('Queue:')) {
-          // Send thinking outputs to console but avoid pushing them to the chat bubbles
           broadcast({ type: 'console', entry: `⚙️ ${text.substring(0, 200)}`, style: 'sys' });
         }
       });
       
       proc.on('close', (code) => {
+        const durMs = Date.now() - startTime;
         if (code !== 0) {
           pushToConsole(`✗ OpenClaw failed (code ${code})`, 'err');
         }
-        broadcast({ type: 'console', entry: '✅ Runtime finished', style: 'sys', status: 'IDLE', ts: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) });
+        broadcast({ type: 'console', entry: '✅ Done', style: 'sys', status: 'IDLE', ts: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) });
+        broadcast({ type: 'telem', event: 'done', ts: new Date().toISOString(), durMs });
       });
 
       // return success to frontend immediately

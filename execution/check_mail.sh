@@ -18,9 +18,9 @@ tell application \"Mail\"
     set isRead to (read status of msg)
     try
       set bodyText to content of msg
-      -- Get first 500 chars as snippet
-      if length of bodyText > 500 then
-        set bodyText to text 1 thru 500 of bodyText
+      -- Get first 2000 chars for preview pane
+      if length of bodyText > 2000 then
+        set bodyText to text 1 thru 2000 of bodyText
       end if
     on error
       set bodyText to \"\"
@@ -68,9 +68,11 @@ for entry in raw.split('|||'):
     date_str = parts[2].strip()
     is_read = parts[3].strip().lower() == 'true'
     snippet = parts[4].strip() if len(parts) > 4 else ''
-    # Clean snippet: collapse whitespace, remove weird chars
-    snippet = re.sub(r'[\r\n\t]+', ' ', snippet)
-    snippet = re.sub(r'  +', ' ', snippet).strip()
+    # Clean body text: collapse whitespace, remove weird chars
+    body = re.sub(r'[\r\n\t]+', ' ', snippet)
+    body = re.sub(r'  +', ' ', body).strip()
+    # Short snippet for list view (100 chars)
+    list_snippet = body[:100] + '...' if len(body) > 100 else body
     if not subject:
         continue
     emails.append({
@@ -78,7 +80,8 @@ for entry in raw.split('|||'):
         'sender': sender,
         'date': date_str,
         'unread': not is_read,
-        'snippet': snippet
+        'snippet': list_snippet,
+        'body': body
     })
 
 print(json.dumps({'type': 'email', 'emails': emails}))

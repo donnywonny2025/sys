@@ -135,7 +135,7 @@
           '<strong>Date:</strong> ' + (email.date || '') +
         '</div>' +
       '</div>' +
-      '<div class="mail-preview-body">' + (email.snippet || email.subject || 'No preview available.') + '</div>';
+      '<div class="mail-preview-body">' + (email.body || email.snippet || email.subject || 'No preview available.') + '</div>';
   }
 
   function renderEmail(emails, targetId) {
@@ -766,12 +766,19 @@
       addConsoleLine('Console initialized. Waiting for OpenClaw activity...', 'sys');
     });
 
+  var _lastChatTexts = {};
   function addChatFeedBubble(text, style, ts) {
     if (!chatMessages) return;
     // Only show chat-relevant messages (→ outgoing, ← incoming)
     var isOut = text.indexOf('→') === 0;
     var isIn = text.indexOf('←') === 0;
     if (!isOut && !isIn) return;
+
+    // Dedup: skip if same message within 5s
+    var dedupKey = text.substring(0, 80);
+    var now = Date.now();
+    if (_lastChatTexts[dedupKey] && (now - _lastChatTexts[dedupKey]) < 5000) return;
+    _lastChatTexts[dedupKey] = now;
 
     // Remove welcome message on first real message
     var welcome = chatMessages.querySelector('.chat-welcome');
@@ -1010,7 +1017,37 @@
         addChainEvent('◀', 'OUT', 'reply', durStr);
         break;
     }
+
+    // Update LAST action
+    var lastEl = document.getElementById('telem-last-action');
+    if (lastEl) {
+      var actionMap = { recv: '→ prompt', think: '◎ thinking', tool: '▶ ' + (msg.label || 'tool'), done: '✓ done', reply: '◀ reply' };
+      lastEl.textContent = actionMap[msg.event] || msg.event;
+    }
   }
+
+  // ── Feed Age Tracking (uses feedTimestamps from line 5) ──
+  function formatAge(ms) {
+    if (!ms) return '—';
+    var sec = Math.floor(ms / 1000);
+    if (sec < 60) return sec + 's ago';
+    var min = Math.floor(sec / 60);
+    if (min < 60) return min + 'm ago';
+    return Math.floor(min / 60) + 'h ago';
+  }
+
+  // Update feed age displays every 15s
+  setInterval(function() {
+    var now = Date.now();
+    var feedMap = { mail: 'email', cal: 'calendar', wx: 'weather' };
+    ['mail', 'cal', 'wx'].forEach(function(key) {
+      var el = document.getElementById('telem-' + key + '-age');
+      if (el) {
+        var ts = feedTimestamps[feedMap[key]];
+        el.textContent = ts ? formatAge(now - ts) : '—';
+      }
+    });
+  }, 15000);
 
   // Start telemetry polling
   pollTelemetry();
