@@ -102,8 +102,8 @@ const server = http.createServer(async (req, res) => {
         return;
       }
       
-      // Tell UI we are processing so spinner activates
-      broadcast({ type: 'console', entry: `→ ${message}`, style: 'out', status: 'PROCESSING', ts: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) });
+      // Tell UI we are processing so spinner activates (don't echo the user message here — the JSONL watcher handles it to avoid duplicates)
+      broadcast({ type: 'console', entry: `⏳ Processing request...`, style: 'sys', status: 'PROCESSING', ts: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) });
 
       const { spawn } = require('child_process');
       const proc = spawn('openclaw', ['agent', '--agent', 'main', '--message', message], {
@@ -125,7 +125,7 @@ const server = http.createServer(async (req, res) => {
         if (code !== 0) {
           pushToConsole(`✗ OpenClaw failed (code ${code})`, 'err');
         }
-        broadcast({ type: 'console', entry: '← Runtime finished', style: 'sys', status: 'IDLE', ts: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) });
+        broadcast({ type: 'console', entry: '✅ Runtime finished', style: 'sys', status: 'IDLE', ts: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) });
       });
 
       // return success to frontend immediately

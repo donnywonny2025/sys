@@ -7,7 +7,7 @@
 ---
 
 ## Last Updated
-`2026-04-07T13:05:00-04:00` — Session: Dashboard Telemetry & API Streaming Fixes
+`2026-04-07T13:51:00-04:00` — Session: Telegram Integration, Himalaya Email & Chat Dedup Fixes
 
 ## Response Timing Benchmarks
 | Query | Time | Notes |
@@ -67,7 +67,7 @@ Antigravity → curl OpenClaw /v1/chat/completions → OpenClaw uses skills → 
 | Weather | `weather` (wttr.in/Open-Meteo) | ✅ Verified — returned "☁️ +48°F" |
 | Calendar | `gog` (Google Workspace) | ⚠️ Needs Google auth setup |
 | Reminders | `apple-reminders` (remindctl CLI) | ✅ Verified — returned real reminders |
-| Email | `himalaya` (IMAP/SMTP) or `gog` (Gmail) | ⚠️ Needs account config |
+| Email | `himalaya` (IMAP/SMTP) | ✅ Configured — iCloud `colour8k@mac.com`, config at `~/.config/himalaya/config.toml` |
 | Notes | `apple-notes` / `bear-notes` / `obsidian` | Available, untested |
 
 ### Fallback Scripts (still work independently)
@@ -93,7 +93,13 @@ Installed via `crontab` on 2026-04-07. Dashboard data stays fresh without manual
 |------|-------|-----------|
 | OpenClaw health | Dashboard polls `/api/hermes-status` every 15s | No (live only) |
 | Console log | `dashboard/data/history.json` | ✅ Yes — reloads on page refresh |
-| OpenClaw raw logs | `/tmp/openclaw/openclaw-YYYY-MM-DD.log` | ✅ Yes (daily rotation) |
+| OpenClaw raw logs | `~/.openclaw/logs/gateway.log` | ✅ Yes |
+
+## Telegram Integration
+- **Bot paired:** User ID `7095320256`, fully verified two-way messaging
+- **Outbound command:** `openclaw message send --channel telegram --target "7095320256" --message "..."`
+- **Inbound:** Messages from Telegram flow into the active JSONL session and render in the Dashboard chat UI
+- **Session file:** `~/.openclaw/agents/main/sessions/*.jsonl` (most recent by mtime)
 
 ## Key File Locations
 - **OpenClaw source:** `/Volumes/WORK 2TB/WORK 2026/SYSTEM/openclaw/`
@@ -131,6 +137,8 @@ Installed via `crontab` on 2026-04-07. Dashboard data stays fresh without manual
 | `EAGAIN` Node.js Exception | `tailProc.kill()` leaked file-watcher zombies | Used `killall tail`, migrated API logic to streaming |
 | Dashboard Chat Missing Responses | JSONL Regex `/[\s\S]*?$/` was accidentally wiping active output | Fixed `server.js` strictly to match `/🦞 OpenClaw[\s\S]+?🪢 Queue:.*?\n/` |
 | Silent Agent Execution | Direct CLI bash runs bypass WebSocket pushes | Implemented `agent_cmd.sh` to stream arbitrary OS actions securely back to `/api/push` |
+| Duplicate Chat Bubbles | `/api/openclaw-chat` echoed user message AND JSONL watcher both emitted `→` prefix | Removed redundant broadcast from chat endpoint; JSONL watcher is now the single source |
+| "Runtime finished" as Chat Bubble | `← Runtime finished` prefix matched assistant bubble filter | Changed prefix to `✅ Runtime finished` so it stays in console only |
 
 ## User Preferences (Immutable)
 - **READ-ONLY** for all Apple integrations (Calendar, Mail) — never write/send
@@ -150,11 +158,16 @@ Installed via `crontab` on 2026-04-07. Dashboard data stays fresh without manual
 - [x] Audit OpenClaw capabilities
 - [x] Stream CLI diagnostics dynamically to Dashboard console
 - [x] Fix JSONL telemetry regex feed string bug
+- [x] Update AGENTS.md to reflect OpenClaw instead of Hermes
+- [x] Pair Telegram bot with user account
+- [x] Configure himalaya email skill (iCloud IMAP)
+- [x] Fix duplicate chat bubbles in dashboard
+- [x] Fix "Runtime finished" rendering as assistant bubble
 - [ ] Migrate cron jobs from crontab to OpenClaw's `cron` tool
 - [ ] Fix OpenClaw Control UI blank screen (low priority)
-- [ ] Update AGENTS.md to reflect OpenClaw instead of Hermes
 - [ ] Fix whiteboard component
 - [ ] Add smart summarization (OpenClaw summarizes calendar + inbox)
+- [ ] Configure Google Workspace auth for `gog` skill
 
 ---
 
