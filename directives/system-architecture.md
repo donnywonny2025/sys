@@ -53,18 +53,82 @@ DASHBOARD (Display — http://localhost:3111 — shows everything to the user)
 - ❌ Do NOT show a green OPENCLAW light unless the gateway is actually responding
 - ❌ Do NOT lose feed data on page refresh (data must be cached server-side)
 
+## Talking to OpenClaw (WORKING — verified 2026-04-07 07:36 EDT)
+
+### CLI Command (primary method)
+```bash
+openclaw agent --agent main --message "Your message here"
+```
+- This sends a message to the `main` agent via the gateway
+- OpenClaw processes it (Gemini 2.5 Flash) and responds
+- The exchange is written to the active session JSONL file
+- The dashboard session watcher picks it up and pushes it to the console
+- User sees: `→ [timestamp] message` and `← OpenClaw : response`
+
+### Pairing (FIXED)
+- The CLI device (`40802b48...`) was originally scoped to `operator.read` only
+- We upgraded it to full scopes in `~/.openclaw/devices/paired.json`:
+  `operator.admin`, `operator.read`, `operator.write`, `operator.approvals`, `operator.pairing`
+- If pairing breaks again, re-run the scope upgrade on the CLI device ID
+- The gateway must be restarted after scope changes: `launchctl kickstart -k gui/$(id -u)/ai.openclaw.gateway`
+
+### Console Pipeline
+```
+Antigravity sends CLI command
+  → OpenClaw processes via Gemini
+    → Response written to ~/.openclaw/agents/main/sessions/*.jsonl
+      → Dashboard session watcher (startSessionWatcher in server.js) tails the JSONL
+        → Parsed messages broadcast to browser via WebSocket
+          → Console panel displays: → user message / ← assistant response
+```
+
 ## Current State (2026-04-07)
-- Dashboard server: `/Volumes/WORK 2TB/WORK 2026/SYSTEM/dashboard/server.js` (port 3111)
-- OpenClaw gateway: port 18789, auth token in session files
-- OpenClaw config: `~/.openclaw/`
-- Agent config: `~/.openclaw/agents/main/agent/`
-- Session files: `~/.openclaw/agents/main/sessions/*.jsonl` (tailed for live chat)
-- Gateway log: `~/.openclaw/logs/gateway.log` (tailed for connection events)
-- API key: stored in `~/.openclaw/agents/main/agent/auth-profiles.json` (gitignored)
-- Model: gemini-2.5-flash via Google provider
+
+### Services
+| Service | Port | Status |
+|---------|------|--------|
+| Dashboard | 3111 | `node server.js` (manual start, nohup) |
+| OpenClaw Gateway | 18789 | LaunchAgent `ai.openclaw.gateway` (auto-start) |
+
+### Key Files
+| File | Purpose |
+|------|---------|
+| `dashboard/server.js` | Dashboard server — WebSocket, feed cache, session watcher, console push |
+| `dashboard/public/app.js` | Client — timers, console rendering, scene switching, status polling |
+| `dashboard/public/index.html` | Dashboard layout — panels, console, scenes |
+| `dashboard/public/style.css` | Dashboard styles |
+| `directives/system-architecture.md` | THIS FILE — the authoritative system reference |
+| `execution/check_mail.sh` | Mail fetch (via macOS Mail.app) — **temporary cron, migrate to OpenClaw** |
+| `execution/check_calendar.sh` | Calendar fetch (via macOS Calendar.app) — **temporary cron, migrate to OpenClaw** |
+| `execution/check_weather.sh` | Weather fetch (via wttr.in) — **temporary cron, migrate to OpenClaw** |
+
+### OpenClaw Paths
+| Path | Purpose |
+|------|---------|
+| `~/.openclaw/openclaw.json` | Main config (auth profiles, model settings) |
+| `~/.openclaw/agents/main/agent/auth-profiles.json` | Gemini API key (gitignored) |
+| `~/.openclaw/agents/main/sessions/*.jsonl` | Chat sessions (tailed by dashboard) |
+| `~/.openclaw/logs/gateway.log` | Gateway log (tailed by dashboard) |
+| `~/.openclaw/devices/paired.json` | Device pairing & scopes |
+| `/Users/jeffkerr/Library/pnpm/openclaw` | CLI binary |
+
+### Cron (temporary — to be migrated to OpenClaw)
+```
+*/5 * * * *  check_mail.sh    (every 5 min)
+*/15 * * * * check_calendar.sh (every 15 min)
+*/30 * * * * check_weather.sh  (every 30 min)
+```
+
+## Known Issues
+- **Duplicate console messages**: Session watcher may pick up the same message from both `main.jsonl` and the UUID session file. Needs dedup logic.
+- **OpenClaw can't access Google Calendar directly**: Needs `gog` CLI setup (OAuth). Currently using macOS Calendar.app via AppleScript as workaround.
+- **Dashboard server not auto-started**: Needs a LaunchAgent or the dashboard needs to be started manually after reboot.
 
 ## Migration TODO
-- [ ] Learn OpenClaw's task/scheduling system (`openclaw tasks --help`)
-- [ ] Migrate mail/calendar/weather checks from crontab into OpenClaw tasks
+- [x] Establish Antigravity ↔ OpenClaw communication (CLI: `openclaw agent --agent main --message "..."`)
+- [x] Verify communication shows in dashboard console
+- [ ] Fix duplicate console messages (dedup in session watcher)
+- [ ] Migrate mail/calendar/weather checks from crontab into OpenClaw scheduled tasks
 - [ ] Remove raw crontab entries once OpenClaw handles scheduling
-- [ ] Ensure all OpenClaw task execution shows in dashboard console
+- [ ] Set up dashboard server as LaunchAgent for auto-start
+
