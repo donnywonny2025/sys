@@ -8,7 +8,7 @@
 ---
 
 ## Last Updated
-`2026-04-07T14:30:00-04:00` — Session: Contacts Page, Global Telemetry, Calendar Fix, Health Check
+`2026-04-07T14:52:00-04:00` — Session: Scene Switch API, Split-Pane Inbox, Mail Snippets
 
 ## Who Does What
 ```
@@ -50,7 +50,7 @@ User (Jeff) → Antigravity (orchestrator) → OpenClaw Gateway (18789) → Dash
 | Page | Sidebar Icon | What It Shows |
 |------|-------------|---------------|
 | **Home** | 🏠 House | Today's Focus, Schedule, Inbox, Board + drawing canvas |
-| **Mail** | ✉️ Envelope | Full inbox view for colour8k@mac.com |
+| **Mail** | ✉️ Envelope | Split-pane inbox: list left, preview right. Click to read. |
 | **Calendar** | 📅 Calendar | Schedule detail view |
 | **Board** | ✏️ Pencil | Task board + whiteboard |
 | **Studio** | 🖼 Picture | Nano Banana image generation studio |
@@ -84,6 +84,13 @@ curl -sS http://127.0.0.1:18789/tools/invoke -H "Authorization: Bearer $TOKEN" -
 
 # Chat via dashboard (preferred — streams to console)
 curl -s -X POST http://localhost:3111/api/openclaw-chat -H "Content-Type: application/json" -d '{"message":"..."}'
+
+# Scene switch (instant — no mouse needed)
+curl -s -X POST http://localhost:3111/api/scene -H "Content-Type: application/json" -d '{"scene":"home"}'
+# Valid scenes: home, mail, calendar, whiteboard, studio, chat, contacts, openclaw
+
+# Force browser refresh
+curl -s -X POST http://localhost:3111/api/refresh -H "Content-Type: application/json"
 ```
 
 ## Dashboard Data Flow

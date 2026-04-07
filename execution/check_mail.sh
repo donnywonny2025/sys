@@ -18,9 +18,9 @@ tell application \"Mail\"
     set isRead to (read status of msg)
     try
       set bodyText to content of msg
-      -- Get first 200 chars as snippet
-      if length of bodyText > 200 then
-        set bodyText to text 1 thru 200 of bodyText
+      -- Get first 500 chars as snippet
+      if length of bodyText > 500 then
+        set bodyText to text 1 thru 500 of bodyText
       end if
     on error
       set bodyText to \"\"
