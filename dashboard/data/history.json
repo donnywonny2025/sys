@@ -1090,5 +1090,163 @@
       "model": "Imagen 4 Fast"
     },
     "timestamp": "2026-04-07T08:05:31.279Z"
+  },
+  {
+    "type": "scene",
+    "scene": "home",
+    "timestamp": "2026-04-07T08:09:21.565Z"
+  },
+  {
+    "type": "weather",
+    "data": {
+      "summary": "☁️   +47°F",
+      "detail": "☁️   +47°F 56% ↓4mph"
+    },
+    "timestamp": "2026-04-07T08:10:53.214Z"
+  },
+  {
+    "type": "calendar",
+    "events": [],
+    "timestamp": "2026-04-07T08:10:59.854Z"
+  },
+  {
+    "type": "email",
+    "emails": [
+      {
+        "subject": "More Perfect Union is hiring for Video Editor. 6 more Video Editor jobs in United States.",
+        "sender": "Indeed",
+        "date": "Tuesday, April 7, 2026 at 2:59:36 AM",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "Tuesday, April 7, 2026 at 2:16:05 AM",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "Tuesday, April 7, 2026 at 2:15:20 AM",
+        "unread": true
+      },
+      {
+        "subject": "Quick question about your application at Reputation.com, Inc.",
+        "sender": "Glassdoor",
+        "date": "Tuesday, April 7, 2026 at 1:30:03 AM",
+        "unread": true
+      },
+      {
+        "subject": "USPS® Expected Delivery by Monday, April 13, 2026 arriving by 9:00pm 9400111206241421253727",
+        "sender": "auto-reply@usps.com",
+        "date": "Tuesday, April 7, 2026 at 12:49:06 AM",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "Monday, April 6, 2026 at 11:41:45 PM",
+        "unread": true
+      },
+      {
+        "subject": "Receipt from GOOGLE*CLOUD CHTCX4 - $10.00",
+        "sender": "Venmo",
+        "date": "Monday, April 6, 2026 at 11:41:17 PM",
+        "unread": true
+      },
+      {
+        "subject": "Security alert for kerrjeff1977@gmail.com",
+        "sender": "Google",
+        "date": "Monday, April 6, 2026 at 11:39:38 PM",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "Monday, April 6, 2026 at 11:37:45 PM",
+        "unread": true
+      },
+      {
+        "subject": "Apr 6, 2026 Digest: 1 new message from PVSchools today",
+        "sender": "PVSchools via ParentSquare",
+        "date": "Monday, April 6, 2026 at 9:19:33 PM",
+        "unread": true
+      }
+    ],
+    "timestamp": "2026-04-07T08:11:15.207Z"
+  },
+  {
+    "type": "weather",
+    "data": {
+      "summary": "☁️   +47°F",
+      "detail": "☁️   +47°F 56% ↓4mph"
+    },
+    "timestamp": "2026-04-07T08:13:17.937Z"
+  },
+  {
+    "type": "email",
+    "emails": [
+      {
+        "subject": "More Perfect Union is hiring for Video Editor. 6 more Video Editor jobs in United States.",
+        "sender": "Indeed",
+        "date": "Tuesday, April 7, 2026 at 2:59:36 AM",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "Tuesday, April 7, 2026 at 2:16:05 AM",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "Tuesday, April 7, 2026 at 2:15:20 AM",
+        "unread": true
+      },
+      {
+        "subject": "Quick question about your application at Reputation.com, Inc.",
+        "sender": "Glassdoor",
+        "date": "Tuesday, April 7, 2026 at 1:30:03 AM",
+        "unread": true
+      },
+      {
+        "subject": "USPS® Expected Delivery by Monday, April 13, 2026 arriving by 9:00pm 9400111206241421253727",
+        "sender": "auto-reply@usps.com",
+        "date": "Tuesday, April 7, 2026 at 12:49:06 AM",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now disabled",
+        "sender": "Venmo",
+        "date": "Monday, April 6, 2026 at 11:41:45 PM",
+        "unread": true
+      },
+      {
+        "subject": "Receipt from GOOGLE*CLOUD CHTCX4 - $10.00",
+        "sender": "Venmo",
+        "date": "Monday, April 6, 2026 at 11:41:17 PM",
+        "unread": true
+      },
+      {
+        "subject": "Security alert for kerrjeff1977@gmail.com",
+        "sender": "Google",
+        "date": "Monday, April 6, 2026 at 11:39:38 PM",
+        "unread": true
+      },
+      {
+        "subject": "Your Venmo Debit Card is now enabled",
+        "sender": "Venmo",
+        "date": "Monday, April 6, 2026 at 11:37:45 PM",
+        "unread": true
+      },
+      {
+        "subject": "Apr 6, 2026 Digest: 1 new message from PVSchools today",
+        "sender": "PVSchools via ParentSquare",
+        "date": "Monday, April 6, 2026 at 9:19:33 PM",
+        "unread": true
+      }
+    ],
+    "timestamp": "2026-04-07T08:13:26.945Z"
   }
 ]

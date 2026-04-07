@@ -117,6 +117,18 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // ── API: Hermes agent status ──
+  if (req.method === 'GET' && req.url === '/api/hermes-status') {
+    // Check if hermes binary exists and can report status
+    const { exec } = require('child_process');
+    exec('hermes status 2>&1 | head -5', { timeout: 3000 }, (err, stdout) => {
+      const isUp = stdout && stdout.includes('Hermes Agent Status');
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ active: isUp, output: (stdout || '').trim() }));
+    });
+    return;
+  }
+
   // ── API: Save Whiteboard Image ──
   if (req.method === 'POST' && req.url === '/api/whiteboard/save') {
     try {
