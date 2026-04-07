@@ -1,69 +1,78 @@
-# Session Log — 2026-04-06
+# Session Log — 2026-04-06 (Update 2)
 
 **Conversation ID:** `b39af107-fcc9-435a-aa7f-40e49d6c624c`  
-**Date/Time:** 2026-04-06 22:47 EDT  
-**Duration:** ~10 min (ongoing)
+**Date/Time:** 2026-04-06 22:47 → 23:00+ EDT  
+**Duration:** ~15 min (ongoing)
 
 ---
 
 ## Objective
-Bootstrap the SYSTEM folder — establish it as the central control-center repository for Jeff's entire operation. Initialize git, sync to GitHub, and define the vision before building anything.
+Bootstrap SYSTEM folder, establish changelog system, and research OpenClaw + agent landscape for background automation layer.
 
 ## Decisions Made
-- **SYSTEM is a cockpit, not an app** — It's a structured state machine that the AI reads on every session to get situational awareness across all projects. Not a to-do app, not a dashboard (yet). The files ARE the system.
-- **3-layer architecture preserved** — Kept the existing Directive → Orchestration → Execution model from AGENTS.md. SYSTEM builds on top of it, doesn't replace it.
-- **Git is the single source of truth** — Everything gets committed and pushed. GitHub is the permanent record. Local is transient.
-- **YAML for structured state, Markdown for human context** — Manifests/config in YAML (machine-parseable), directives/logs in Markdown (human-readable). Both version-controlled.
-- **Session logging is mandatory** — Every conversation touching SYSTEM produces a log entry that gets committed. No exceptions.
+- **SYSTEM is a cockpit, not an app** — Structured state machine the AI reads on every session
+- **3-layer architecture preserved** — Directive → Orchestration → Execution from AGENTS.md
+- **Git is the single source of truth** — Everything committed and pushed. GitHub is permanent record.
+- **Session logging is mandatory** — Every conversation produces a log entry (see `directives/session_logging.md`)
+- **YAML for state, Markdown for context** — Machine-parseable config + human-readable docs, both versioned
 
 ## Changes Made
-- `.gitignore` — Created. Excludes .env, credentials, .tmp/, .DS_Store, node_modules, IDE files
-- `directives/` — Created directory (was referenced in AGENTS.md but didn't exist)
-- `execution/` — Created directory (same)
-- `.tmp/` — Created directory (same)
-- `directives/session_logging.md` — Created. Defines the logging protocol, what gets captured, commit rules.
-- `changelog/` — Created directory structure: `sessions/`, `decisions/`, `ideas/`, plus session template
-- `changelog/TEMPLATE_session.md` — Created. Reusable template for all future session logs.
-- Git initialized, remote set to `https://github.com/donnywonny2025/sys.git`, initial commit pushed to `main`
+- `.gitignore` — Created (excludes .env, credentials, .tmp/, .DS_Store, node_modules, IDE files)
+- `directives/session_logging.md` — Created (defines logging protocol, commit rules)
+- `changelog/` — Full structure: `sessions/`, `decisions/`, `ideas/`, `TEMPLATE_session.md`
+- `directives/`, `execution/`, `.tmp/` — Created directories (referenced in AGENTS.md but didn't exist)
+- `research/2026-04-06_openclaw-agent-landscape.md` — Comprehensive research doc on OpenClaw, forks, alternatives, and how they fit SYSTEM
+- Git initialized → synced to `https://github.com/donnywonny2025/sys.git`
+- Initial commit + session logging commit pushed
 
 ## Ideas Explored
 
-### SYSTEM as "Personal Control Center"
-Jeff described wanting a centralized system that acts as a command center for his life — tracking projects, calendar, email, tasks, finances, everything. The key insight: he's running 40+ project folders simultaneously and needs a single place that aggregates state.
+### Jeff's 3-Layer Architecture Vision
+Jeff described a clear separation of concerns:
+1. **Antigravity (this IDE)** = "The Brain" — Jeff talks here, controls everything, makes decisions
+2. **Google AI Studio / Gemini Pro** = "The Face" — Web UI panel that displays calendar, whiteboard, SVGs, images, design work. Persistent, fixed-size, always-on display.
+3. **OpenClaw (or similar)** = "The Hands" — Background worker for cron jobs, email scanning, computer-use, autonomous tasks. Jeff does NOT want to chat with OpenClaw directly — it should be headless, receiving tasks from the SYSTEM directives.
 
-### Proposed Architecture (from implementation_plan.md)
-- **Manifest layer** — `manifest/` with YAML files for projects, calendar, contacts, finances, inbox
-- **Directives layer** — Standing orders like daily_briefing, email_triage, project_review
-- **Execution layer** — Python scripts for calendar sync, email scan, project scanning, reporting
-- **Knowledge base** — Persistent memory: decisions, learnings, people dossiers, playbooks
+### Key Design Principles (from Jeff's description)
+- **Jeff talks to Antigravity, Antigravity controls everything else**
+- **The web UI is persistent and fixed-sized** — never resizes, always there, like a command display
+- **Maybe use Playwright** for instant rendering of the web panel
+- **Memory persists in SYSTEM** — if Jeff starts a new Antigravity chat, SYSTEM repo still has all context
+- **OpenClaw runs in background** — no direct interaction, just execution. Powered by Gemini via Google Ultra subscription
+- **The web UI does everything** — show calendar, create images, draw SVGs, show whiteboard, design work — all in one consistent panel
 
-### Integration Candidates Discussed
-- Google Calendar, Gmail, Google Sheets, GitHub, DataAnnotation, filesystem scanning
-- Jeff hasn't prioritized these yet — waiting on his input
+### OpenClaw Research Summary
+- Created by Peter Steinberger, launched Nov 2025
+- **ACQUIRED BY OPENAI** (Feb 2026), NOT Meta. Meta acquired Moltbook (AI agent social network using OpenClaw).
+- Still open source on GitHub, still functional
+- Multiple forks exist: NanoClaw, ZeroClaw, PicoClaw, IronClaw, NullClaw
+- Supports cron jobs, background tasks, multi-model, skills/plugins, persistent memory
+- **My recommendation:** Consider skipping OpenClaw for v1, build custom with Python + launchd + Playwright. Add OpenClaw later if needed.
 
-### Daily Briefing Concept
-The idea of a "briefing" generated every time Jeff opens the SYSTEM folder. Could be markdown doc, web dashboard, or verbal. Format TBD.
-
-### Autonomy Spectrum
-Discussed how much the AI should do autonomously vs. waiting for instruction. Range from "always ask" to "handle it and report." Decision deferred.
+### Custom vs. OpenClaw
+My lean is toward custom Python scripts + macOS launchd for background tasks in v1. Fewer moving parts, full control, no token costs for non-AI tasks. OpenClaw can be layered in later for its unique capabilities (multi-chat-platform, proactive heartbeats, sophisticated tool chaining).
 
 ## Ideas Abandoned
-_None yet — this is Session 1._
+_None yet — evaluating options._
 
 ## Open Questions
-- [ ] Which integrations matter most right now? (Top 3)
-- [ ] Daily briefing format preference? (Markdown / dashboard / verbal / combo)
+- [ ] Which integrations matter most? (Top 3)
+- [ ] Daily briefing format? (Markdown / dashboard / verbal / combo)
 - [ ] How structured should project tracking be? (Light / medium / heavy)
 - [ ] How much AI autonomy? (Ask-first vs. act-and-report)
 - [ ] Privacy boundaries — what goes to GitHub vs. stays local?
-- [ ] Should certain projects be excluded from the manifest?
+- [ ] OpenClaw vs. custom Python for background tasks in v1?
+- [ ] OpenClaw 24/7 or on-demand if used?
+- [ ] Chat platform for OpenClaw? (Telegram / Discord / headless)
+- [ ] How far along is the Google AI Studio web UI? What's its architecture?
 
 ## Next Steps
-- [ ] Jeff reviews the implementation plan and answers open questions
-- [ ] Build the manifest schema based on his answers
+- [ ] Jeff reviews research doc (`research/2026-04-06_openclaw-agent-landscape.md`)
+- [ ] Jeff answers open questions (especially: OpenClaw vs. custom for v1, web UI status)
+- [ ] Build the manifest schema based on answers
 - [ ] Write the `daily_briefing.md` directive
-- [ ] Create `project_scanner.py` to auto-populate the initial project manifest from WORK 2026
-- [ ] Wire up first integration (whatever Jeff prioritizes)
+- [ ] Create `project_scanner.py` to auto-populate initial manifest
+- [ ] Begin web UI architecture (coordinate with what Jeff is building in AI Studio)
 
 ---
 
