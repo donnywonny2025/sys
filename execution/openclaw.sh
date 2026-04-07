@@ -35,22 +35,29 @@ TS2=$(date +%H:%M:%S)
 
 # Extract and escape content properly with Python
 CONTENT=$(echo "$RESPONSE" | python3 -c "
-import sys,json
+import sys,json,re
 try:
     d=json.load(sys.stdin)
     c=d['choices'][0]['message']['content']
+    # Strip think blocks
+    c = re.sub(r'<think>.*?</think>', '', c, flags=re.DOTALL)
+    # Strip OpenClaw token/status block
+    c = re.sub(r'\u1f99e OpenClaw.*?(?:Queue:.*?\(depth \d+\)|$)', '', c, flags=re.DOTALL|re.IGNORECASE)
+    c = re.sub(r'🦞 OpenClaw.*?(?:Queue:.*?\(depth \d+\)|$)', '', c, flags=re.DOTALL|re.IGNORECASE)
+    c = re.sub(r'\`\`\`[\s\n]*\`\`\`', '', c, flags=re.DOTALL)
+    
     # For console display: collapse newlines, truncate
-    display=c.replace('\n',' ').replace('\r','')[:500]
+    display=c.replace('\n',' ').replace('\r','').strip()[:500]
     # Escape for safe JSON embedding
     safe=json.dumps(display)[1:-1]  # strip outer quotes
     print(safe)
 except Exception as e:
-    print(f'Error: {e}')
+    pass
 " 2>&1)
 
 # Log the response to the console
 curl -s -X POST "$DASH_URL" -H "Content-Type: application/json" \
-  -d "{\"type\":\"console\",\"entry\":\"← OpenClaw (${ELAPSED}s): ${CONTENT}\",\"style\":\"in\",\"status\":\"IDLE\",\"ts\":\"$TS2\"}" > /dev/null
+  -d "{\"type\":\"console\",\"entry\":\"← Runtime finished (${ELAPSED}s)\",\"style\":\"sys\",\"status\":\"IDLE\",\"ts\":\"$TS2\"}" > /dev/null
 
 # Output the raw content for piping (full, with newlines preserved)
 echo "$RESPONSE" | python3 -c "

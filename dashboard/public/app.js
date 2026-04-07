@@ -614,8 +614,15 @@
             addChatFeedBubble(msg.entry, msg.style, msg.ts);
             if (msg.status) {
               var statusEl = document.getElementById('console-status');
-              statusEl.textContent = msg.status;
-              statusEl.className = 'console-status' + (msg.status !== 'IDLE' ? ' active' : '');
+              if (statusEl) {
+                statusEl.textContent = msg.status;
+                statusEl.className = 'console-status' + (msg.status !== 'IDLE' ? ' active' : '');
+              }
+              if (msg.status === 'PROCESSING') {
+                handleTelemEvent({ event: 'think', durMs: 0 });
+              } else if (msg.status === 'IDLE') {
+                handleTelemEvent({ event: 'done', durMs: 0 });
+              }
             }
             break;
           case 'telem':
@@ -774,7 +781,8 @@
       time.textContent = timeStr;
       bubble.appendChild(time);
     } else if (isIn) {
-      cleanText = text.replace(/^←\s*(OpenClaw\s*:\s*)?/i, '');
+      // Strip "← OpenClaw:" or "← OpenClaw (1.5s):"
+      cleanText = text.replace(/^←\s*(OpenClaw(?:\s*\([\d.]+s\))?\s*:\s*)?/i, '');
       bubble.className = 'chat-bubble assistant';
       var sender = document.createElement('div');
       sender.className = 'chat-sender';
@@ -861,39 +869,47 @@
       .catch(function() {});
   }
 
-  var MAX_CHAIN = 10;
+  var activityFrames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+  var activityFrameIdx = 0;
+  var activityInterval = null;
 
   function addChainEvent(icon, label, cssClass, durStr, dataSize) {
     var chain = document.getElementById('telem-chain');
     if (!chain) return;
 
-    // Add arrow separator if not first
-    if (chain.children.length > 0) {
-      var arrow = document.createElement('span');
-      arrow.className = 'telem-evt-arrow';
-      arrow.textContent = '→';
-      chain.appendChild(arrow);
+    if (activityInterval) {
+      clearInterval(activityInterval);
+      activityInterval = null;
     }
 
-    // Build the event pill
-    var evt = document.createElement('span');
-    evt.className = 'telem-evt ' + (cssClass || '');
-    var text = icon + ' ' + label;
-    if (durStr) text += ' ' + durStr;
-    if (dataSize) text += ' ↓' + dataSize;
-    evt.textContent = text;
-    chain.appendChild(evt);
+    var isSpinning = (cssClass === 'think' || cssClass === 'recv');
 
-    // Trim old events (remove oldest pill + its arrow)
-    while (chain.querySelectorAll('.telem-evt').length > MAX_CHAIN) {
-      if (chain.firstChild) chain.removeChild(chain.firstChild); // arrow or evt
-      if (chain.firstChild && chain.firstChild.classList.contains('telem-evt-arrow')) {
-        chain.removeChild(chain.firstChild);
+    function renderStatus(frameIcon) {
+      var text = frameIcon + ' ' + label;
+      if (durStr) text += ' [' + durStr + ']';
+      if (dataSize) text += ' ' + dataSize;
+      
+      chain.textContent = text;
+      
+      if (cssClass === 'think' || cssClass === 'recv') {
+        chain.style.color = 'var(--purple)';
+      } else if (cssClass === 'done' || cssClass === 'reply') {
+        chain.style.color = 'var(--green)';
+      } else if (cssClass === 'boot') {
+        chain.style.color = 'var(--cyan)';
+      } else {
+        chain.style.color = 'var(--t1)';
       }
     }
 
-    // Auto-scroll to newest
-    chain.scrollLeft = chain.scrollWidth;
+    if (isSpinning) {
+      activityInterval = setInterval(function() {
+        activityFrameIdx = (activityFrameIdx + 1) % activityFrames.length;
+        renderStatus(activityFrames[activityFrameIdx]);
+      }, 80);
+    } else {
+      renderStatus(icon);
+    }
   }
 
   function fmtBytes(b) {

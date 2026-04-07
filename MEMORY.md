@@ -7,7 +7,7 @@
 ---
 
 ## Last Updated
-`2026-04-07T09:15:00-04:00` — Session: Telemetry Strip + OpenClaw Capabilities Audit
+`2026-04-07T13:05:00-04:00` — Session: Dashboard Telemetry & API Streaming Fixes
 
 ## Response Timing Benchmarks
 | Query | Time | Notes |
@@ -128,6 +128,9 @@ Installed via `crontab` on 2026-04-07. Dashboard data stays fresh without manual
 | `openclaw agent --message` fails | Requires `--to`, `--session-id`, or `--agent` flag | Use HTTP API `/v1/chat/completions` instead |
 | Calendar "Application isn't running" | Calendar.app not open | Non-blocking — script still pushes empty array |
 | `openclaw doctor` hangs on git update | Interactive prompt asks to update from git | Use `--skip-update` flag or answer No |
+| `EAGAIN` Node.js Exception | `tailProc.kill()` leaked file-watcher zombies | Used `killall tail`, migrated API logic to streaming |
+| Dashboard Chat Missing Responses | JSONL Regex `/[\s\S]*?$/` was accidentally wiping active output | Fixed `server.js` strictly to match `/🦞 OpenClaw[\s\S]+?🪢 Queue:.*?\n/` |
+| Silent Agent Execution | Direct CLI bash runs bypass WebSocket pushes | Implemented `agent_cmd.sh` to stream arbitrary OS actions securely back to `/api/push` |
 
 ## User Preferences (Immutable)
 - **READ-ONLY** for all Apple integrations (Calendar, Mail) — never write/send
@@ -145,6 +148,8 @@ Installed via `crontab` on 2026-04-07. Dashboard data stays fresh without manual
 - [x] Fix openclaw.sh multiline parsing
 - [x] Add telemetry strip (system metrics + activity chain)
 - [x] Audit OpenClaw capabilities
+- [x] Stream CLI diagnostics dynamically to Dashboard console
+- [x] Fix JSONL telemetry regex feed string bug
 - [ ] Migrate cron jobs from crontab to OpenClaw's `cron` tool
 - [ ] Fix OpenClaw Control UI blank screen (low priority)
 - [ ] Update AGENTS.md to reflect OpenClaw instead of Hermes

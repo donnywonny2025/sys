@@ -101,24 +101,36 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify({ error: 'No message provided' }));
         return;
       }
-      // Fire-and-forget: the session watcher picks up both the prompt and
-      // response from the JSONL files and pushes them to the console/chat feed.
-      const { execFile } = require('child_process');
-      execFile('openclaw', ['agent', '--agent', 'main', '--message', message], {
-        timeout: 60000,
+      
+      // Tell UI we are processing so spinner activates
+      broadcast({ type: 'console', entry: `→ ${message}`, style: 'out', status: 'PROCESSING', ts: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) });
+
+      const { spawn } = require('child_process');
+      const proc = spawn('openclaw', ['agent', '--agent', 'main', '--message', message], {
         env: { ...process.env, PATH: process.env.PATH + ':/Users/jeffkerr/Library/pnpm' }
-      }, (err, stdout, stderr) => {
-        if (err) {
-          const errMsg = stderr || err.message;
-          pushToConsole(`✗ OpenClaw error: ${errMsg.substring(0, 150)}`, 'err');
-          res.writeHead(500, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ error: errMsg }));
-          return;
-        }
-        // CLI returns "completed" — actual reply comes via session watcher
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ ok: true }));
       });
+      
+      // Push stderr blocks (which contain CLI thinking/tool calls) to the console live
+      proc.stderr.on('data', (chunk) => {
+        let text = chunk.toString().trim();
+        // Skip some repetitive static terminal clear codes if any
+        text = text.replace(/[\x1b\x9b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
+        if (text && !text.includes('Queue:')) {
+          // Send thinking outputs to console but avoid pushing them to the chat bubbles
+          broadcast({ type: 'console', entry: `⚙️ ${text.substring(0, 200)}`, style: 'sys' });
+        }
+      });
+      
+      proc.on('close', (code) => {
+        if (code !== 0) {
+          pushToConsole(`✗ OpenClaw failed (code ${code})`, 'err');
+        }
+        broadcast({ type: 'console', entry: '← Runtime finished', style: 'sys', status: 'IDLE', ts: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) });
+      });
+
+      // return success to frontend immediately
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true }));
     } catch (e) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: e.message }));
@@ -615,7 +627,12 @@ function startSessionWatcher() {
               }
             } else if (role === 'assistant' && text) {
               const dur = durMs ? `(${(durMs / 1000).toFixed(1)}s)` : '';
-              pushToConsole(`← OpenClaw ${dur}: ${text}`, 'response');
+              let strippedText = text.replace(/<think>[\s\S]*?<\/think>/g, '');
+              strippedText = strippedText.replace(/🦞 OpenClaw[\s\S]+?🪢 Queue:.*?\n/g, '');
+              strippedText = strippedText.trim();
+              if (strippedText) {
+                pushToConsole(`← OpenClaw ${dur}: ${strippedText}`, 'response');
+              }
               broadcast({ type: 'telem', event: 'reply', ts, durMs, label: text.slice(0, 60) });
             }
           } else if (Array.isArray(content)) {
@@ -632,16 +649,23 @@ function startSessionWatcher() {
                   }
                 } else if (role === 'assistant') {
                   const dur = durMs ? `(${(durMs / 1000).toFixed(1)}s)` : '';
-                  pushToConsole(`← OpenClaw ${dur}: ${text}`, 'response');
+                  let strippedText = text.replace(/<think>[\s\S]*?<\/think>/g, '');
+                  strippedText = strippedText.replace(/🦞 OpenClaw[\s\S]+?🪢 Queue:.*?\n/g, '');
+                  strippedText = strippedText.replace(/```[\s\n]*```/g, '');
+                  strippedText = strippedText.trim();
+                  
+                  if (strippedText) {
+                    pushToConsole(`← OpenClaw ${dur}: ${strippedText}`, 'response');
+                  }
                   broadcast({ type: 'telem', event: 'reply', ts, durMs, label: text.slice(0, 60) });
                 } else if (role === 'toolResult') {
                   const short = text.length > 120 ? text.slice(0, 120) + '…' : text;
-                  pushToConsole(`← [tool] ${short}`, 'sys');
+                  // DO NOT push toolResult to console. It goes to telemetry status strip.
                   broadcast({ type: 'telem', event: 'done', ts, durMs, label: short.slice(0, 60), dataBytes: text.length });
                 }
               } else if (part.type === 'toolCall' && role === 'assistant') {
                 const name = part.name || 'unknown';
-                pushToConsole(`← OpenClaw → running: ${name}`, 'sys');
+                // DO NOT push toolCall to console. It goes to telemetry status strip.
                 broadcast({ type: 'telem', event: 'tool', ts, label: name });
               } else if (part.type === 'thinking' && role === 'assistant') {
                 broadcast({ type: 'telem', event: 'think', ts, durMs });
