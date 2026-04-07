@@ -7,7 +7,7 @@
 ---
 
 ## Last Updated
-`2026-04-07T05:43:00-04:00` — Session: Console + Cron + Persistence
+`2026-04-07T09:15:00-04:00` — Session: Telemetry Strip + OpenClaw Capabilities Audit
 
 ## Response Timing Benchmarks
 | Query | Time | Notes |
@@ -30,6 +30,7 @@ User (Jeff) → Antigravity (orchestrator) → OpenClaw Gateway (18789) → Dash
 |---------|------|--------|-------|
 | OpenClaw Gateway | 18789 | ✅ LIVE | LaunchAgent `ai.openclaw.gateway`, auto-starts on boot |
 | Dashboard Server | 3111 | ✅ LIVE | WebSocket + HTTP, serves `dashboard/public/` |
+| Telemetry Strip | (in dashboard) | ✅ LIVE | 2-row system metrics + activity chain, zero token cost |
 | OpenClaw Control UI | 18789 (web) | ⚠️ BLANK | Web component doesn't initialize — not critical, our dashboard is primary |
 
 ## OpenClaw Auth
@@ -105,6 +106,20 @@ Installed via `crontab` on 2026-04-07. Dashboard data stays fresh without manual
 - **Directives:** `/Volumes/WORK 2TB/WORK 2026/SYSTEM/directives/`
 - **Hermes backup:** `/Volumes/WORK 2TB/WORK 2026/SYSTEM/.archive/hermes-backup/`
 
+## OpenClaw Capabilities (audited 2026-04-07)
+- **Files:** `read`, `edit`, `write`
+- **Shell:** `exec`, `process`
+- **Scheduling:** `cron` (reminders, recurring tasks, deferred follow-ups)
+- **Media:** `image_generate`, `music_generate`, `video_generate`
+- **Web:** `web_search` (via Firecrawl)
+- **Multi-Agent:** `sessions_spawn`, `sessions_send`, `sessions_yield`, `sessions_list`, `sessions_history`
+
+## Telemetry Strip (added 2026-04-07)
+- **Row 1:** ONLINE, UP, SESSION, TURNS, CPU sparkline, MEM bar
+- **Row 2:** Activity event chain (colored pills: IN/THINK/EXEC/COMPLETE/OUT), ↓/↑ data counters, LATENCY sparkline
+- **Data sources:** OS module (CPU/MEM), JSONL log tailing (events), zero API cost
+- **Key files:** `app.js` (client), `server.js` (telemetry API + watcher), `style.css` (BBS aesthetic)
+
 ## Errors Encountered & Fixes
 | Error | Root Cause | Fix |
 |-------|-----------|-----|
@@ -128,6 +143,9 @@ Installed via `crontab` on 2026-04-07. Dashboard data stays fresh without manual
 - [x] Add auto-refresh cron for dashboard data feeds
 - [x] Add OpenClaw console panel to dashboard
 - [x] Fix openclaw.sh multiline parsing
+- [x] Add telemetry strip (system metrics + activity chain)
+- [x] Audit OpenClaw capabilities
+- [ ] Migrate cron jobs from crontab to OpenClaw's `cron` tool
 - [ ] Fix OpenClaw Control UI blank screen (low priority)
 - [ ] Update AGENTS.md to reflect OpenClaw instead of Hermes
 - [ ] Fix whiteboard component
