@@ -100,11 +100,35 @@ hermes --resume SESSION_ID   # Resume specific session
 
 ## Dashboard Integration Pattern
 
+The data flow is always:
 ```
-Jeff speaks → Antigravity → Execution Script → Hermes Gateway API (port 8642)
-                                             → Dashboard WebSocket (port 3111)
+User → Antigravity → Hermes (via CLI terminal) → Execution → Back to Antigravity → Dashboard push
 ```
 
-For routine data (mail, calendar, weather): use **execution scripts** that call native APIs (AppleScript, curl) directly — faster than going through the LLM.
+### Routine Data (Mail, Calendar, Weather):
+1. Antigravity calls `hermes chat -q "..." --quiet` via terminal
+2. Hermes uses its terminal tool to run AppleScript/curl/whatever
+3. Hermes returns the data as text
+4. Antigravity parses the output and pushes structured JSON to `http://localhost:3111/api/push`
+5. Dashboard renders it live
 
-For complex requests: route through the **Gateway API** so Hermes can use its full tool chain.
+### Shortcut Scripts (faster, no LLM overhead):
+For repetitive tasks where the data format is known, use the execution scripts directly:
+- `execution/check_mail.sh` — Apple Mail via Hermes's apple-mail skill scripts
+- `execution/check_calendar.sh` — Calendar via AppleScript (no Hermes calendar skill exists)
+- `execution/check_weather.sh` — Weather via wttr.in API
+
+These scripts handle parsing AND dashboard push in one call.
+
+### Complex Requests:
+Route through Hermes Gateway API (port 8642) so it can use its full tool chain:
+```bash
+curl http://localhost:8642/v1/chat/completions \
+  -H "Authorization: Bearer hermes-system-local-key" \
+  -H "Content-Type: application/json" \
+  -d '{"messages":[{"role":"user","content":"Check my mail"}]}'
+```
+
+### Calendar Note:
+**No built-in calendar skill exists.** Calendar = AppleScript via Hermes terminal tool.
+The Calendar.app must be running for AppleScript access to work.

@@ -1248,5 +1248,15 @@
       }
     ],
     "timestamp": "2026-04-07T08:13:26.945Z"
+  },
+  {
+    "type": "calendar",
+    "events": [
+      {
+        "name": "No events today",
+        "time": "—"
+      }
+    ],
+    "timestamp": "2026-04-07T08:16:55.208Z"
   }
 ]
