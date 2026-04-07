@@ -31,8 +31,15 @@ const MIME = {
 const clients = new Set();
 // Persistent UI State Cache
 let activeState = null;
-// Cache latest feed data so refreshes don't lose them
-const feedCache = {};
+// Cache latest feed data — persisted to disk so restarts don't lose feeds
+const FEED_CACHE_FILE = path.join(DATA_DIR, 'feed-cache.json');
+let feedCache = {};
+try {
+  if (fs.existsSync(FEED_CACHE_FILE)) feedCache = JSON.parse(fs.readFileSync(FEED_CACHE_FILE, 'utf8'));
+} catch (e) { feedCache = {}; }
+function saveFeedCache() {
+  try { fs.writeFileSync(FEED_CACHE_FILE, JSON.stringify(feedCache), 'utf8'); } catch (e) {}
+}
 
 // Broadcast to all connected browsers
 function broadcast(data) {
@@ -143,6 +150,7 @@ const server = http.createServer(async (req, res) => {
       if (['email', 'calendar', 'weather'].includes(data.type)) {
         data._cachedAt = Date.now();
         feedCache[data.type] = data;
+        saveFeedCache();
         // Log feed arrival to console
         const icons = { email: '📬', calendar: '📅', weather: '🌤' };
         const labels = { email: 'Inbox', calendar: 'Schedule', weather: 'Weather' };
