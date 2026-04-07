@@ -5,6 +5,12 @@
 
 DASH_URL="http://localhost:3111/api/push"
 
+# Ensure Calendar.app is running (required for AppleScript)
+if ! osascript -e 'tell application "System Events" to return (exists process "Calendar")' 2>/dev/null | grep -q "true"; then
+  open -a Calendar
+  sleep 2
+fi
+
 # Get next 30 days of events from Apple Calendar via AppleScript
 EVENTS=$(osascript -e '
 set output to ""

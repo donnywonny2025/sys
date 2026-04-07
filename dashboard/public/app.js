@@ -56,6 +56,32 @@
     });
   }
 
+  // Auto-populate Today's Focus from calendar events
+  function autoFocusFromCalendar(events) {
+    if (!events || events.length === 0) {
+      renderFocus([]);
+      return;
+    }
+    var now = new Date();
+    var todayStr = (now.getMonth() + 1) + '/' + now.getDate();
+    var todayEvents = events.filter(function(ev) {
+      return ev.time && ev.time.indexOf(todayStr) === 0;
+    });
+    if (todayEvents.length === 0) {
+      renderFocus([]);
+      return;
+    }
+    var focusItems = todayEvents.map(function(ev) {
+      var timeOnly = ev.time.replace(todayStr, '').trim();
+      var isAllDay = !timeOnly || timeOnly === '00:00';
+      return {
+        text: ev.name,
+        meta: isAllDay ? 'All day' : timeOnly
+      };
+    });
+    renderFocus(focusItems);
+  }
+
   // --- Email ---
   function renderEmail(emails, targetId) {
     var el = document.getElementById(targetId);
@@ -493,6 +519,8 @@
           case 'calendar':
             renderCalendar(msg.events, 'calendar-content');
             renderCalendar(msg.events, 'calendar-full-content');
+            // Auto-populate Today's Focus from calendar
+            autoFocusFromCalendar(msg.events);
             break;
           case 'weather':
             renderWeather(msg.data);
