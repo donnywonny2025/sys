@@ -39,7 +39,7 @@
     var el = document.getElementById('focus-items');
     el.innerHTML = '';
     if (!items || items.length === 0) {
-      el.innerHTML = '<div class="empty-state">No focus items. Tell me what you\'re working on.</div>';
+      el.innerHTML = '<div class="empty-state">Nothing scheduled for today. You\'re free to build.</div>';
       return;
     }
     items.forEach(function (item) {
@@ -505,6 +505,14 @@
           case 'close_reference':
             renderStudio(msg);
             break;
+          case 'console':
+            addConsoleLine(msg.entry, msg.style || 'sys', msg.ts);
+            if (msg.status) {
+              var statusEl = document.getElementById('console-status');
+              statusEl.textContent = msg.status;
+              statusEl.className = 'console-status' + (msg.status !== 'IDLE' ? ' active' : '');
+            }
+            break;
         }
       } catch (err) {
         addFeedItem(e.data, 'info');
@@ -567,4 +575,25 @@
     .catch(e => console.error("Could not fetch dashboard state:", e));
 
   addFeedItem('<strong>Session started.</strong> All systems online.', 'success');
+
+  // --- Console Panel ---
+  var consoleBody = document.getElementById('console-body');
+  var consoleToggle = document.getElementById('console-toggle');
+  var consolePanel = document.getElementById('openclaw-console');
+
+  consoleToggle.addEventListener('click', function() {
+    consolePanel.classList.toggle('collapsed');
+  });
+
+  function addConsoleLine(text, style, ts) {
+    var line = document.createElement('div');
+    line.className = 'console-line ' + (style || 'sys');
+    var time = ts || new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+    line.innerHTML = '<span class="ts">[' + time + ']</span> ' + text;
+    consoleBody.appendChild(line);
+    while (consoleBody.children.length > 80) consoleBody.removeChild(consoleBody.firstChild);
+    consoleBody.scrollTop = consoleBody.scrollHeight;
+  }
+
+  addConsoleLine('Console initialized. Waiting for OpenClaw activity...', 'sys');
 })();

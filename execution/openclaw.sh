@@ -1,71 +1,49 @@
 #!/bin/bash
-# ─── OpenClaw Gateway Communication Script ───
-# This is the execution layer interface for Antigravity → OpenClaw.
-# Gateway: ws://127.0.0.1:18789 | HTTP: http://127.0.0.1:18789
-# Config:  ~/.openclaw/openclaw.json
-# Logs:    /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log
+# openclaw.sh — Talk to OpenClaw Gateway and log to dashboard console
+# Usage: ./execution/openclaw.sh "your prompt here"
+# All requests and responses are logged to the dashboard console panel.
 
-export PNPM_HOME="$HOME/Library/pnpm"
-export PATH="$PNPM_HOME:$PATH"
+PROMPT="$1"
+DASH_URL="http://localhost:3111/api/push"
+TOKEN=$(python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('gateway',{}).get('auth',{}).get('token',''))" < ~/.openclaw/openclaw.json)
+TS=$(date +%H:%M:%S)
 
-# Read auth token from config
-TOKEN=$(cat ~/.openclaw/openclaw.json | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('gateway',{}).get('auth',{}).get('token',''))")
+# Log the outgoing request to the console
+curl -s -X POST "$DASH_URL" -H "Content-Type: application/json" \
+  -d "{\"type\":\"console\",\"entry\":\"→ ${PROMPT//\"/\\\"}\",\"style\":\"out\",\"status\":\"PROCESSING\",\"ts\":\"$TS\"}" > /dev/null
 
-API="http://127.0.0.1:18789"
+# Send to OpenClaw
+START=$(python3 -c "import time; print(time.time())")
+RESPONSE=$(curl -sS http://127.0.0.1:18789/v1/chat/completions \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"model\": \"openclaw/default\",
+    \"messages\": [
+      {\"role\":\"system\",\"content\":\"Be concise. Return direct answers.\"},
+      {\"role\":\"user\",\"content\":\"${PROMPT//\"/\\\"}\"}
+    ]
+  }" 2>&1)
 
-usage() {
-  echo "Usage: openclaw.sh <command> [args]"
-  echo ""
-  echo "Commands:"
-  echo "  health        - Check gateway health"
-  echo "  status        - Full gateway status"
-  echo "  models        - List available models"
-  echo "  ask <message> - Send a message to the agent"
-  echo "  skills        - List installed skills"
-  echo "  restart       - Restart the gateway"
-  echo "  logs          - Tail gateway logs"
-  exit 1
-}
+ELAPSED=$(python3 -c "import time; print(round(time.time()-$START,1))")
+TS2=$(date +%H:%M:%S)
 
-case "${1:-}" in
-  health)
-    curl -s "$API/health"
-    ;;
-  status)
-    openclaw gateway status
-    ;;
-  models)
-    curl -s "$API/v1/models" \
-      -H "Authorization: Bearer $TOKEN" \
-      -H "Accept: application/json"
-    ;;
-  ask)
-    shift
-    MESSAGE="$*"
-    if [ -z "$MESSAGE" ]; then
-      echo "Error: provide a message after 'ask'"
-      exit 1
-    fi
-    curl -s "$API/v1/chat/completions" \
-      -H "Authorization: Bearer $TOKEN" \
-      -H "Content-Type: application/json" \
-      -d "{\"model\":\"openclaw/default\",\"messages\":[{\"role\":\"user\",\"content\":\"$MESSAGE\"}]}" \
-      | python3 -c "import sys,json; r=json.load(sys.stdin); print(r['choices'][0]['message']['content'])"
-    ;;
-  skills)
-    curl -s "$API/v1/chat/completions" \
-      -H "Authorization: Bearer $TOKEN" \
-      -H "Content-Type: application/json" \
-      -d '{"model":"openclaw/default","messages":[{"role":"user","content":"List only your skill names, comma separated, nothing else"}]}' \
-      | python3 -c "import sys,json; r=json.load(sys.stdin); print(r['choices'][0]['message']['content'])"
-    ;;
-  restart)
-    openclaw gateway restart
-    ;;
-  logs)
-    tail -f /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log
-    ;;
-  *)
-    usage
-    ;;
-esac
+# Extract content from response
+CONTENT=$(echo "$RESPONSE" | python3 -c "
+import sys,json
+try:
+  d=json.load(sys.stdin)
+  c=d['choices'][0]['message']['content']
+  # Escape for JSON
+  c=c.replace('\\\\','\\\\\\\\').replace('\"','\\\\\"').replace('\\n',' ')
+  print(c[:500])
+except:
+  print('Error parsing response')
+" 2>&1)
+
+# Log the response to the console
+curl -s -X POST "$DASH_URL" -H "Content-Type: application/json" \
+  -d "{\"type\":\"console\",\"entry\":\"← OpenClaw (${ELAPSED}s): ${CONTENT}\",\"style\":\"in\",\"status\":\"IDLE\",\"ts\":\"$TS2\"}" > /dev/null
+
+# Output the raw content for piping
+echo "$CONTENT"

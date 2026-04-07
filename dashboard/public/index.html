@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div id="main-wrapper">
   <!-- Left Rail -->
   <nav id="rail">
     <div class="rail-top">
@@ -69,7 +70,7 @@
           <span class="focus-date" id="focus-date"></span>
         </div>
         <div id="focus-items">
-          <div class="empty-state">No focus items yet. Tell me what you're working on.</div>
+          <div class="empty-state">Nothing scheduled for today. You're free to build.</div>
         </div>
       </section>
 
@@ -169,6 +170,17 @@
         </div>
       </section>
     </main>
+  </div>
+  </div><!-- end main-wrapper -->
+
+  <!-- OpenClaw Console -->
+  <div id="openclaw-console">
+    <div class="console-header">
+      <span class="console-label">OPENCLAW CONSOLE</span>
+      <span class="console-status" id="console-status">IDLE</span>
+      <button class="console-toggle" id="console-toggle" title="Collapse/Expand">▼</button>
+    </div>
+    <div class="console-body" id="console-body"></div>
   </div>
 
   <script src="app.js"></script>
