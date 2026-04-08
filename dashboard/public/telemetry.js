@@ -162,7 +162,7 @@
     }
   };
 
-  // --- Feed Age Display ---
+  // --- Feed Age Display (uses cron heartbeat) ---
   function formatAge(ms) {
     if (!ms) return '—';
     var sec = Math.floor(ms / 1000);
@@ -172,18 +172,44 @@
     return Math.floor(min / 60) + 'h ago';
   }
 
-  setInterval(function() {
-    var now = Date.now();
-    var feedMap = { mail: 'email', cal: 'calendar', wx: 'weather' };
-    ['mail', 'cal', 'wx'].forEach(function(key) {
-      var el = document.getElementById('telem-' + key + '-age');
-      if (el) { var ts = DASH.feedTimestamps[feedMap[key]]; el.textContent = ts ? formatAge(now - ts) : '—'; }
-    });
-  }, 15000);
+  // Map cron job names to telem element IDs
+  var cronMap = {
+    'Check Mail': 'telem-mail-age',
+    'Check Calendar': 'telem-cal-age',
+    'Check Weather': 'telem-wx-age'
+  };
+
+  function pollCronHeartbeat() {
+    fetch('/api/cron-heartbeat').then(function(r) { return r.json(); }).then(function(d) {
+      if (!d.ok || !d.jobs) return;
+      var now = Date.now();
+      d.jobs.forEach(function(job) {
+        var elId = cronMap[job.name];
+        if (!elId) return;
+        var el = document.getElementById(elId);
+        if (!el) return;
+        el.textContent = job.lastRunAt ? formatAge(now - job.lastRunAt) : '—';
+        // Color: green if ok, red if errors, dim if never ran
+        if (job.status === 'ok' && job.errors === 0) {
+          el.style.color = 'var(--green)';
+        } else if (job.errors > 0) {
+          el.style.color = 'var(--red, #ff6b6b)';
+        } else {
+          el.style.color = '';
+        }
+        // Also update feedTimestamps for backwards compat
+        if (job.name === 'Check Mail') DASH.feedTimestamps.email = job.lastRunAt;
+        if (job.name === 'Check Calendar') DASH.feedTimestamps.calendar = job.lastRunAt;
+        if (job.name === 'Check Weather') DASH.feedTimestamps.weather = job.lastRunAt;
+      });
+    }).catch(function() {});
+  }
 
   // Start polling
   pollTelemetry();
   setInterval(pollTelemetry, 4000);
+  pollCronHeartbeat();
+  setInterval(pollCronHeartbeat, 30000);
   fetchModel();
   setInterval(fetchModel, 30000);
 

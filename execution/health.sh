@@ -80,11 +80,11 @@ fi
 
 # 5. Execution Scripts
 echo "▸ Execution Scripts"
-for script in check_mail.sh check_calendar.sh check_weather.sh check_contacts.sh agent_cmd.sh openclaw.sh; do
-  if [ -x "$PROJ/execution/$script" ]; then
+for script in check_mail_himalaya.py check_calendar.sh check_weather.py check_contacts.sh agent_cmd.sh openclaw.sh health.sh; do
+  if [ -f "$PROJ/execution/$script" ]; then
     check "$script" "OK"
   else
-    check "$script MISSING or not executable" "FAIL"
+    check "$script MISSING" "FAIL"
   fi
 done
 

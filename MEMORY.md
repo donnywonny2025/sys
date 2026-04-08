@@ -8,7 +8,7 @@
 ---
 
 ## Last Updated
-`2026-04-07T17:21:00-04:00` — Session: Dashboard Modular Refactor + Cron Job Repair
+`2026-04-07T17:35:00-04:00` — Session: OpenClaw Chat Fix + System Boot
 
 ## Who Does What
 ```
@@ -91,8 +91,10 @@ curl -s http://127.0.0.1:18789/v1/chat/completions -H "Authorization: Bearer $TO
 # Direct tool invoke (auth required, always enabled)
 curl -sS http://127.0.0.1:18789/tools/invoke -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d '{"tool":"sessions_list","action":"json","args":{}}'
 
-# Chat via dashboard (preferred — streams to console)
+# Chat via dashboard (preferred — uses direct HTTP API, no stale sessions)
 curl -s -X POST http://localhost:3111/api/openclaw-chat -H "Content-Type: application/json" -d '{"message":"..."}'
+# CRITICAL: Dashboard chat uses HTTP API internally, NOT `openclaw agent --message` CLI.
+# The CLI reuses old sessions that accumulate prompt-errors. HTTP API creates fresh sessions.
 
 # Scene switch (instant — no mouse needed)
 curl -s -X POST http://localhost:3111/api/scene -H "Content-Type: application/json" -d '{"scene":"home"}'
@@ -198,6 +200,9 @@ Cron → scripts → AppleScript/curl/API → JSON → POST /api/push → Dashbo
 | Calendar path spaces | OpenClaw can't exec paths with spaces | Symlinked to `~/.local/bin/check_contacts` |
 | `EAGAIN` Node.js Exception | `tailProc.kill()` leaked zombies | `killall tail`, migrated to streaming |
 | Duplicate Chat Bubbles | Redundant broadcast from chat endpoint | JSONL watcher is single source of truth |
+| OpenClaw chat timeout (60s) | `openclaw agent --message` CLI reuses stale sessions with accumulated `prompt-error` entries | Rewrote dashboard chat to use direct HTTP API (`/v1/chat/completions`) — fast, creates fresh sessions |
+| Double response in chat | Both direct API and JSONL watcher broadcast the same response | Normalized dedup key in `pushToConsole` strips timing prefix before comparing |
+| `health.sh` reports false failures | Script checked for deleted legacy scripts (`check_mail.sh`, `check_weather.sh`) | Updated to check current names (`check_mail_himalaya.py`, `check_weather.py`) |
 
 ## User Preferences (Immutable)
 - **READ-ONLY** for all Apple integrations (Calendar, Mail) — never write/send
@@ -208,6 +213,11 @@ Cron → scripts → AppleScript/curl/API → JSON → POST /api/push → Dashbo
 - **Product engineer mindset** — make the dashboard a daily command center
 - **Telemetry transparency** — all OpenClaw commands go through `agent_cmd.sh` for console visibility
 - **Jeff just talks** — Antigravity handles all technical execution and OpenClaw management
+- **ONE TAB ONLY** — never open new browser tabs. Dashboard runs in a single tab, always.
+- **NO PLAYWRIGHT** — never use browser_subagent or Playwright automation. All interaction via backend API (curl). Browser is visual only.
+- **NEVER call `openclaw agent --message` for chat** — always use the HTTP API (`/v1/chat/completions`). The CLI reuses stale sessions.
+- **ALL OpenClaw interaction visible in dashboard** — every message to/from OpenClaw must go through the chat API (`/api/openclaw-chat`) so Jeff sees it in the chat UI and console. Never run invisible CLI commands.
+- **OpenClaw owns all cron jobs** — never use system crontab. All scheduled tasks go through `openclaw cron add` with `--session isolated --no-deliver`. Gateway LaunchAgent keeps them alive across reboots.
 
 ## Dashboard Frontend Architecture (Modular — refactored 2026-04-07)
 The monolithic `app.js` (1,104 lines) was split into 7 focused modules:
@@ -221,12 +231,22 @@ The monolithic `app.js` (1,104 lines) was split into 7 focused modules:
 | `telemetry.js` | System metrics, activity chain, feed timers | `DASH.updateTelem` |
 | `openclaw.js` | Console log, health polling | `DASH.addConsoleEntry` |
 | `websocket.js` | WebSocket dispatch — loaded LAST | Central event router |
+| `tv.js` | TV scene — live streams, YouTube, world cams | Category tabs, click-to-play |
 
-**Load order in index.html:** core → feeds → studio → board → chat → telemetry → openclaw → contacts → websocket
+**Load order in index.html:** core → feeds → studio → board → chat → telemetry → openclaw → tv → contacts → websocket
 
 **Key pattern:** All modules attach to `window.DASH`. WebSocket is loaded last so it can dispatch to any module.
 **Backup:** Old monolith saved as `_app.js.bak`.
-**Backend:** `server.js` (809 lines) remains monolithic — still manageable, split when needed.
+**Backend:** `server.js` remains monolithic — still manageable, split when needed.
+
+## Dashboard Persistence (LaunchAgent)
+The dashboard server is managed by a macOS LaunchAgent — it auto-starts on boot and auto-restarts on crash.
+- **Plist:** `~/Library/LaunchAgents/com.system.dashboard.plist`
+- **KeepAlive:** `true` — macOS restarts it within seconds if it dies
+- **RunAtLoad:** `true` — starts automatically on login
+- **Logs:** `/tmp/dashboard-stdout.log`, `/tmp/dashboard-stderr.log`
+- **Reload:** `launchctl unload ~/Library/LaunchAgents/com.system.dashboard.plist && launchctl load ~/Library/LaunchAgents/com.system.dashboard.plist`
+- **Same pattern as:** `ai.openclaw.gateway` LaunchAgent
 
 ## Next Steps / TODO
 - [x] Wire calendar data into dashboard (30-day lookahead via AppleScript)
@@ -255,7 +275,14 @@ The monolithic `app.js` (1,104 lines) was split into 7 focused modules:
 - [x] Replace mail script with himalaya-based check_mail_himalaya.py
 - [x] Replace weather script with Open-Meteo-based check_weather.py
 - [x] Remove ugly weather timer from header display
-- [ ] **PRIORITY: Create OpenClaw cron jobs for mail + weather (silent delivery, lightweight model)**
+- [x] Fix OpenClaw chat — switch from CLI to direct HTTP API (no stale sessions)
+- [x] Fix duplicate chat responses (dedup normalization in pushToConsole)
+- [x] Fix health.sh to check correct script names (himalaya, Open-Meteo)
+- [x] **Create OpenClaw cron jobs for mail + weather + calendar (via `openclaw cron add`)**
+- [x] **Fix dashboard persistence — LaunchAgent auto-restart (com.system.dashboard)**
+- [x] Add cron heartbeat API endpoint (`/api/cron-heartbeat`)
+- [x] Wire telemetry MAIL/CAL/WX indicators to live cron heartbeat data
+- [x] Add TV tab (live streams, news, space, music, nature)
 - [ ] Add more live activity to console (show OpenClaw thinking/executing in real-time)
 - [ ] Animate dashboard (micro-interactions, transitions, hover effects)
 - [ ] Fix whiteboard component

@@ -4,9 +4,66 @@ description: How to manage the browser and dashboard — rules for efficient bro
 
 # Browser & Dashboard Operations
 
-## RULE #1: THE BROWSER IS JEFF'S DISPLAY
+## THE IRON RULES
 
-**Everything visual goes to the browser IMMEDIATELY.** No exceptions. No showing things only in chat.
+### 1. ONE TAB ONLY
+
+The dashboard runs in a single Chrome tab. Always. If a second tab appears for any reason, close it immediately. There is never a reason for two tabs.
+
+```bash
+# Close any non-dashboard tabs
+osascript -e 'tell application "Google Chrome"
+  set tabCount to count of tabs of window 1
+  if tabCount > 1 then
+    repeat with i from tabCount to 1 by -1
+      set t to tab i of window 1
+      if URL of t does not contain "localhost:3111" then close t
+    end repeat
+  end if
+end tell'
+```
+
+### 2. NO PLAYWRIGHT, NO BROWSER SUBAGENT, EVER
+
+Never use `browser_subagent`. Never use Playwright. Never automate mouse clicks. Never open URLs through browser automation tools. The browser is Jeff's visual display — not a tool for Antigravity to poke at.
+
+All interaction happens through backend APIs. The browser just renders what the backend tells it to.
+
+### 3. EVERYTHING THROUGH THE API
+
+Scene switches, data pushes, chat messages, refreshes — all via `curl` to `localhost:3111`. Never touch the browser directly.
+
+```bash
+# Switch scene
+curl -s -X POST http://localhost:3111/api/push -H "Content-Type: application/json" \
+  -d '{"type":"scene","scene":"home"}'
+# Valid scenes: home, mail, calendar, whiteboard, studio, chat, contacts
+
+# Force refresh (pushes reload to browser via WebSocket)
+curl -s -X POST http://localhost:3111/api/refresh
+
+# Push data
+curl -s -X POST http://localhost:3111/api/push -H "Content-Type: application/json" \
+  -d '{"type":"weather","data":{"summary":"72F"}}'
+
+# Chat with OpenClaw
+curl -s -X POST http://localhost:3111/api/openclaw-chat -H "Content-Type: application/json" \
+  -d '{"message":"check my calendar"}'
+```
+
+### 4. THE BROWSER IS JEFF'S DISPLAY
+
+Push everything visual immediately. No showing things only in chat. If Jeff needs to see it, it goes to the dashboard.
+
+### 5. NEVER ASK, JUST BUILD
+
+If Jeff says he wants something, build it completely and show the working result. Don't ask "do you want me to set that up?" Half-working demos are unacceptable.
+
+### 6. THINK AHEAD
+
+When building a feature, think through what Jeff will obviously need next and build the complete thing. Don't ship v0.1 and iterate in front of him.
+
+## Opening the Dashboard (First Boot Only)
 
 ```bash
 osascript -e 'tell application "Google Chrome"
@@ -16,82 +73,16 @@ osascript -e 'tell application "Google Chrome"
 end tell'
 ```
 
-## RULE #2: NEVER ASK, JUST BUILD
-
-If Jeff says he wants something, BUILD IT. Don't ask "do you want me to set that up?" — obviously yes. If it needs to work (persistence, visibility, collaboration), make it work COMPLETELY before showing it. Half-working demos are unacceptable.
-
-**Bad:** "Want me to set up self-hosted Excalidraw?"
-**Good:** *sets it up, shows working result* "Whiteboard is live. Your drawings save to the project and I can see them."
-
-## RULE #3: THINK AHEAD
-
-When building a feature, think through what Jeff will obviously need next:
-- If it's a whiteboard → he needs persistence, he needs me to see it
-- If it's email → he needs it sorted, dated, more than 5 items
-- If it's a display → he needs it to look premium, not amateur
-
-Build the complete thing. Don't ship v0.1 and iterate in front of him.
-
-## RULE #4: AUTO-RUN EVERYTHING
-
-Mark all safe commands as SafeToAutoRun=true. Jeff should never see "Allow this?" prompts from command execution. Screenshots, curl, osascript, file reads — all auto-run.
-
-## RULE #5: SINGULAR BROWSER CONTROL
-
-Maintain absolute, dictatorial control over the browser session. If multiple identical tabs are open causing state conflict, actively close them and force the active remaining tab into the correct focus context. The user expects you to drive the display perfectly.
-
-## RULE #6: ALWAYS VISUALLY VERIFY
-
-Never assume a DOM manipulation worked because the code looks right. Capture backend screenshots if necessary, but remember Rule #7.
-
-## RULE #7: NO MOUSE/CURSOR AUTOMATION
-
-DO NOT use browser subagents to physically "click" around the user's dashboard to verify things. The user hates having their cursor or active session hijacked by simulated mouse events. If you need to switch the view to Image Studio, DO NOT click the studio button using browser AI—USE THE WEBSOCKET BACKEND (`curl http://localhost:3111/api/push`) to invisibly switch the scene state.
-
-## Core Browser Commands
+## Refreshing Chrome
 
 ```bash
-# Refresh dashboard
 osascript -e 'tell application "Google Chrome" to tell active tab of front window to reload'
-
-# Switch scene via API
-curl -s -X POST http://localhost:3111/api/push -H "Content-Type: application/json" -d '{"type":"scene","scene":"home"}'
-
-# Close Duplicate Localhost Tabs 
-osascript -e 'tell application "Google Chrome"
-  set theTabs to tabs of window 1 whose URL contains "localhost:3111"
-  if (count of theTabs) > 1 then close item 2 of theTabs
-end tell'
 ```
 
-## RULE #8: HARDCODED DASHBOARD COORDINATES
+## Verification
 
-When using browser subagents to interact with the dashboard at http://localhost:3111/ (viewport 961x963):
-
-**Sidebar icons (left rail, x=27):**
-- Home: (27, 80)
-- Mail: (27, 120)
-- Calendar: (27, 160)
-- Whiteboard: (27, 210)
-- Image Studio: (27, 250)
-- OpenClaw Control: (27, 770) — the gear/claw icon at bottom
-
-**OpenClaw UI elements (inside iframe after clicking OpenClaw):**
-- Chat input field: Execute JS `document.querySelector('iframe')?.contentDocument?.querySelector('textarea')?.focus()` or click pixel (500, 684)
-- Send button: (855, 724)
-- The chat input is a `<textarea>` with placeholder "Message Assistant (Enter to send)"
-
-**Always use these coordinates directly. Do NOT waste time searching for elements by scanning the DOM or trying different positions.**
-
-## RULE #9: SUBAGENT TIMING
-
-- `WaitMsBeforeAsync` should be 3000ms max for simple commands (file ops, kill/restart)
-- 5000ms for server restarts that need boot time
-- **NEVER use 60s waits** — no dashboard command takes that long
-- `WaitDurationSeconds` for command_status: use 5-10s, not 30-60s
-- If a command hasn't finished in 10s, something is wrong — investigate, don't wait longer
-
-## RULE #10: FAIL FAST
-
-If a browser subagent step doesn't work on the first try (e.g., click misses the target, page doesn't load), report the failure immediately with a screenshot. Do NOT retry 3-4 times adjusting coordinates by a few pixels. Report exactly what happened and let the orchestrator fix it.
-
+Verify results through backend data, not browser automation:
+- Check `dashboard/data/history.json` for console/chat history
+- Check `dashboard/data/feed-cache.json` for feed data
+- Use `curl` to hit API endpoints and check responses
+- Read JSONL session files for OpenClaw conversation state

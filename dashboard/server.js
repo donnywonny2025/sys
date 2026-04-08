@@ -91,6 +91,36 @@ const server = http.createServer(async (req, res) => {
     req.pipe(proxyReq);
     return;
   }
+  // ── API: Cron Heartbeat ──
+  if (req.method === 'GET' && req.url === '/api/cron-heartbeat') {
+    const { execFile } = require('child_process');
+    execFile('openclaw', ['cron', 'list', '--json'], { timeout: 8000 }, (err, stdout) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err.message }));
+        return;
+      }
+      try {
+        const data = JSON.parse(stdout);
+        const jobs = (data.jobs || []).map(j => ({
+          name: j.name,
+          schedule: j.schedule?.expr,
+          lastRunAt: j.state?.lastRunAtMs || null,
+          nextRunAt: j.state?.nextRunAtMs || null,
+          status: j.state?.lastRunStatus || 'unknown',
+          durationMs: j.state?.lastDurationMs || 0,
+          errors: j.state?.consecutiveErrors || 0,
+          enabled: j.enabled
+        }));
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true, ts: Date.now(), jobs }));
+      } catch (e) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'parse: ' + e.message }));
+      }
+    });
+    return;
+  }
   // ── API: Get/Set OpenClaw Model ──
   const OPENCLAW_CONFIG = path.join(os.homedir(), '.openclaw', 'openclaw.json');
   if (req.url === '/api/model') {
@@ -125,6 +155,7 @@ const server = http.createServer(async (req, res) => {
     }
   }
   // ── API: Chat with OpenClaw ──
+  // Uses the direct HTTP API to the gateway — fast, reliable, no stale sessions
   if (req.method === 'POST' && req.url === '/api/openclaw-chat') {
     try {
       const data = await parseBody(req);
@@ -134,38 +165,80 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify({ error: 'No message provided' }));
         return;
       }
-      
-      // Let the JSONL watcher handle → and ← chat bubbles to avoid duplicates
+
+      // Show user message immediately in chat + console
+      pushToConsole(`→ ${message}`, 'prompt');
       broadcast({ type: 'telem', event: 'recv', ts: new Date().toISOString(), label: message.slice(0, 60) });
       broadcast({ type: 'console', entry: `⏳ Processing request...`, style: 'sys', status: 'PROCESSING', ts: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) });
 
-      const { spawn } = require('child_process');
+      // Return immediately to frontend
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true }));
+
+      // Fire the API call asynchronously
       const startTime = Date.now();
-      const proc = spawn('openclaw', ['agent', '--agent', 'main', '--message', message], {
-        env: { ...process.env, PATH: process.env.PATH + ':/Users/jeffkerr/Library/pnpm' }
+      let token = '';
+      try {
+        const cfg = JSON.parse(fs.readFileSync(path.join(os.homedir(), '.openclaw', 'openclaw.json'), 'utf8'));
+        token = cfg?.gateway?.auth?.token || '';
+      } catch (e) {}
+
+      const payload = JSON.stringify({
+        model: 'openclaw/default',
+        messages: [{ role: 'user', content: message }]
       });
 
-      // Push stderr blocks (CLI thinking/tool calls) to console live
-      proc.stderr.on('data', (chunk) => {
-        let text = chunk.toString().trim();
-        text = text.replace(/[\x1b\x9b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
-        if (text && !text.includes('Queue:')) {
-          broadcast({ type: 'console', entry: `⚙️ ${text.substring(0, 200)}`, style: 'sys' });
-        }
+      const apiReq = http.request({
+        hostname: '127.0.0.1',
+        port: 18789,
+        path: '/v1/chat/completions',
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(payload)
+        },
+        timeout: 60000
+      }, (apiRes) => {
+        let body = '';
+        apiRes.on('data', d => body += d);
+        apiRes.on('end', () => {
+          const durMs = Date.now() - startTime;
+          try {
+            const result = JSON.parse(body);
+            const reply = result?.choices?.[0]?.message?.content || '';
+            // Strip thinking tags
+            let clean = reply.replace(/<think>[\s\S]*?<\/think>/g, '').replace(/<\/?final>/g, '').trim();
+            if (clean) {
+              const dur = `(${(durMs / 1000).toFixed(1)}s)`;
+              pushToConsole(`← OpenClaw ${dur}: ${clean}`, 'response');
+            } else {
+              pushToConsole(`← OpenClaw: (empty response)`, 'response');
+            }
+          } catch (e) {
+            pushToConsole(`✗ OpenClaw parse error: ${e.message}`, 'err');
+          }
+          broadcast({ type: 'console', entry: '✅ Done', style: 'sys', status: 'IDLE', ts: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) });
+          broadcast({ type: 'telem', event: 'done', ts: new Date().toISOString(), durMs });
+        });
       });
-      
-      proc.on('close', (code) => {
+
+      apiReq.on('error', (e) => {
         const durMs = Date.now() - startTime;
-        if (code !== 0) {
-          pushToConsole(`✗ OpenClaw failed (code ${code})`, 'err');
-        }
+        pushToConsole(`✗ OpenClaw error: ${e.message}`, 'err');
         broadcast({ type: 'console', entry: '✅ Done', style: 'sys', status: 'IDLE', ts: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) });
         broadcast({ type: 'telem', event: 'done', ts: new Date().toISOString(), durMs });
       });
 
-      // return success to frontend immediately
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ ok: true }));
+      apiReq.on('timeout', () => {
+        apiReq.destroy();
+        pushToConsole(`✗ OpenClaw timeout (60s)`, 'err');
+        broadcast({ type: 'console', entry: '✅ Done', style: 'sys', status: 'IDLE', ts: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) });
+      });
+
+      apiReq.write(payload);
+      apiReq.end();
+
     } catch (e) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: e.message }));
@@ -605,11 +678,14 @@ const SESSIONS_DIR = path.join(process.env.HOME || '/Users/jeffkerr', '.openclaw
 const recentMessages = [];
 
 function pushToConsole(text, style) {
-  // Dedup: skip if same text appeared in last 5 seconds
+  // Dedup: normalize away timing like "(4.6s)" so both API and JSONL paths match
   const now = Date.now();
-  const isDupe = recentMessages.some(m => m.text === text && (now - m.ts) < 5000);
+  const dedupKey = text.replace(/← OpenClaw\s*\(\d+\.\d+s\)\s*:/g, '← OpenClaw:')
+                       .replace(/← OpenClaw\s*:/g, '← OpenClaw:')
+                       .substring(0, 120);
+  const isDupe = recentMessages.some(m => m.key === dedupKey && (now - m.ts) < 5000);
   if (isDupe) return;
-  recentMessages.push({ text, ts: now });
+  recentMessages.push({ key: dedupKey, ts: now });
   while (recentMessages.length > 20) recentMessages.shift();
   const ts = new Date().toLocaleTimeString('en-US', {
     hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
