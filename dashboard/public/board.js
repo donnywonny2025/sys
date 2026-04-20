@@ -75,6 +75,34 @@
 
     // Load saved state
     loadBoard();
+
+    // Add card button + input
+    var addBtn = document.getElementById('board-add-btn');
+    var addInput = document.getElementById('board-add-input');
+    if (addBtn && addInput) {
+      addBtn.addEventListener('click', function() {
+        addInput.classList.toggle('visible');
+        if (addInput.classList.contains('visible')) {
+          addInput.focus();
+        }
+      });
+      addInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && addInput.value.trim()) {
+          addCard(addInput.value.trim(), 'idea');
+          addInput.value = '';
+          addInput.classList.remove('visible');
+        } else if (e.key === 'Escape') {
+          addInput.value = '';
+          addInput.classList.remove('visible');
+        }
+      });
+      // Click outside to dismiss
+      addInput.addEventListener('blur', function() {
+        setTimeout(function() {
+          if (!addInput.value.trim()) addInput.classList.remove('visible');
+        }, 200);
+      });
+    }
   }
 
   // ===================== CANVAS DRAWING =====================
@@ -266,20 +294,20 @@
   function addCard(text, status) {
     cards.push({ text: text, status: status || 'idea', done: false, ts: Date.now() });
     renderCards();
-    scheduleSave();
+    saveBoardImmediate();
   }
 
   function removeCard(index) {
     cards.splice(index, 1);
     renderCards();
-    scheduleSave();
+    saveBoardImmediate();
   }
 
   function updateCard(index, updates) {
     if (cards[index]) {
       Object.assign(cards[index], updates);
       renderCards();
-      scheduleSave();
+      saveBoardImmediate();
     }
   }
 
@@ -287,6 +315,12 @@
   function scheduleSave() {
     clearTimeout(saveTimer);
     saveTimer = setTimeout(saveBoard, 1000);
+  }
+
+  // Immediate save — for card operations that must never be lost
+  function saveBoardImmediate() {
+    clearTimeout(saveTimer);
+    saveBoard();
   }
 
   function saveBoard() {

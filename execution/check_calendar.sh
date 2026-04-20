@@ -5,10 +5,10 @@
 
 DASH_URL="http://localhost:3111/api/push"
 
-# Ensure Calendar.app is running (open it if not, wait for it to be ready)
+# Ensure Calendar.app is running (open it if not, wait for iCloud sync)
 if ! pgrep -q "Calendar"; then
   open -a Calendar
-  sleep 5
+  sleep 10
 fi
 
 # Get next 30 days of events from Apple Calendar via AppleScript

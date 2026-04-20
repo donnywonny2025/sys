@@ -1,5 +1,6 @@
 /* ==========================================================================
    TV Scene — Live Streams & Video Viewer
+   Ported from War Room with mute/unmute, fullscreen, LIVE badge
    ========================================================================== */
 
 .tv-container {
@@ -10,89 +11,324 @@
   overflow: hidden;
 }
 
-/* ── Featured Player ── */
-.tv-player-wrap {
-  flex: 1;
-  min-height: 0;
+/* ── Page Tabs ── */
+.tv-page-tabs {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--s2);
+  padding: 0 4px;
 }
 
-.tv-player {
+.tv-page-tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 10px 18px;
+  font-family: var(--font-b);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--t2);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  letter-spacing: 0.03em;
+}
+
+.tv-page-tab:hover {
+  color: var(--t1);
+}
+
+.tv-page-tab.active {
+  color: var(--t0);
+  border-bottom-color: var(--accent);
+}
+
+.tv-page-label {
+  font-family: var(--font-m);
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-transform: uppercase;
+  padding: 10px 14px 10px 8px;
+  flex-shrink: 0;
+}
+
+/* ── Stream Area ── */
+.tv-stream-area {
   flex: 1;
-  background: #0a0a0c;
-  border-radius: 6px 6px 0 0;
+  min-height: 0;
   overflow: hidden;
+}
+
+/* ── Featured Layout: 1 big + 3 small ── */
+.tv-layout-featured {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr auto;
+  height: 100%;
+  gap: 3px;
+}
+
+.tv-main-stream {
   position: relative;
+  background: #080810;
+  overflow: hidden;
   min-height: 0;
 }
 
-.tv-player iframe {
+.tv-side-streams {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  height: 160px;
+}
+
+/* ── Grid Layout: 3x3 ── */
+.tv-layout-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 3px;
+  height: 100%;
+}
+
+/* ── Stream Cell ── */
+.tv-cell {
+  position: relative;
+  background: #0a0a14;
+  overflow: hidden;
+}
+
+.tv-cell iframe {
   width: 100%;
   height: 100%;
   border: none;
   display: block;
 }
 
-.tv-player-empty {
+/* Player mount (YT API injects here) */
+.tv-player-mount {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.tv-player-mount iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* ── Click Overlay — intercepts clicks on iframe ── */
+.tv-click-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  cursor: pointer;
+}
+
+/* ── Active Cell (audio unmuted) ── */
+.tv-cell.tv-cell-active {
+  outline: 2px solid var(--accent, #ff3030);
+  outline-offset: -2px;
+  box-shadow: inset 0 0 20px rgba(255, 48, 48, 0.08), 0 0 15px rgba(255, 48, 48, 0.1);
+}
+
+/* ── Region Tag ── */
+.tv-cell-region {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  padding: 2px 6px;
+  font-family: var(--font-m);
+  font-size: 0.45rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #fff;
+  background: rgba(255,48,48,0.75);
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* ── Stream Label ── */
+.tv-cell-label {
+  position: absolute;
+  bottom: 6px;
+  left: 8px;
+  font-family: var(--font-b);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.85);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+  letter-spacing: 0.02em;
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* ── LIVE Badge (green dot) ── */
+.tv-live-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(0,0,0,0.7);
+  border: 1px solid #22c55e;
+  padding: 2px 7px;
+  border-radius: 3px;
+  z-index: 20;
+  font-size: 0.45rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #22c55e;
+  pointer-events: none;
+}
+
+.tv-live-dot-green {
+  width: 5px;
+  height: 5px;
+  background: #22c55e;
+  border-radius: 50%;
+  animation: tvGreenPulse 1.5s ease-in-out infinite;
+  box-shadow: 0 0 4px #22c55e;
+}
+
+@keyframes tvGreenPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 4px #22c55e; }
+  50% { opacity: 0.5; box-shadow: 0 0 8px #22c55e; }
+}
+
+/* ── Audio Badge (muted / live state) ── */
+.tv-audio-badge {
+  position: absolute;
+  top: auto;
+  bottom: 22px;
+  right: 6px;
+  background: rgba(0,0,0,0.7);
+  padding: 2px 7px;
+  font-size: 0.45rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  z-index: 20;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  border-radius: 2px;
+  pointer-events: none;
+  transition: all 0.2s;
+}
+
+.tv-badge-muted {
+  color: #ff3030;
+  border: 1px solid #ff3030;
+}
+
+.tv-badge-live {
+  color: #22c55e;
+  border: 1px solid #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+}
+
+/* ── Cell Controls (hover to reveal) ── */
+.tv-cell-controls {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  display: flex;
+  gap: 2px;
+  z-index: 20;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.tv-cell:hover .tv-cell-controls {
+  opacity: 1;
+}
+
+.tv-ctrl-btn {
+  background: rgba(10,10,20,0.75);
+  backdrop-filter: blur(8px);
+  padding: 3px 8px;
+  font-size: 0.5rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: all 0.12s;
+  font-family: var(--font-b);
+  border-radius: 3px;
+}
+
+.tv-ctrl-btn:hover {
+  background: var(--accent, #ff3030);
+  color: #fff;
+  border-color: var(--accent, #ff3030);
+}
+
+/* ── Empty State ── */
+.tv-empty {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100%;
-  gap: 16px;
-  user-select: none;
+  gap: 12px;
+  color: var(--t2);
 }
 
 .tv-empty-icon {
-  font-size: 3rem;
-  color: var(--s3);
-  opacity: 0.4;
-  transition: opacity 0.3s, color 0.3s;
+  font-size: 2.5rem;
+  opacity: 0.3;
 }
 
 .tv-empty-text {
-  font-family: var(--font-b);
-  font-size: 0.82rem;
-  color: var(--t2);
-  letter-spacing: 0.02em;
+  font-size: 0.8rem;
+  font-style: italic;
 }
 
-/* Now Playing info bar */
-.tv-player-info {
+/* ── Now Playing Bar ── */
+.tv-now-bar {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 8px 16px;
+  padding: 6px 14px;
   background: var(--s1);
-  border: 1px solid var(--s2);
-  border-top: none;
-  border-radius: 0 0 6px 6px;
-  min-height: 36px;
+  border-top: 1px solid var(--s2);
+  flex-shrink: 0;
+  min-height: 32px;
 }
 
-.tv-now-label {
-  font-family: var(--font-m);
-  font-size: 0.5rem;
-  letter-spacing: 0.18em;
-  color: var(--red);
-  opacity: 0;
-  transition: opacity 0.4s;
+.tv-now-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--red);
+  animation: tvLivePulse 2s infinite;
+  flex-shrink: 0;
 }
 
-.tv-now-label.active {
-  opacity: 1;
-  animation: tvPulse 2.5s ease-in-out infinite;
+.tv-now-dot.off {
+  background: var(--s3);
+  animation: none;
 }
 
-@keyframes tvPulse {
+@keyframes tvLivePulse {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  50% { opacity: 0.3; }
 }
 
 .tv-now-title {
   font-family: var(--font-b);
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   color: var(--t0);
   font-weight: 500;
   flex: 1;
@@ -101,160 +337,34 @@
   text-overflow: ellipsis;
 }
 
-.tv-now-channel {
-  font-family: var(--font-m);
-  font-size: 0.55rem;
-  color: var(--t2);
-  letter-spacing: 0.06em;
-}
-
-/* ── Channel Strip ── */
-.tv-channels {
-  flex-shrink: 0;
-  margin-top: 12px;
-}
-
-.tv-channels-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.tv-channels-label {
-  font-family: var(--font-b);
-  font-size: 0.56rem;
-  letter-spacing: 0.2em;
-  color: var(--accent);
-  text-transform: uppercase;
-}
-
-.tv-channel-tabs {
-  display: flex;
-  gap: 4px;
-}
-
-.tv-tab {
-  background: none;
-  border: 1px solid var(--s3);
-  border-radius: 4px;
-  padding: 4px 12px;
-  font-family: var(--font-b);
-  font-size: 0.68rem;
-  color: var(--t2);
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-
-.tv-tab:hover {
-  color: var(--t1);
-  background: var(--s2);
-  border-color: var(--s2);
-}
-
-.tv-tab.active {
-  color: var(--t0);
-  background: var(--s2);
-  border-color: var(--accent-dim);
-}
-
-/* ── Video Grid ── */
-.tv-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 10px;
-  overflow-y: auto;
-  max-height: 200px;
-  padding-bottom: 4px;
-}
-
-.tv-grid::-webkit-scrollbar { width: 3px; }
-.tv-grid::-webkit-scrollbar-thumb { background: var(--s3); border-radius: 2px; }
-
-.tv-card {
-  position: relative;
-  border-radius: 5px;
-  overflow: hidden;
-  cursor: pointer;
-  border: 1px solid var(--s2);
-  transition: border-color 0.2s, transform 0.15s;
-  background: var(--s1);
-}
-
-.tv-card:hover {
-  border-color: var(--accent-dim);
-  transform: translateY(-2px);
-}
-
-.tv-card.active {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent-dim);
-}
-
-.tv-thumb-wrap {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  background: #080808;
-  overflow: hidden;
-}
-
-.tv-thumb {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  opacity: 0.85;
-  transition: opacity 0.2s;
-}
-
-.tv-card:hover .tv-thumb { opacity: 1; }
-
-.tv-live-badge {
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  background: var(--red);
-  color: #fff;
-  font-family: var(--font-m);
-  font-size: 0.45rem;
-  letter-spacing: 0.12em;
-  padding: 2px 6px;
-  border-radius: 3px;
-  text-transform: uppercase;
-}
-
-.tv-viewers {
-  position: absolute;
-  bottom: 6px;
-  right: 6px;
-  background: rgba(0,0,0,0.7);
-  color: var(--t1);
-  font-family: var(--font-m);
-  font-size: 0.48rem;
-  padding: 2px 6px;
-  border-radius: 3px;
-}
-
-.tv-card-info {
-  padding: 8px 10px;
-}
-
-.tv-card-title {
-  font-family: var(--font-b);
-  font-size: 0.72rem;
-  color: var(--t0);
-  line-height: 1.3;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.tv-card-channel {
+.tv-now-page {
   font-family: var(--font-m);
   font-size: 0.5rem;
   color: var(--t2);
-  margin-top: 3px;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── Fullscreen fix — cell expands to fill ── */
+.tv-cell:fullscreen {
+  background: #000;
+}
+
+.tv-cell:fullscreen .tv-player-mount {
+  width: 100vw;
+  height: 100vh;
+}
+
+.tv-cell:fullscreen .tv-player-mount iframe {
+  width: 100%;
+  height: 100%;
+}
+
+.tv-cell:-webkit-full-screen {
+  background: #000;
+}
+
+.tv-cell:-webkit-full-screen .tv-player-mount {
+  width: 100vw;
+  height: 100vh;
 }

@@ -72,6 +72,9 @@
           case 'refresh':
             window.location.reload();
             break;
+          case 'tv':
+            if (DASH.tvCommand) DASH.tvCommand(msg);
+            break;
         }
       } catch (err) {
         DASH.addFeedItem(e.data, 'info');

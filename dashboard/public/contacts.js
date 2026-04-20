@@ -29,7 +29,7 @@
       phone: "",
       org: "SYSTEM",
       avatar: null,
-      project: "System owner — dashboard, OpenClaw orchestration",
+      project: "System owner — dashboard, system orchestration",
       priority: 3
     },
     {
@@ -107,7 +107,7 @@
     const sorted = [...CONTACTS_DATA].sort((a, b) => a.priority - b.priority);
 
     if (sorted.length === 0) {
-      grid.innerHTML = '<div class="contacts-empty">No contacts yet. Ask OpenClaw to add someone.</div>';
+      grid.innerHTML = '<div class="contacts-empty">No contacts yet. Ask the system to add someone.</div>';
       if (counter) counter.textContent = '0 people';
       return;
     }

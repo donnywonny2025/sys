@@ -51,6 +51,22 @@ function broadcast(data) {
   }
 }
 
+function pushToConsole(entry, style = 'sys') {
+  broadcast({
+    type: 'console',
+    entry,
+    style,
+    ts: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
+  });
+}
+
+// Server-side dedup for console chat entries
+const _consoleDedupMap = {};
+setInterval(() => {
+  const cutoff = Date.now() - 60000;
+  for (const k in _consoleDedupMap) { if (_consoleDedupMap[k] < cutoff) delete _consoleDedupMap[k]; }
+}, 30000);
+
 // Parse JSON body from request
 function parseBody(req) {
   return new Promise((resolve, reject) => {
@@ -66,185 +82,33 @@ function parseBody(req) {
 // HTTP server — serves static files + API endpoints
 const server = http.createServer(async (req, res) => {
 
-  // ── Reverse proxy: OpenClaw UI (strips iframe-blocking headers) ──
-  if (req.url.startsWith('/openclaw/') || req.url === '/openclaw') {
-    const targetPath = req.url.replace(/^\/openclaw\/?/, '/');
-    const options = {
-      hostname: '127.0.0.1',
-      port: 18789,
-      path: targetPath || '/',
-      method: req.method,
-      headers: { ...req.headers, host: '127.0.0.1:18789' }
-    };
-    const proxyReq = http.request(options, (proxyRes) => {
-      // Strip headers that block iframe embedding
-      const headers = { ...proxyRes.headers };
-      delete headers['x-frame-options'];
-      delete headers['content-security-policy'];
-      res.writeHead(proxyRes.statusCode, headers);
-      proxyRes.pipe(res);
+
+  // ── API: TV Control (System can POST here) ──
+  if (req.method === 'POST' && req.url === '/api/tv') {
+    let body = '';
+    req.on('data', c => body += c);
+    req.on('end', () => {
+      try {
+        const data = JSON.parse(body);
+        // Broadcast TV command to all connected clients
+        data.type = 'tv';
+        broadcast(JSON.stringify(data));
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true }));
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: e.message }));
+      }
     });
-    proxyReq.on('error', () => {
-      res.writeHead(502, { 'Content-Type': 'text/html' });
-      res.end('<div style="color:#888;font-family:monospace;padding:40px;">OpenClaw not reachable at port 18789</div>');
-    });
-    req.pipe(proxyReq);
     return;
   }
   // ── API: Cron Heartbeat ──
   if (req.method === 'GET' && req.url === '/api/cron-heartbeat') {
-    const { execFile } = require('child_process');
-    execFile('openclaw', ['cron', 'list', '--json'], { timeout: 8000 }, (err, stdout) => {
-      if (err) {
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: err.message }));
-        return;
-      }
-      try {
-        const data = JSON.parse(stdout);
-        const jobs = (data.jobs || []).map(j => ({
-          name: j.name,
-          schedule: j.schedule?.expr,
-          lastRunAt: j.state?.lastRunAtMs || null,
-          nextRunAt: j.state?.nextRunAtMs || null,
-          status: j.state?.lastRunStatus || 'unknown',
-          durationMs: j.state?.lastDurationMs || 0,
-          errors: j.state?.consecutiveErrors || 0,
-          enabled: j.enabled
-        }));
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ ok: true, ts: Date.now(), jobs }));
-      } catch (e) {
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'parse: ' + e.message }));
-      }
-    });
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true, cpu: '0%', mem: '0%', cron: [] }));
     return;
   }
-  // ── API: Get/Set OpenClaw Model ──
-  const OPENCLAW_CONFIG = path.join(os.homedir(), '.openclaw', 'openclaw.json');
-  if (req.url === '/api/model') {
-    if (req.method === 'GET') {
-      try {
-        const cfg = JSON.parse(fs.readFileSync(OPENCLAW_CONFIG, 'utf8'));
-        const model = cfg?.agents?.defaults?.model?.primary || 'unknown';
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ model }));
-      } catch (e) {
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: e.message }));
-      }
-      return;
-    }
-    if (req.method === 'POST') {
-      try {
-        const data = await parseBody(req);
-        const newModel = data.model;
-        if (!newModel) { res.writeHead(400); res.end('{"error":"no model"}'); return; }
-        const cfg = JSON.parse(fs.readFileSync(OPENCLAW_CONFIG, 'utf8'));
-        cfg.agents.defaults.model.primary = newModel;
-        fs.writeFileSync(OPENCLAW_CONFIG, JSON.stringify(cfg, null, 2), 'utf8');
-        broadcast({ type: 'model-change', model: newModel });
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ ok: true, model: newModel }));
-      } catch (e) {
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: e.message }));
-      }
-      return;
-    }
-  }
-  // ── API: Chat with OpenClaw ──
-  // Uses the direct HTTP API to the gateway — fast, reliable, no stale sessions
-  if (req.method === 'POST' && req.url === '/api/openclaw-chat') {
-    try {
-      const data = await parseBody(req);
-      const message = data.message;
-      if (!message) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'No message provided' }));
-        return;
-      }
 
-      // Show user message immediately in chat + console
-      pushToConsole(`→ ${message}`, 'prompt');
-      broadcast({ type: 'telem', event: 'recv', ts: new Date().toISOString(), label: message.slice(0, 60) });
-      broadcast({ type: 'console', entry: `⏳ Processing request...`, style: 'sys', status: 'PROCESSING', ts: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) });
-
-      // Return immediately to frontend
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ ok: true }));
-
-      // Fire the API call asynchronously
-      const startTime = Date.now();
-      let token = '';
-      try {
-        const cfg = JSON.parse(fs.readFileSync(path.join(os.homedir(), '.openclaw', 'openclaw.json'), 'utf8'));
-        token = cfg?.gateway?.auth?.token || '';
-      } catch (e) {}
-
-      const payload = JSON.stringify({
-        model: 'openclaw/default',
-        messages: [{ role: 'user', content: message }]
-      });
-
-      const apiReq = http.request({
-        hostname: '127.0.0.1',
-        port: 18789,
-        path: '/v1/chat/completions',
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-          'Content-Length': Buffer.byteLength(payload)
-        },
-        timeout: 60000
-      }, (apiRes) => {
-        let body = '';
-        apiRes.on('data', d => body += d);
-        apiRes.on('end', () => {
-          const durMs = Date.now() - startTime;
-          try {
-            const result = JSON.parse(body);
-            const reply = result?.choices?.[0]?.message?.content || '';
-            // Strip thinking tags
-            let clean = reply.replace(/<think>[\s\S]*?<\/think>/g, '').replace(/<\/?final>/g, '').trim();
-            if (clean) {
-              const dur = `(${(durMs / 1000).toFixed(1)}s)`;
-              pushToConsole(`← OpenClaw ${dur}: ${clean}`, 'response');
-            } else {
-              pushToConsole(`← OpenClaw: (empty response)`, 'response');
-            }
-          } catch (e) {
-            pushToConsole(`✗ OpenClaw parse error: ${e.message}`, 'err');
-          }
-          broadcast({ type: 'console', entry: '✅ Done', style: 'sys', status: 'IDLE', ts: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) });
-          broadcast({ type: 'telem', event: 'done', ts: new Date().toISOString(), durMs });
-        });
-      });
-
-      apiReq.on('error', (e) => {
-        const durMs = Date.now() - startTime;
-        pushToConsole(`✗ OpenClaw error: ${e.message}`, 'err');
-        broadcast({ type: 'console', entry: '✅ Done', style: 'sys', status: 'IDLE', ts: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) });
-        broadcast({ type: 'telem', event: 'done', ts: new Date().toISOString(), durMs });
-      });
-
-      apiReq.on('timeout', () => {
-        apiReq.destroy();
-        pushToConsole(`✗ OpenClaw timeout (60s)`, 'err');
-        broadcast({ type: 'console', entry: '✅ Done', style: 'sys', status: 'IDLE', ts: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) });
-      });
-
-      apiReq.write(payload);
-      apiReq.end();
-
-    } catch (e) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: e.message }));
-    }
-    return;
-  }
 
   // ── API: Switch scene (Antigravity backend control) ──
   if (req.method === 'POST' && req.url === '/api/scene') {
@@ -309,6 +173,16 @@ const server = http.createServer(async (req, res) => {
         pushToConsole(`🎨 Image Studio: new image loaded`, 'sys');
       } else if (data.type === 'scene') {
         pushToConsole(`📺 Scene: ${data.scene}`, 'sys');
+      }
+
+      // ── Server-side dedup for console chat entries ──
+      if (data.type === 'console' && data.entry && (data.entry.startsWith('→') || data.entry.startsWith('←'))) {
+        const dedupKey = data.entry.replace(/[\u{1F000}-\u{1FFFF}]/gu, '').replace(/[^\w\s.,!?'-]/g, '').replace(/\s+/g, ' ').trim().toLowerCase().substring(0, 120);
+        const now = Date.now();
+        if (_consoleDedupMap[dedupKey] && (now - _consoleDedupMap[dedupKey]) < 30000) {
+          return res.writeHead(200, { 'Content-Type': 'application/json' }), res.end('{"ok":true,"deduped":true}');
+        }
+        _consoleDedupMap[dedupKey] = now;
       }
 
       broadcast(data);
@@ -392,7 +266,7 @@ const server = http.createServer(async (req, res) => {
     const uptimeMs = Date.now() - SERVER_START;
 
     // Session info
-    const sessDir = path.join(os.homedir(), '.openclaw/agents/main/sessions');
+    const sessDir = path.join(os.homedir(), '.system/agents/main/sessions');
     let sessionId = '—', sessionSize = 0, turns = 0;
     try {
       const files = fs.readdirSync(sessDir).filter(f => f.endsWith('.jsonl'));
@@ -424,23 +298,6 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // ── API: OpenClaw agent status ──
-  if (req.method === 'GET' && (req.url === '/api/hermes-status' || req.url === '/api/openclaw-status')) {
-    const http = require('http');
-    const probe = http.get('http://127.0.0.1:18789/health', { timeout: 3000 }, (probeRes) => {
-      let body = '';
-      probeRes.on('data', d => body += d);
-      probeRes.on('end', () => {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ active: true, engine: 'openclaw', output: body.trim() }));
-      });
-    });
-    probe.on('error', () => {
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ active: false, engine: 'openclaw', output: 'Gateway unreachable' }));
-    });
-    return;
-  }
 
   // ── API: Save Whiteboard Image ──
   if (req.method === 'POST' && req.url === '/api/whiteboard/save') {
@@ -621,39 +478,6 @@ wss.on('connection', (ws) => {
 
 // ── Manual upgrade routing ──
 server.on('upgrade', (req, socket, head) => {
-  // OpenClaw Control UI → proxy to gateway
-  if (req.url.startsWith('/openclaw')) {
-    const targetPath = req.url.replace(/^\/openclaw\/?/, '/');
-    const proxyReq = http.request({
-      hostname: '127.0.0.1',
-      port: 18789,
-      path: targetPath || '/',
-      method: 'GET',
-      headers: {
-        ...req.headers,
-        host: '127.0.0.1:18789'
-      }
-    });
-    proxyReq.on('upgrade', (proxyRes, proxySocket, proxyHead) => {
-      let responseHead = `HTTP/1.1 101 Switching Protocols\r\n`;
-      for (const [key, value] of Object.entries(proxyRes.headers)) {
-        responseHead += `${key}: ${value}\r\n`;
-      }
-      responseHead += '\r\n';
-      socket.write(responseHead);
-      if (proxyHead.length) socket.write(proxyHead);
-      proxySocket.pipe(socket);
-      socket.pipe(proxySocket);
-      proxySocket.on('error', () => socket.destroy());
-      socket.on('error', () => proxySocket.destroy());
-    });
-    proxyReq.on('error', (err) => {
-      console.error('OpenClaw WS proxy error:', err.message);
-      socket.destroy();
-    });
-    proxyReq.end();
-    return;
-  }
 
   // Dashboard WebSocket → handle with our WSS
   wss.handleUpgrade(req, socket, head, (ws) => {
@@ -661,225 +485,74 @@ server.on('upgrade', (req, socket, head) => {
   });
 });
 
+// ══════════════════════════════════════════════════════════════
+// ██  HEARTBEAT ENGINE — Deterministic data refresh loop
+// ══════════════════════════════════════════════════════════════
+// Zero AI tokens. Pure timers + child_process.spawn.
+// Email: 1 min  |  Calendar: 10 min  |  Weather: 30 min
+// On boot: all three fire immediately so the dashboard is never empty.
+
+const EXEC_DIR = path.join(__dirname, '..', 'execution');
+
+const HEARTBEAT_JOBS = [
+  { name: 'Mail',     cmd: 'python3', args: [path.join(EXEC_DIR, 'check_mail_himalaya.py')], intervalMs: 1  * 60 * 1000 },
+  { name: 'Calendar', cmd: 'bash',    args: [path.join(EXEC_DIR, 'check_calendar.sh')],      intervalMs: 10 * 60 * 1000 },
+  { name: 'Weather',  cmd: 'python3', args: [path.join(EXEC_DIR, 'check_weather.py')],       intervalMs: 30 * 60 * 1000 },
+];
+
+function runHeartbeatJob(job) {
+  const startTime = Date.now();
+  const child = spawn(job.cmd, job.args, {
+    cwd: path.join(__dirname, '..'),
+    timeout: 30000,
+    env: { ...process.env, PATH: `/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:${process.env.PATH}` }
+  });
+
+  let stdout = '', stderr = '';
+  child.stdout.on('data', d => { stdout += d; });
+  child.stderr.on('data', d => { stderr += d; });
+
+  child.on('close', (code) => {
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+    if (code === 0) {
+      const msg = stdout.trim().split('\n').pop() || 'OK';
+      pushToConsole(`💓 ${job.name}: ${msg} (${elapsed}s)`, 'sys');
+    } else {
+      const err = (stderr || stdout).trim().split('\n').pop() || `exit ${code}`;
+      pushToConsole(`⚠️ ${job.name} failed: ${err}`, 'sys');
+    }
+  });
+
+  child.on('error', (err) => {
+    pushToConsole(`⚠️ ${job.name} error: ${err.message}`, 'sys');
+  });
+}
+
+// Start all heartbeat timers
+function startHeartbeat() {
+  pushToConsole('💓 Heartbeat engine starting...', 'sys');
+  console.log('  Heartbeat engine active.');
+
+  // Boot sync — stagger by 2 seconds each to avoid collision
+  HEARTBEAT_JOBS.forEach((job, i) => {
+    setTimeout(() => runHeartbeatJob(job), i * 2000);
+  });
+
+  // Ongoing intervals
+  HEARTBEAT_JOBS.forEach(job => {
+    setInterval(() => runHeartbeatJob(job), job.intervalMs);
+    console.log(`    ↳ ${job.name} every ${job.intervalMs / 60000} min`);
+  });
+}
+
 server.listen(PORT, () => {
   console.log(`\n  SYSTEM Dashboard`);
   console.log(`  ────────────────`);
   console.log(`  http://localhost:${PORT}`);
   console.log(`  WebSocket on same port`);
-  console.log(`  OpenClaw proxy on /openclaw/`);
+  console.log(`  Backend initialized.`);
   console.log(`  Ready.\n`);
+
+  // Start heartbeat after server is listening
+  startHeartbeat();
 });
-
-// ── OpenClaw Session Watcher ──
-// Watches the active session JSONL file for new chat messages and pushes them to the console
-
-const SESSIONS_DIR = path.join(process.env.HOME || '/Users/jeffkerr', '.openclaw/agents/main/sessions');
-
-const recentMessages = [];
-
-function pushToConsole(text, style) {
-  // Dedup: normalize away timing like "(4.6s)" so both API and JSONL paths match
-  const now = Date.now();
-  const dedupKey = text.replace(/← OpenClaw\s*\(\d+\.\d+s\)\s*:/g, '← OpenClaw:')
-                       .replace(/← OpenClaw\s*:/g, '← OpenClaw:')
-                       .substring(0, 120);
-  const isDupe = recentMessages.some(m => m.key === dedupKey && (now - m.ts) < 5000);
-  if (isDupe) return;
-  recentMessages.push({ key: dedupKey, ts: now });
-  while (recentMessages.length > 20) recentMessages.shift();
-  const ts = new Date().toLocaleTimeString('en-US', {
-    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
-  });
-  broadcast({
-    type: 'console',
-    entry: text,
-    style: style || 'sys',
-    ts: ts,
-    status: style === 'prompt' ? 'ACTIVE' : (style === 'response' ? 'IDLE' : undefined)
-  });
-  // Persist
-  try {
-    const histFile = path.join(DATA_DIR, 'history.json');
-    let hist = [];
-    if (fs.existsSync(histFile)) hist = JSON.parse(fs.readFileSync(histFile, 'utf8'));
-    hist.push({ type: 'console', entry: text, style: style, ts: ts });
-    if (hist.length > 200) hist = hist.slice(-200);
-    fs.writeFileSync(histFile, JSON.stringify(hist, null, 2));
-  } catch (e) { /* ignore */ }
-}
-
-// Watch the sessions directory for the most-recently-modified JSONL file
-function startSessionWatcher() {
-  let watchingFile = null;
-  let tailProc = null;
-
-  function findActiveSession() {
-    try {
-      const files = fs.readdirSync(SESSIONS_DIR)
-        .filter(f => f.endsWith('.jsonl'))
-        .map(f => ({ name: f, mtime: fs.statSync(path.join(SESSIONS_DIR, f)).mtimeMs }))
-        .sort((a, b) => b.mtime - a.mtime);
-      return files.length > 0 ? files[0].name : null;
-    } catch (e) { return null; }
-  }
-
-  function tailSession(filename) {
-    if (tailProc) { tailProc.kill(); tailProc = null; }
-    watchingFile = filename;
-    const filePath = path.join(SESSIONS_DIR, filename);
-    console.log(`  Watching session: ${filename}`);
-
-    tailProc = spawn('tail', ['-n', '0', '-f', filePath], { stdio: ['ignore', 'pipe', 'ignore'] });
-    let buffer = '';
-
-    tailProc.stdout.on('data', (chunk) => {
-      buffer += chunk.toString();
-      const lines = buffer.split('\n');
-      buffer = lines.pop();
-
-      for (const line of lines) {
-        if (!line.trim()) continue;
-        try {
-          const entry = JSON.parse(line);
-          if (entry.type !== 'message' || !entry.message) continue;
-
-          const role = entry.message.role;
-          const content = entry.message.content;
-
-          // Extract all visible content (text, tool calls, tool results)
-          const ts = entry.message.timestamp || new Date().toISOString();
-          const durMs = entry.message.durationMs || 0;
-
-          if (typeof content === 'string' && content.trim()) {
-            let text = content.replace(/<\/?final>/g, '').trim();
-            if (role === 'user') {
-              const userMatch = text.match(/\n\n(.+)$/s);
-              const cleanText = userMatch ? userMatch[1].trim() : text.trim();
-              if (cleanText) {
-                pushToConsole(`→ ${cleanText}`, 'prompt');
-                broadcast({ type: 'telem', event: 'recv', ts, label: cleanText.slice(0, 60) });
-              }
-            } else if (role === 'assistant' && text) {
-              const dur = durMs ? `(${(durMs / 1000).toFixed(1)}s)` : '';
-              let strippedText = text.replace(/<think>[\s\S]*?<\/think>/g, '');
-              strippedText = strippedText.replace(/🦞 OpenClaw[\s\S]+?🪢 Queue:.*?\n/g, '');
-              strippedText = strippedText.trim();
-              if (strippedText) {
-                pushToConsole(`← OpenClaw ${dur}: ${strippedText}`, 'response');
-              }
-              broadcast({ type: 'telem', event: 'reply', ts, durMs, label: text.slice(0, 60) });
-            }
-          } else if (Array.isArray(content)) {
-            for (const part of content) {
-              if (part.type === 'text' && part.text) {
-                let text = part.text.replace(/<\/?final>/g, '').trim();
-                if (!text) continue;
-                if (role === 'user') {
-                  const userMatch = text.match(/\n\n(.+)$/s);
-                  const cleanText = userMatch ? userMatch[1].trim() : text.trim();
-                  if (cleanText) {
-                    pushToConsole(`→ ${cleanText}`, 'prompt');
-                    broadcast({ type: 'telem', event: 'recv', ts, label: cleanText.slice(0, 60) });
-                  }
-                } else if (role === 'assistant') {
-                  const dur = durMs ? `(${(durMs / 1000).toFixed(1)}s)` : '';
-                  let strippedText = text.replace(/<think>[\s\S]*?<\/think>/g, '');
-                  strippedText = strippedText.replace(/🦞 OpenClaw[\s\S]+?🪢 Queue:.*?\n/g, '');
-                  strippedText = strippedText.replace(/```[\s\n]*```/g, '');
-                  strippedText = strippedText.trim();
-                  
-                  if (strippedText) {
-                    pushToConsole(`← OpenClaw ${dur}: ${strippedText}`, 'response');
-                  }
-                  broadcast({ type: 'telem', event: 'reply', ts, durMs, label: text.slice(0, 60) });
-                } else if (role === 'toolResult') {
-                  const short = text.length > 120 ? text.slice(0, 120) + '…' : text;
-                  // DO NOT push toolResult to console. It goes to telemetry status strip.
-                  broadcast({ type: 'telem', event: 'done', ts, durMs, label: short.slice(0, 60), dataBytes: text.length });
-                }
-              } else if (part.type === 'toolCall' && role === 'assistant') {
-                const name = part.name || 'unknown';
-                // DO NOT push toolCall to console. It goes to telemetry status strip.
-                broadcast({ type: 'telem', event: 'tool', ts, label: name });
-              } else if (part.type === 'thinking' && role === 'assistant') {
-                broadcast({ type: 'telem', event: 'think', ts, durMs });
-              }
-            }
-          }
-        } catch (e) { /* skip bad lines */ }
-      }
-    });
-
-    tailProc.on('close', () => {
-      console.log('  Session tail closed, restarting in 3s...');
-      setTimeout(() => startSessionWatcher(), 3000);
-    });
-  }
-
-  const active = findActiveSession();
-  if (active) {
-    tailSession(active);
-  } else {
-    console.log('  No active session found, retrying in 10s...');
-    setTimeout(startSessionWatcher, 10000);
-  }
-
-  // Watch directory for new JSONL files instantly
-  fs.watch(SESSIONS_DIR, (eventType, filename) => {
-    if (eventType === 'rename' && filename && filename.endsWith('.jsonl')) {
-      const active = findActiveSession();
-      if (active && active !== watchingFile) {
-        console.log(`  New session detected: ${active}`);
-        tailSession(active);
-      }
-    }
-  });
-
-  // Keep a fallback poll checking every 5 seconds instead of 15
-  setInterval(() => {
-    const latest = findActiveSession();
-    if (latest && latest !== watchingFile) {
-      console.log(`  Switching to newer session (fallback): ${latest}`);
-      tailSession(latest);
-    }
-  }, 5000);
-}
-
-// Gateway log tailing for connection/status events
-function startLogTail() {
-  const gwLogPath = path.join(process.env.HOME || '/Users/jeffkerr', '.openclaw/logs/gateway.log');
-  if (!fs.existsSync(gwLogPath)) return;
-
-  const tail = spawn('tail', ['-n', '0', '-f', gwLogPath], { stdio: ['ignore', 'pipe', 'ignore'] });
-  let buffer = '';
-
-  tail.stdout.on('data', (chunk) => {
-    buffer += chunk.toString();
-    const lines = buffer.split('\n');
-    buffer = lines.pop();
-
-    for (const line of lines) {
-      const match = line.match(/^\S+T(\d{2}:\d{2}:\d{2})\.\S+\s+\[(\w+)\]\s+(.*)/);
-      if (!match) continue;
-      const msg = match[3];
-
-      if (msg.includes('webchat connected')) {
-        pushToConsole('🔗 OpenClaw Control UI connected', 'sys');
-      } else if (msg.includes('webchat disconnected')) {
-        pushToConsole('🔌 OpenClaw Control UI disconnected', 'warn');
-      } else if (msg.includes('agent model:')) {
-        pushToConsole(`🤖 ${msg}`, 'sys');
-      }
-    }
-  });
-
-  tail.on('close', () => setTimeout(startLogTail, 5000));
-  console.log(`  Tailing gateway.log`);
-}
-
-// Start watchers after brief delay
-setTimeout(() => {
-  startSessionWatcher();
-  startLogTail();
-}, 2000);
-

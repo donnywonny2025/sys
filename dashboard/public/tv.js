@@ -1,184 +1,435 @@
-// tv.js — TV Scene: Live streams, YouTube, world cams
-// Attaches to DASH namespace from core.js
-
+// tv.js — TV Scene: Multi-page live stream viewer
+// Features: YouTube IFrame API mute/unmute, fullscreen, click-to-audio, LIVE badge
+// API-driven so System can control it via POST /api/tv
 (function() {
   'use strict';
 
-  // ── Channel Data ──
-  // Each entry: { id, title, channel, cat[], thumb, src (embed URL), live?, viewers? }
-  var CHANNELS = [
-    // ── LIVE ──
-    { id: 'iss', title: 'ISS Live — Earth from Space', channel: 'NASA', cat: ['live','space'],
-      thumb: 'https://img.youtube.com/vi/P9C25Un7xaM/mqdefault.jpg',
-      src: 'https://www.youtube.com/embed/P9C25Un7xaM?autoplay=1&mute=1', live: true },
-    { id: 'lofi', title: 'lofi hip hop radio — beats to relax/study to', channel: 'Lofi Girl', cat: ['live','music'],
-      thumb: 'https://img.youtube.com/vi/jfKfPfyJRdk/mqdefault.jpg',
-      src: 'https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=1', live: true },
-    { id: 'jazz', title: '24/7 Coffee Jazz — Relaxing Jazz Piano', channel: 'Cafe Music BGM', cat: ['live','music'],
-      thumb: 'https://img.youtube.com/vi/fEvM-OUbaKs/mqdefault.jpg',
-      src: 'https://www.youtube.com/embed/fEvM-OUbaKs?autoplay=1&mute=1', live: true },
-    { id: 'nyc', title: 'New York City — Times Square LIVE', channel: 'EarthCam', cat: ['live','nature'],
-      thumb: 'https://img.youtube.com/vi/1-iS7LArMPA/mqdefault.jpg',
-      src: 'https://www.youtube.com/embed/1-iS7LArMPA?autoplay=1&mute=1', live: true },
-    { id: 'jackson', title: 'Jackson Hole Town Square — Wyoming', channel: 'EarthCam', cat: ['live','nature'],
-      thumb: 'https://img.youtube.com/vi/psfFJR3vZ78/mqdefault.jpg',
-      src: 'https://www.youtube.com/embed/psfFJR3vZ78?autoplay=1&mute=1', live: true },
-    { id: 'tokyo', title: 'LIVE Tokyo Shibuya Scramble Crossing', channel: 'SHIBUYA COMMUNITY NEWS', cat: ['live','nature'],
-      thumb: 'https://img.youtube.com/vi/3n3Hq7XSBEg/mqdefault.jpg',
-      src: 'https://www.youtube.com/embed/3n3Hq7XSBEg?autoplay=1&mute=1', live: true },
+  // ─── CHANNEL PRESETS ───
+  var PAGES = {
+    featured: {
+      label: 'Featured',
+      layout: 'featured',
+      streams: [
+        { id: 'jfKfPfyJRdk', label: 'Lofi Girl', region: 'MUSIC' },
+        { id: 'gCNeDWCI0vo', label: 'Al Jazeera English', region: 'QATAR' },
+        { id: 'Ap-UM1O9RBU', label: 'France 24', region: 'FR' },
+        { id: 'aTd8pZMunbY', label: 'Deep Ocean 24/7', region: 'NATURE' },
+      ]
+    },
+    news: {
+      label: 'News',
+      layout: 'grid',
+      streams: [
+        { id: 'gCNeDWCI0vo', label: 'Al Jazeera', region: 'QATAR' },
+        { id: 'YDvsBbKfLPA', label: 'Sky News', region: 'UK' },
+        { id: 'Ap-UM1O9RBU', label: 'France 24', region: 'FR' },
+        { id: 'LuKwFajn37U', label: 'DW News', region: 'DE' },
+        { id: 'BOy2xDU1LC8', label: 'CGTN', region: 'CHINA' },
+        { id: 'f0lYkdA-Gtw', label: 'NHK World', region: 'JAPAN' },
+        { id: 'vOTiJkg1voo', label: 'ABC News', region: 'AUS' },
+        { id: '1VUhRQpz_9o', label: 'TRT World', region: 'TR' },
+        { id: 'GzIGQs7dkos', label: 'WION', region: 'INDIA' },
+      ]
+    },
+    entertainment: {
+      label: 'Music',
+      layout: 'featured',
+      streams: [
+        { id: 'jfKfPfyJRdk', label: 'Lofi Hip Hop', region: 'BEATS' },
+        { id: 'HuFYqnbVbzY', label: 'Jazz Lofi', region: 'JAZZ' },
+        { id: 'Dx5qFachd3A', label: 'Jazz Piano Radio', region: 'PIANO' },
+        { id: '5yx6BWlEVcY', label: 'Chillhop Radio', region: 'CHILL' },
+      ]
+    },
+    movies: {
+      label: 'Movies',
+      layout: 'featured',
+      streams: [
+        { id: '4wihbYopspQ', label: 'Pursued (2025)', region: 'THRILLER' },
+        { id: '2ae1CRBeFQw', label: 'Dirty Money', region: 'ACTION' },
+        { id: 'y9dedKC3DqQ', label: 'Last Warning', region: 'ACTION' },
+        { id: '_OI41jga4dg', label: 'One Last Job', region: 'THRILLER' },
+      ]
+    },
+    livecams: {
+      label: 'Live Cams',
+      layout: 'grid',
+      streams: [
+        { id: '1-iS7LArMPA', label: 'Times Square', region: 'NYC' },
+        { id: 'psfFJR3vZ78', label: 'Jackson Hole', region: 'WY' },
+        { id: '3n3Hq7XSBEg', label: 'Shibuya Crossing', region: 'TOKYO' },
+        { id: 'EjlEtOBwJLs', label: 'Monterey Aquarium', region: 'CA' },
+        { id: 'DHUnz4dyb54', label: 'Tropical Reef Cam', region: 'OCEAN' },
+        { id: 'aTd8pZMunbY', label: 'Deep Ocean 24/7', region: 'OCEAN' },
+        { id: '4NoTsBpE68k', label: 'ISS Earth View', region: 'NASA' },
+        { id: 'tZzkTRoct40', label: 'ISS Real-Time', region: 'NASA' },
+        { id: 'N609loYkFJo', label: 'Bird Feeder', region: 'CORNELL' },
+      ]
+    },
+    space: {
+      label: 'Space',
+      layout: 'featured',
+      streams: [
+        { id: '4NoTsBpE68k', label: 'ISS HD Earth', region: 'NASA' },
+        { id: 'tZzkTRoct40', label: 'ISS Real-Time', region: 'NASA' },
+        { id: 'vytmBNhc9ig', label: 'ISS 24/7', region: 'NASA' },
+        { id: 'mhJRzQsLZGg', label: 'SpaceX Starbase', region: 'TX' },
+      ]
+    }
+  };
 
-    // ── NEWS ──
-    { id: 'sky', title: 'Sky News Live', channel: 'Sky News', cat: ['live','news'],
-      thumb: 'https://img.youtube.com/vi/9Auq9mYxFEE/mqdefault.jpg',
-      src: 'https://www.youtube.com/embed/9Auq9mYxFEE?autoplay=1&mute=1', live: true },
-    { id: 'abc', title: 'ABC News Live', channel: 'ABC News', cat: ['live','news'],
-      thumb: 'https://img.youtube.com/vi/gCNeDWCI0vo/mqdefault.jpg',
-      src: 'https://www.youtube.com/embed/gCNeDWCI0vo?autoplay=1&mute=1', live: true },
-    { id: 'france24', title: 'France 24 English — Live', channel: 'France 24', cat: ['live','news'],
-      thumb: 'https://img.youtube.com/vi/h3MuIUNCCzI/mqdefault.jpg',
-      src: 'https://www.youtube.com/embed/h3MuIUNCCzI?autoplay=1&mute=1', live: true },
-    { id: 'dw', title: 'DW News Livestream', channel: 'DW News', cat: ['live','news'],
-      thumb: 'https://img.youtube.com/vi/GE_SfNVNyqk/mqdefault.jpg',
-      src: 'https://www.youtube.com/embed/GE_SfNVNyqk?autoplay=1&mute=1', live: true },
+  var currentPage = 'featured';
+  var activeIndex = -1;
+  var players = [];
+  var playersReady = [];
+  var ytApiReady = false;
+  var pendingRender = null;
 
-    // ── SPACE ──
-    { id: 'nasa-tv', title: 'NASA Live — Official Stream', channel: 'NASA', cat: ['live','space'],
-      thumb: 'https://img.youtube.com/vi/21X5lGlDOfg/mqdefault.jpg',
-      src: 'https://www.youtube.com/embed/21X5lGlDOfg?autoplay=1&mute=1', live: true },
-    { id: 'spacex', title: 'SpaceX Starbase Live', channel: 'NASASpaceflight', cat: ['live','space'],
-      thumb: 'https://img.youtube.com/vi/mhJRzQsLZGg/mqdefault.jpg',
-      src: 'https://www.youtube.com/embed/mhJRzQsLZGg?autoplay=1&mute=1', live: true },
-
-    // ── NATURE ──
-    { id: 'aquarium', title: 'Monterey Bay Aquarium Live Cam', channel: 'Monterey Bay Aquarium', cat: ['live','nature'],
-      thumb: 'https://img.youtube.com/vi/EjlEtOBwJLs/mqdefault.jpg',
-      src: 'https://www.youtube.com/embed/EjlEtOBwJLs?autoplay=1&mute=1', live: true },
-    { id: 'birdfeeder', title: 'Live Bird Feeder Cam — Cornell Lab', channel: 'Cornell Lab', cat: ['live','nature'],
-      thumb: 'https://img.youtube.com/vi/N609loYkFJo/mqdefault.jpg',
-      src: 'https://www.youtube.com/embed/N609loYkFJo?autoplay=1&mute=1', live: true },
-
-    // ── MUSIC ──
-    { id: 'synthwave', title: 'Synthwave Radio — Retrowave', channel: 'Synthwave', cat: ['live','music'],
-      thumb: 'https://img.youtube.com/vi/4xDzrJKXOOY/mqdefault.jpg',
-      src: 'https://www.youtube.com/embed/4xDzrJKXOOY?autoplay=1&mute=1', live: true },
-    { id: 'classical', title: 'Classical Music Radio — 24/7', channel: 'Halidon Music', cat: ['live','music'],
-      thumb: 'https://img.youtube.com/vi/jgpJVI3tDbY/mqdefault.jpg',
-      src: 'https://www.youtube.com/embed/jgpJVI3tDbY?autoplay=1&mute=1', live: true },
-  ];
-
-  var savedChannels = [];
-  var currentCat = 'live';
-  var currentPlaying = null;
-
-  // ── DOM refs ──
-  var grid = document.getElementById('tv-grid');
-  var player = document.getElementById('tv-player');
+  // ─── DOM ───
+  var container = document.querySelector('#scene-tv .tv-stream-area');
+  var tabsWrap = document.querySelector('#scene-tv .tv-page-tabs');
   var nowTitle = document.getElementById('tv-now-title');
-  var nowChannel = document.getElementById('tv-now-channel');
-  var nowLabel = document.querySelector('.tv-now-label');
-  var tabsWrap = document.getElementById('tv-channel-tabs');
+  var nowDot = document.getElementById('tv-now-dot');
+  var nowPage = document.getElementById('tv-now-page');
 
-  // ── Load saved channels from localStorage ──
-  try {
-    var saved = localStorage.getItem('tv-saved');
-    if (saved) savedChannels = JSON.parse(saved);
-  } catch(e) {}
+  // ─── UTILS ───
+  function updateBadge(i, live) {
+    var b = document.getElementById('tv-badge-' + i);
+    if (!b) return;
+    if (live) {
+      b.innerHTML = '🔊 LIVE';
+      b.classList.add('tv-badge-live');
+      b.classList.remove('tv-badge-muted');
+    } else {
+      b.innerHTML = '🔇 MUTED';
+      b.classList.remove('tv-badge-live');
+      b.classList.add('tv-badge-muted');
+    }
+  }
 
-  // ── Render Grid ──
-  function renderGrid(cat) {
-    if (!grid) return;
-    grid.innerHTML = '';
-    var items = cat === 'saved'
-      ? CHANNELS.filter(function(c) { return savedChannels.indexOf(c.id) !== -1; })
-      : CHANNELS.filter(function(c) { return c.cat.indexOf(cat) !== -1; });
+  function destroyPlayers() {
+    for (var i = 0; i < players.length; i++) {
+      if (players[i] && typeof players[i].destroy === 'function') {
+        try { players[i].destroy(); } catch (e) {}
+      }
+    }
+    players = [];
+    playersReady = [];
+    activeIndex = -1;
+  }
 
-    if (items.length === 0) {
-      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--t2);font-size:0.8rem;font-style:italic;">No channels in this category</div>';
+  // ─── SELECT CELL (mute/unmute toggle) ───
+  function selectCell(index) {
+    var page = PAGES[currentPage];
+    if (!page || !page.streams[index]) return;
+
+    // If clicking the already-active cell → mute it
+    if (activeIndex === index) {
+      if (players[index] && playersReady[index]) {
+        try { players[index].mute(); } catch (e) {}
+      }
+      var cell = document.getElementById('tv-cell-' + index);
+      if (cell) cell.classList.remove('tv-cell-active');
+      updateBadge(index, false);
+      activeIndex = -1;
+      if (nowTitle) nowTitle.textContent = '—';
+      if (nowDot) nowDot.classList.add('off');
       return;
     }
 
-    items.forEach(function(ch, idx) {
-      var card = document.createElement('div');
-      card.className = 'tv-card' + (currentPlaying === ch.id ? ' active' : '');
-      card.style.animationDelay = (idx * 40) + 'ms';
-      card.style.animation = 'slideIn 0.3s cubic-bezier(0.16,1,0.3,1) both';
-      card.style.animationDelay = (idx * 40) + 'ms';
+    // Mute all first
+    muteAll();
 
-      var isSaved = savedChannels.indexOf(ch.id) !== -1;
+    // Unmute selected
+    activeIndex = index;
+    if (players[index] && playersReady[index]) {
+      try { players[index].unMute(); players[index].setVolume(100); } catch (e) {}
+    }
+    var selCell = document.getElementById('tv-cell-' + index);
+    if (selCell) selCell.classList.add('tv-cell-active');
+    updateBadge(index, true);
 
-      card.innerHTML =
-        '<div class="tv-thumb-wrap">' +
-          '<img class="tv-thumb" src="' + ch.thumb + '" alt="" loading="lazy">' +
-          (ch.live ? '<span class="tv-live-badge">LIVE</span>' : '') +
-          (ch.viewers ? '<span class="tv-viewers">' + ch.viewers + ' watching</span>' : '') +
-        '</div>' +
-        '<div class="tv-card-info">' +
-          '<div class="tv-card-title">' + ch.title + '</div>' +
-          '<div class="tv-card-channel">' + ch.channel + '</div>' +
-        '</div>';
+    if (nowTitle) nowTitle.textContent = page.streams[index].label || 'Stream ' + index;
+    if (nowDot) nowDot.classList.remove('off');
+  }
 
-      card.addEventListener('click', function() { playChannel(ch); });
+  function muteAll() {
+    var page = PAGES[currentPage];
+    if (!page) return;
+    for (var i = 0; i < page.streams.length; i++) {
+      if (players[i] && playersReady[i]) {
+        try { players[i].mute(); } catch (e) {}
+      }
+      var c = document.getElementById('tv-cell-' + i);
+      if (c) c.classList.remove('tv-cell-active');
+      updateBadge(i, false);
+    }
+    activeIndex = -1;
+  }
 
-      // Right-click to save/unsave
-      card.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-        toggleSaved(ch.id);
-        renderGrid(currentCat);
+  // ─── FULLSCREEN ───
+  function fullscreenCell(index) {
+    var cell = document.getElementById('tv-cell-' + index);
+    if (!cell) return;
+    if (document.fullscreenElement === cell) {
+      document.exitFullscreen();
+      return;
+    }
+    var fn = cell.requestFullscreen || cell.webkitRequestFullscreen;
+    if (fn) fn.call(cell);
+  }
+
+  // ─── SWAP TO FEATURED (click small → make big) ───
+  function promoteToFeatured(index) {
+    var page = PAGES[currentPage];
+    if (!page || page.layout !== 'featured' || index === 0) return;
+    var tmp = page.streams[0];
+    page.streams[0] = page.streams[index];
+    page.streams[index] = tmp;
+    renderPage(currentPage);
+  }
+
+  // ─── BUILD CELL ───
+  function makeCell(stream, idx) {
+    var cell = document.createElement('div');
+    cell.className = 'tv-cell';
+    cell.id = 'tv-cell-' + idx;
+
+    var ytId = stream.id && /^[\w-]{11}$/.test(stream.id) ? stream.id : null;
+    if (!ytId) {
+      cell.innerHTML = '<div class="tv-empty"><div class="tv-empty-icon">📡</div></div>';
+      return cell;
+    }
+
+    // Region badge
+    var regionTag = stream.region
+      ? '<span class="tv-cell-region">' + stream.region + '</span>'
+      : '';
+
+    // Player container (YT API will inject here)
+    var playerDiv = '<div id="tv-player-' + idx + '" class="tv-player-mount"></div>';
+
+    // Click overlay — intercepts clicks on the iframe
+    var clickOverlay = '<div class="tv-click-overlay" data-idx="' + idx + '"></div>';
+
+    // Label
+    var label = '<span class="tv-cell-label">' + (stream.label || '') + '</span>';
+
+    // LIVE badge (green pulsing dot)
+    var liveBadge = '<span class="tv-live-badge"><span class="tv-live-dot-green"></span>LIVE</span>';
+
+    // Audio badge (muted/live state)
+    var audioBadge = '<span class="tv-audio-badge tv-badge-muted" id="tv-badge-' + idx + '">🔇 MUTED</span>';
+
+    // Cell controls (hover to reveal)
+    var controls = '<div class="tv-cell-controls">' +
+      '<button class="tv-ctrl-btn" data-action="fullscreen" data-idx="' + idx + '" title="Fullscreen">⛶ Full</button>' +
+      '</div>';
+
+    cell.innerHTML = regionTag + playerDiv + clickOverlay + label + liveBadge + audioBadge + controls;
+
+    return cell;
+  }
+
+  // ─── INIT YT PLAYER FOR CELL ───
+  function initPlayer(idx, ytId) {
+    if (!ytApiReady || !document.getElementById('tv-player-' + idx)) return;
+
+    playersReady[idx] = false;
+    players[idx] = new YT.Player('tv-player-' + idx, {
+      videoId: ytId,
+      playerVars: {
+        autoplay: 1,
+        mute: 1,
+        controls: 0,
+        modestbranding: 1,
+        rel: 0,
+        iv_load_policy: 3,
+        playsinline: 1
+      },
+      events: {
+        onReady: function() { playersReady[idx] = true; },
+        onError: function() { playersReady[idx] = false; }
+      }
+    });
+  }
+
+  // ─── RENDER PAGE ───
+  function renderPage(pageName) {
+    var page = PAGES[pageName];
+    if (!page || !container) return;
+
+    destroyPlayers();
+    currentPage = pageName;
+    container.innerHTML = '';
+
+    if (!page.streams || page.streams.length === 0) {
+      container.innerHTML = '<div class="tv-empty"><div class="tv-empty-icon">📡</div><div class="tv-empty-text">No streams configured</div></div>';
+      return;
+    }
+
+    if (page.layout === 'featured') {
+      var wrap = document.createElement('div');
+      wrap.className = 'tv-layout-featured';
+
+      var main = makeCell(page.streams[0], 0);
+      main.classList.add('tv-main-stream');
+      wrap.appendChild(main);
+
+      var side = document.createElement('div');
+      side.className = 'tv-side-streams';
+      for (var i = 1; i < Math.min(page.streams.length, 4); i++) {
+        side.appendChild(makeCell(page.streams[i], i));
+      }
+      wrap.appendChild(side);
+      container.appendChild(wrap);
+
+      if (nowTitle) nowTitle.textContent = page.streams[0].label || '—';
+      if (nowDot) nowDot.classList.add('off');
+    } else {
+      var grid = document.createElement('div');
+      grid.className = 'tv-layout-grid';
+      page.streams.forEach(function(s, i) {
+        grid.appendChild(makeCell(s, i));
       });
+      container.appendChild(grid);
 
-      grid.appendChild(card);
+      if (nowTitle) nowTitle.textContent = page.label + ' — ' + page.streams.length + ' streams';
+      if (nowDot) nowDot.classList.add('off');
+    }
+
+    if (nowPage) nowPage.textContent = page.label;
+
+    // Update tab active state
+    if (tabsWrap) {
+      tabsWrap.querySelectorAll('.tv-page-tab').forEach(function(t) {
+        t.classList.toggle('active', t.dataset.page === pageName);
+      });
+    }
+
+    // Init YT players
+    if (ytApiReady) {
+      page.streams.forEach(function(stream, i) {
+        if (stream.id && /^[\w-]{11}$/.test(stream.id)) {
+          initPlayer(i, stream.id);
+        }
+      });
+    } else {
+      // YT API not ready yet — fall back to iframe embeds
+      page.streams.forEach(function(stream, i) {
+        var mount = document.getElementById('tv-player-' + i);
+        if (mount && stream.id && /^[\w-]{11}$/.test(stream.id)) {
+          mount.innerHTML = '<iframe src="https://www.youtube.com/embed/' + stream.id +
+            '?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1" ' +
+            'allow="autoplay; encrypted-media" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>';
+        }
+      });
+    }
+  }
+
+  // ─── EVENT DELEGATION ───
+  if (container) {
+    // Click overlay → toggle audio
+    container.addEventListener('click', function(e) {
+      var overlay = e.target.closest('.tv-click-overlay');
+      if (overlay) {
+        var idx = parseInt(overlay.dataset.idx, 10);
+        if (!isNaN(idx)) selectCell(idx);
+        return;
+      }
+
+      // Fullscreen button
+      var ctrl = e.target.closest('.tv-ctrl-btn');
+      if (ctrl) {
+        e.stopPropagation();
+        var action = ctrl.dataset.action;
+        var ci = parseInt(ctrl.dataset.idx, 10);
+        if (action === 'fullscreen' && !isNaN(ci)) fullscreenCell(ci);
+        return;
+      }
+    });
+
+    // Double-click overlay → promote to featured (swap big/small)
+    container.addEventListener('dblclick', function(e) {
+      var overlay = e.target.closest('.tv-click-overlay');
+      if (overlay) {
+        var idx = parseInt(overlay.dataset.idx, 10);
+        if (!isNaN(idx)) promoteToFeatured(idx);
+      }
     });
   }
 
-  // ── Play Channel ──
-  function playChannel(ch) {
-    if (!player) return;
-    currentPlaying = ch.id;
-
-    // Replace player content with iframe
-    player.innerHTML = '<iframe src="' + ch.src + '" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
-
-    // Update info bar
-    if (nowTitle) nowTitle.textContent = ch.title;
-    if (nowChannel) nowChannel.textContent = ch.channel;
-    if (nowLabel) nowLabel.classList.add('active');
-
-    // Mark active card
-    var cards = grid.querySelectorAll('.tv-card');
-    cards.forEach(function(c, i) { c.classList.remove('active'); });
-    // Find and mark
-    var filtered = currentCat === 'saved'
-      ? CHANNELS.filter(function(c) { return savedChannels.indexOf(c.id) !== -1; })
-      : CHANNELS.filter(function(c) { return c.cat.indexOf(currentCat) !== -1; });
-    filtered.forEach(function(item, idx) {
-      if (item.id === ch.id && cards[idx]) cards[idx].classList.add('active');
-    });
-  }
-
-  // ── Save/Unsave ──
-  function toggleSaved(id) {
-    var idx = savedChannels.indexOf(id);
-    if (idx === -1) savedChannels.push(id);
-    else savedChannels.splice(idx, 1);
-    try { localStorage.setItem('tv-saved', JSON.stringify(savedChannels)); } catch(e) {}
-  }
-
-  // ── Tab Switching ──
+  // ─── TAB CLICKS ───
   if (tabsWrap) {
     tabsWrap.addEventListener('click', function(e) {
-      var btn = e.target.closest('.tv-tab');
+      var btn = e.target.closest('.tv-page-tab');
       if (!btn) return;
-      var cat = btn.getAttribute('data-cat');
-      if (!cat) return;
-
-      currentCat = cat;
-      tabsWrap.querySelectorAll('.tv-tab').forEach(function(t) { t.classList.remove('active'); });
-      btn.classList.add('active');
-      renderGrid(cat);
+      var page = btn.dataset.page;
+      if (page && PAGES[page]) renderPage(page);
     });
   }
 
-  // ── Initial render ──
-  renderGrid('live');
+  // ─── YOUTUBE IFRAME API CALLBACK ───
+  // Load the API
+  var ytScript = document.createElement('script');
+  ytScript.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(ytScript);
+
+  // Global callback
+  var origCallback = window.onYouTubeIframeAPIReady;
+  window.onYouTubeIframeAPIReady = function() {
+    ytApiReady = true;
+    if (origCallback) origCallback();
+    // Re-render current page with proper YT.Player instances
+    if (pendingRender) {
+      renderPage(pendingRender);
+      pendingRender = null;
+    } else {
+      renderPage(currentPage);
+    }
+  };
+
+  // ─── API HANDLER (System controls via POST /api/tv) ───
+  window.DASH = window.DASH || {};
+  window.DASH.tvCommand = function(data) {
+    if (!data || !data.action) return;
+    switch (data.action) {
+      case 'page':
+        if (PAGES[data.page]) renderPage(data.page);
+        break;
+      case 'add':
+        if (data.page && PAGES[data.page] && data.stream) {
+          PAGES[data.page].streams.push(data.stream);
+          if (currentPage === data.page) renderPage(currentPage);
+        }
+        break;
+      case 'remove':
+        if (data.page && PAGES[data.page] && data.id) {
+          PAGES[data.page].streams = PAGES[data.page].streams.filter(function(s) { return s.id !== data.id; });
+          if (currentPage === data.page) renderPage(currentPage);
+        }
+        break;
+      case 'replace':
+        if (data.page && PAGES[data.page] && data.streams) {
+          PAGES[data.page].streams = data.streams;
+          if (currentPage === data.page) renderPage(currentPage);
+        }
+        break;
+      case 'mute':
+        muteAll();
+        break;
+      case 'unmute':
+        if (typeof data.index === 'number') selectCell(data.index);
+        break;
+      case 'fullscreen':
+        if (typeof data.index === 'number') fullscreenCell(data.index);
+        break;
+    }
+  };
+
+  // ─── INIT ───
+  // Show iframe fallback immediately, YT API will upgrade when ready
+  pendingRender = 'featured';
+  renderPage('featured');
 
 })();

@@ -231,7 +231,9 @@ The monolithic `app.js` (1,104 lines) was split into 7 focused modules:
 | `telemetry.js` | System metrics, activity chain, feed timers | `DASH.updateTelem` |
 | `openclaw.js` | Console log, health polling | `DASH.addConsoleEntry` |
 | `websocket.js` | WebSocket dispatch — loaded LAST | Central event router |
-| `tv.js` | TV scene — live streams, YouTube, world cams | Category tabs, click-to-play |
+| `tv.js` | TV scene — multi-page live streams, YouTube, movies, world cams | 7 pages, OpenClaw API at `/api/tv` |
+
+**YouTube Premium account:** `busdon888@gmail.com` — no ads, clean autoplay for all embeds. Chrome must be logged into this account.
 
 **Load order in index.html:** core → feeds → studio → board → chat → telemetry → openclaw → tv → contacts → websocket
 

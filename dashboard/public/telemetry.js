@@ -216,6 +216,6 @@
   // Boot animation
   setTimeout(function() { addChainEvent('⚡', 'BOOT', 'boot'); }, 200);
   setTimeout(function() { addChainEvent('◉', 'FEEDS', 'recv'); }, 1200);
-  setTimeout(function() { addChainEvent('◎', 'OPENCLAW', 'think'); }, 2200);
+  setTimeout(function() { addChainEvent('◎', 'SYSTEM', 'think'); }, 2200);
   setTimeout(function() { addChainEvent('✓', 'READY', 'done'); }, 3200);
 })();

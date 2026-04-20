@@ -11,7 +11,7 @@ LIMIT = 15
 try:
     # himalaya envelope list — fast, lightweight, no auth tokens
     result = subprocess.run(
-        ["himalaya", "envelope", "list", "-s", str(LIMIT), "-o", "json"],
+        ["/opt/homebrew/bin/himalaya", "envelope", "list", "-s", str(LIMIT), "-o", "json"],
         capture_output=True, text=True, timeout=15
     )
     if result.returncode != 0:

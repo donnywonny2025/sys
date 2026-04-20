@@ -311,8 +311,8 @@ body {
 .thumb-wrap:hover { border-color: var(--accent-dim); }
 .thumb-wrap img { width: 100%; height: 100%; object-fit: cover; }
 
-/* --- OpenClaw Console --- */
-#openclaw-console {
+/* --- System Console --- */
+#system-console {
   flex-shrink: 0;
   background: #0a0a0c;
   border-top: 1px solid #1a1a1f;
@@ -320,8 +320,8 @@ body {
   height: 160px;
   transition: height 0.25s ease;
 }
-#openclaw-console.collapsed { height: 28px; }
-#openclaw-console.collapsed .console-body { display: none; }
+#system-console.collapsed { height: 28px; }
+#system-console.collapsed .console-body { display: none; }
 
 .console-header {
   display: flex; align-items: center; gap: 10px;
@@ -346,7 +346,7 @@ body {
   font-size: 0.6rem; cursor: pointer; padding: 2px 4px;
   transition: transform 0.25s;
 }
-#openclaw-console.collapsed .console-toggle { transform: rotate(180deg); }
+#system-console.collapsed .console-toggle { transform: rotate(180deg); }
 
 .console-body {
   flex: 1; overflow-y: auto; padding: 6px 16px;
